@@ -1,0 +1,66 @@
+<%- include('header') %>
+
+<div class="statistics">
+  <div>
+    <small>Servers</small>
+    <span id="servers"><%= servers %></span>
+  </div>
+  <div>
+    <small>Players</small>
+    <span id="players"><%= players %></span>
+  </div>
+</div>
+<div class="serverlist responsive">
+  <table class="sortable asc">
+    <thead>
+      <tr>
+        <th class="c">&nbsp;</th>
+        <th class="gm">&nbsp;</th>
+        <th class="sv">Name</th>
+        <th>Map</th>
+        <th>Players</th>
+        <th>Address</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (var i = 0; i < svlst.length; i++) { %>
+      <tr>
+        <td class="c" data-sort="<%= svlst[i].country %>">
+          <span class="fi fi-<%= svlst[i].country %>"></span>
+        </td>
+        <td class="gm">
+        <% switch (svlst[i].gamemode) {
+        case 0: %>
+        <strong class="gm-s">S</strong>
+        <% break;
+        case 1: %>
+        <strong class="gm-d">D</strong>
+        <% break;
+        case 2: %>
+        <strong class="gm-t">T</strong>
+        <% break;
+        case 3: %>
+        <strong class="gm-c">C</strong>
+        <% break;
+        case 4: %>
+        <strong class="gm-z">Z</strong>
+        <% break;
+        default:
+        break; } %>
+        </td>
+        <td class="sv">
+          <a href="/details/<%= svlst[i].ip %>:<%= svlst[i].port %>"><%= svlst[i].name %></a>
+        </td>
+        <td><%= svlst[i].map %></td>
+        <td data-sort="<%= svlst[i].players-svlst[i].bots %>">
+          <%= svlst[i].players %>/<%= svlst[i].maxplayers %>
+          <% if (svlst[i].bots > 0) { %> (<%= svlst[i].bots %> bots)<% } %>
+        </td>
+        <td><%= svlst[i].ip %>:<%= svlst[i].port %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('footer') %>

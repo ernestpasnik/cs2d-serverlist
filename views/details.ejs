@@ -1,0 +1,128 @@
+<%- include('header') %>
+
+<ul class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">CS2D Serverlist</a></li>
+  <li class="breadcrumb-item">Server Details</li>
+</ul>
+
+<div class="panel">
+  <div class="content">
+    <h2><%=sv.name%></h2>
+    <div class="box">
+      <div class="responsive">
+        <table class="details">
+          <tbody>
+            <tr>
+              <th>Address</th>
+              <td><%=sv.ip%>:<%=sv.port%></td>
+            </tr>
+            <tr>
+              <th>Map</th>
+              <td><%=sv.map%></td>
+            </tr>
+            <tr>
+              <th>Players</th>
+              <td><%= sv.players %>/<%= sv.maxplayers %><% if (sv.bots > 0) { %> (<%= sv.bots %> bots)<% } %></td>
+            </tr>
+            <tr>
+              <th>Game Mode</th>
+              <td>
+                <% switch (sv.gamemode) {
+                  case 0: %>
+                Standard
+                <% break;
+                  case 1: %>
+                Deathmatch
+                <% break;
+                  case 2: %>
+                Team Deathmatch
+                <% break;
+                  case 3: %>
+                Construction
+                <% break;
+                  case 4: %>
+                Zombies!
+                <% break;
+                  default:
+                  break; } %>
+              </td>
+            </tr>
+            <tr>
+              <th>Lua Scripts</th>
+              <td><% if (sv.lua == true) { %>Yes<% } else { %>No<% } %></td>
+            </tr>
+            <tr>
+              <th>Password</th>
+              <td><% if (sv.password == true) { %>Yes<% } else { %>No<% } %></td>
+            </tr>
+            <tr>
+              <th>USGN Only</th>
+              <td><% if (sv.usgnonly == true) { %>Yes<% } else { %>No<% } %></td>
+            </tr>
+            <tr>
+              <th>Fog of War</th>
+              <td><% if (sv.fow == true) { %>Yes<% } else { %>No<% } %></td>
+            </tr>
+            <tr>
+              <th>Force Lighting</th>
+              <td><% if (sv.forcelight == true) { %>Yes<% } else { %>No<% } %></td>
+            </tr>
+            <tr>
+              <th>Recoil</th>
+              <td><% if (sv.recoil == true) { %>Yes<% } else { %>No<% } %></td>
+            </tr>
+            <tr>
+              <th>Off-Screen Damage</th>
+              <td><% if (sv.offscreendamage == true) { %>Yes<% } else { %>No<% } %></td>
+            </tr>
+            <tr>
+              <th>Has downloads</th>
+              <td><% if (sv.hasdownloads == true) { %>Yes<% } else { %>No<% } %></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="responsive">
+        <table class="playerlist sortable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Score</th>
+              <th>Deaths</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (sv.players == 0) { %>
+            <tr>
+              <td colspan="4">Server is empty</td>
+            </tr>
+            <% } else { %>
+            <% for (var i = 0; i < sv.playerlist.length; i++) { %>
+            <tr>
+              <td><%= sv.playerlist[i].id %></td>
+              <% switch (sv.playerlist[i].team) {
+                case 0: %>
+              <td class="spec">
+              <% break;
+                case 1: %>
+              <td class="t">
+              <% break;
+                default: %>
+              <td class="ct">
+              <% break; } %>
+                <%= sv.playerlist[i].name %>
+              </td>
+              <td><%= sv.playerlist[i].score %></td>
+              <td><%= sv.playerlist[i].deaths %></td>
+            </tr>
+            <% } %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('footer') %>

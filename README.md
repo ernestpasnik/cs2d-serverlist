@@ -2,10 +2,8 @@
 A NodeJS application to display list of servers from [CS2D](https://cs2d.com)
 
 ## 🛠️ Changes 
-2023-02-27
-
-[Added] 
-
+2023-02-27<br />
+**[Added]**<br />
 TailwindCSS support with 🕶️ Dark Mode support using AlpineJS (by Marcell aka Salad Fingers (https://github.com/sqpp)).
 
 ![screenshot](https://i.imgur.com/zGNTP4E.png)

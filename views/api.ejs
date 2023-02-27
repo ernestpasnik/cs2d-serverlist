@@ -1,20 +1,32 @@
 <%- include('header') %>
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="/">CS2D Serverlist</a></li>
-  <li class="breadcrumb-item">API Documentation</li>
-</ul>
 
-<div class="panel">
-  <div class="content">
-    <h2>Retrieve detailed data of CS2D Server</h2>
-    <p>This API call gets a server data updated every 15 seconds.</p>
-    <code>https://cs2d.serverpit.com/api/{address}</code>
-    <ul>
-      <li><code>{address}</code> IP address and port separated by a colon (for example, 54.38.156.49:36963)</li>
+<div class="flex flex-col gap-4 p-4 px-10 md:flex-row md:-mt-6 md:rounded-full md:mx-20 bg-slate-300 dark:text-white dark:bg-teal-700">
+  <div class="items-center gap-2 md:flex-row md:flex">
+    <ul class="flex flex-row text-sm breadcrumb">
+      <li class="breadcrumb-item"><a href="/">CS2D Serverlist</a></li> &nbsp; > &nbsp;
+      <li class="breadcrumb-item">API Documentation</li>
     </ul>
-    <p>The following is an example of response:</p>
-    <pre><%-JSON.stringify(example, null, 2)%></pre>
+   
+  </div>
+</div>
+
+
+
+<div class="flex flex-col items-center w-full text-left text-slate-800 dark:text-teal-50/75">
+  <div class="flex flex-col w-full max-w-2xl px-4 mx-auto my-6 border-4 border-teal-700 rounded-lg sm:p-6 bg-slate-200/75 dark:bg-slate-900/50 ">
+    
+    <h2 class="text-xl">Retrieve detailed data of CS2D Server</h2>
+    <p class="pt-2">This API call gets a server data updated every 15 seconds.</p>
+    <code>https://cs2d.serverpit.com/api/{address}</code>
+    <div class="pt-2">
+      <ul>
+        <li><code>{address}</code> IP address and port separated by a colon (Ex: 54.38.156.49:36963)</li>
+      </ul>
+    </div>
+   
+    <p class="pt-6">The following is an example of response:</p>
+    <pre class="text-green-800 dark:text-green-400/75"><%-JSON.stringify(example, null, 2)%></pre>
   </div>
 </div>
 

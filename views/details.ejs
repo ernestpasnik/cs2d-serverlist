@@ -1,32 +1,41 @@
 <%- include('header') %>
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="/">CS2D Serverlist</a></li>
-  <li class="breadcrumb-item">Server Details</li>
-</ul>
 
-<div class="panel">
-  <div class="content">
-    <h2><%=sv.name%></h2>
-    <div class="box">
-      <div class="responsive">
-        <table class="details">
+<div class="flex flex-col gap-4 p-4 px-10 md:flex-row md:-mt-6 md:rounded-full md:mx-20 bg-slate-300 dark:text-white dark:bg-teal-700">
+  <div class="items-center gap-2 md:flex-row md:flex">
+    <ul class="flex flex-row text-sm breadcrumb">
+      <li class="breadcrumb-item"><a href="/">CS2D Serverlist</a></li> &nbsp; > &nbsp;
+      <li class="breadcrumb-item">Server Details</li>
+    </ul>
+    <h2 class="font-bold underline"><%=sv.name%></h2>
+  </div>
+</div>
+
+
+
+
+<div class="flex flex-col items-center w-full text-left text-slate-800 dark:text-teal-50/75">
+  <div class="flex flex-col w-full max-w-lg px-4 mx-auto my-6 border-4 border-teal-700 rounded-lg sm:p-6 bg-slate-200/75 dark:bg-slate-900/50 ">
+    <h2 class="py-2 text-xl"><%=sv.name%></h2>
+    <div class="flex flex-col mt-4">
+      <div class="flex flex-col ">
+        <table class="o">
           <tbody>
             <tr>
               <th>Address</th>
-              <td><%=sv.ip%>:<%=sv.port%></td>
+              <td class="text-right"><%=sv.ip%>:<%=sv.port%></td>
             </tr>
             <tr>
               <th>Map</th>
-              <td><%=sv.map%></td>
+              <td class="text-right"><%=sv.map%></td>
             </tr>
             <tr>
               <th>Players</th>
-              <td><%= sv.players %>/<%= sv.maxplayers %><% if (sv.bots > 0) { %> (<%= sv.bots %> bots)<% } %></td>
+              <td class="text-right"><%= sv.players %>/<%= sv.maxplayers %><% if (sv.bots > 0) { %> (<%= sv.bots %> bots)<% } %></td>
             </tr>
             <tr>
               <th>Game Mode</th>
-              <td>
+              <td class="text-right">
                 <% switch (sv.gamemode) {
                   case 0: %>
                 Standard
@@ -49,46 +58,46 @@
             </tr>
             <tr>
               <th>Lua Scripts</th>
-              <td><% if (sv.lua == true) { %>Yes<% } else { %>No<% } %></td>
+              <td class="flex flex-row justify-end"><% if (sv.lua == true) { %><i class="block w-3 h-3 bg-green-500 rounded-full"><% } else { %><i class="block w-3 h-3 bg-red-500 rounded-full"><% } %></td>
             </tr>
             <tr>
               <th>Password</th>
-              <td><% if (sv.password == true) { %>Yes<% } else { %>No<% } %></td>
+              <td class="flex flex-row justify-end"><% if (sv.password == true) { %><i class="block w-3 h-3 bg-green-500 rounded-full"><% } else { %><i class="block w-3 h-3 bg-red-500 rounded-full"><% } %></td>
             </tr>
             <tr>
               <th>USGN Only</th>
-              <td><% if (sv.usgnonly == true) { %>Yes<% } else { %>No<% } %></td>
+              <td class="flex flex-row justify-end"><% if (sv.usgnonly == true) { %><i class="block w-3 h-3 bg-green-500 rounded-full"><% } else { %><i class="block w-3 h-3 bg-red-500 rounded-full"><% } %></td>
             </tr>
             <tr>
               <th>Fog of War</th>
-              <td><% if (sv.fow == true) { %>Yes<% } else { %>No<% } %></td>
+              <td class="flex flex-row justify-end"><% if (sv.fow == true) { %><i class="block w-3 h-3 bg-green-500 rounded-full"><% } else { %><i class="block w-3 h-3 bg-red-500 rounded-full"><% } %></td>
             </tr>
             <tr>
               <th>Force Lighting</th>
-              <td><% if (sv.forcelight == true) { %>Yes<% } else { %>No<% } %></td>
+              <td class="flex flex-row justify-end"><% if (sv.forcelight == true) { %><i class="block w-3 h-3 bg-green-500 rounded-full"><% } else { %><i class="block w-3 h-3 bg-red-500 rounded-full"><% } %></td>
             </tr>
             <tr>
               <th>Recoil</th>
-              <td><% if (sv.recoil == true) { %>Yes<% } else { %>No<% } %></td>
+              <td class="flex flex-row justify-end"><% if (sv.recoil == true) { %><i class="block w-3 h-3 bg-green-500 rounded-full"><% } else { %><i class="block w-3 h-3 bg-red-500 rounded-full"><% } %></td>
             </tr>
             <tr>
               <th>Off-Screen Damage</th>
-              <td><% if (sv.offscreendamage == true) { %>Yes<% } else { %>No<% } %></td>
+              <td class="flex flex-row justify-end"><% if (sv.offscreendamage == true) { %><i class="block w-3 h-3 bg-green-500 rounded-full"><% } else { %><i class="block w-3 h-3 bg-red-500 rounded-full"><% } %></td>
             </tr>
             <tr>
               <th>Has downloads</th>
-              <td><% if (sv.hasdownloads == true) { %>Yes<% } else { %>No<% } %></td>
+              <td class="flex flex-row justify-end"><% if (sv.hasdownloads == true) { %><i class="block w-3 h-3 bg-green-500 rounded-full"><% } else { %><i class="block w-3 h-3 bg-red-500 rounded-full"><% } %></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="responsive">
-        <table class="playerlist sortable">
-          <thead>
+      <div class="flex justify-center py-5 responsive">
+        <table class="table-auto playerlist sortable">
+          <thead class="text-left ">
             <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Score</th>
+              <th class="w-8">ID</th>
+              <th class="w-48">Name</th>
+              <th class="w-16">Score</th>
               <th>Deaths</th>
             </tr>
           </thead>
@@ -98,22 +107,25 @@
               <td colspan="4">Server is empty</td>
             </tr>
             <% } else { %>
+            <% let maxScore = sv.playerlist.reduce((max, player) => {
+                 return player.score > max ? player.score : max;
+               }, 0); %>
             <% for (var i = 0; i < sv.playerlist.length; i++) { %>
-            <tr>
-              <td><%= sv.playerlist[i].id %></td>
+            <tr<% if (sv.playerlist[i].score === maxScore) { %> class="px-2 outline-1 outline-dashed outline-gray-600"<% } %>>
+              <td class="pl-2"><%= sv.playerlist[i].id %></td>
               <% switch (sv.playerlist[i].team) {
                 case 0: %>
-              <td class="spec">
+              <td class="text-gray-600">
               <% break;
                 case 1: %>
-              <td class="t">
+              <td class="text-red-500">
               <% break;
                 default: %>
-              <td class="ct">
+              <td class="text-blue-600">
               <% break; } %>
                 <%= sv.playerlist[i].name %>
               </td>
-              <td><%= sv.playerlist[i].score %></td>
+              <td class="<%= sv.playerlist[i].score %>"><%= sv.playerlist[i].score %></td>
               <td><%= sv.playerlist[i].deaths %></td>
             </tr>
             <% } %>

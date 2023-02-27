@@ -1,0 +1,39 @@
+@tailwind base;
+
+
+
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    body {
+    margin: 0;
+    font-family: 'Rubik', sans-serif;
+    background-image: url('../img/bg.jpg');
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-color: #1b2838;
+  }
+
+  .gm-s {
+    color: #afaf32;
+  }
+  
+  .gm-d {
+    color: #b65c5b;
+  }
+  
+  .gm-t {
+    color: #c87d32;
+  }
+  
+  .gm-c {
+    color: #6395ad;
+  }
+  
+  .gm-z {
+    color: #64af64;
+  }
+
+  
+}

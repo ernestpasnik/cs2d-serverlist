@@ -1,34 +1,34 @@
 <%- include('header') %>
 
-<div class="statistics">
-  <div>
+<div class="flex flex-row gap-4 p-4 px-10 md:-mt-6 md:rounded-full md:mx-20 bg-slate-300 text-slate-800 dark:text-white dark:bg-teal-700">
+  <div class="inline-flex items-center gap-2">
     <small>Servers</small>
-    <span id="servers"><%= servers %></span>
+    <span id="servers" class="slashed-zero lining-nums"><%= servers %></span>
   </div>
-  <div>
+  <div class="inline-flex items-center gap-2">
     <small>Players</small>
-    <span id="players"><%= players %></span>
+    <span id="players" class="slashed-zero lining-nums"><%= players %></span>
   </div>
 </div>
-<div class="serverlist responsive">
-  <table class="sortable asc">
-    <thead>
-      <tr>
-        <th class="c">&nbsp;</th>
+<div class="flex items-center mx-auto my-6 border-4 border-teal-500 rounded-lg dark:border-teal-700 sm:p-6 min-w-fit max-w-7xl bg-slate-200/75 dark:bg-slate-900/50 ">
+  <table class="table-auto sortable asc text-white/50 text-slate-800 dark:text-white/50">
+    <thead class="text-left ">
+      <tr class="border-b border-teal-500 dark:text-teal-50/25">
+        <th class="hidden py-2 font-light c md:block">&nbsp;</th>
         <th class="gm">&nbsp;</th>
-        <th class="sv">Name</th>
-        <th>Map</th>
-        <th>Players</th>
-        <th>Address</th>
+        <th class="py-2 font-normal cursor-pointer sv">Name</th>
+        <th class="font-normal cursor-pointer ">Map</th>
+        <th class="font-normal cursor-pointer">Players</th>
+        <th class="hidden font-normal cursor-pointer md:block">Address</th>
       </tr>
     </thead>
     <tbody>
       <% for (var i = 0; i < svlst.length; i++) { %>
       <tr>
-        <td class="c" data-sort="<%= svlst[i].country %>">
+        <td class="hidden c md:block" data-sort="<%= svlst[i].country %>">
           <span class="fi fi-<%= svlst[i].country %>"></span>
         </td>
-        <td class="gm">
+        <td class="px-2 gm">
         <% switch (svlst[i].gamemode) {
         case 0: %>
         <strong class="gm-s">S</strong>
@@ -48,15 +48,15 @@
         default:
         break; } %>
         </td>
-        <td class="sv">
-          <a href="/details/<%= svlst[i].ip %>:<%= svlst[i].port %>"><%= svlst[i].name %></a>
+        <td class="w-64 text-sm duration-200 hover:font-bold sv hover:scale-105 hover:text-teal-700 dark:hover:text-teal-400 easy-out">
+          <a class="" href="/details/<%= svlst[i].ip %>:<%= svlst[i].port %>"><%= svlst[i].name %></a>
         </td>
-        <td><%= svlst[i].map %></td>
-        <td data-sort="<%= svlst[i].players-svlst[i].bots %>">
+        <td class="text-xs"><%= svlst[i].map %></td>
+        <td class="text-xs" data-sort="<%= svlst[i].players-svlst[i].bots %>">
           <%= svlst[i].players %>/<%= svlst[i].maxplayers %>
           <% if (svlst[i].bots > 0) { %> (<%= svlst[i].bots %> bots)<% } %>
         </td>
-        <td><%= svlst[i].ip %>:<%= svlst[i].port %></td>
+        <td class="hidden text-xs md:block"><a class="truncate text-clip" href="cs2d://<%= svlst[i].ip %>:<%= svlst[i].port %>"><%= svlst[i].ip %>:<%= svlst[i].port %></a></td>
       </tr>
       <% } %>
     </tbody>

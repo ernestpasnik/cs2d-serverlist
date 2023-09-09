@@ -16,7 +16,7 @@ function serverQuery(stream) {
   const res = {}
 
   // Flags
-  if (stream.remaining() < 1) return false
+  if (stream.remaining() < 1) return
   flags = stream.readByte()
   res.password = readFlag(flags, 0)
   res.usgnonly = readFlag(flags, 1)
@@ -27,60 +27,63 @@ function serverQuery(stream) {
   res.forcelight = readFlag(flags, 7)
 
   // Name
-  if (stream.remaining() < 1) return false
+  if (stream.remaining() < 1) return
   len = stream.readByte()
-  if (stream.remaining() < len) return false
+  if (stream.remaining() < len) return
   res.name = stream.readString(len)
 
   // Map
-  if (stream.remaining() < 1) return false
+  if (stream.remaining() < 1) return
   len = stream.readByte()
-  if (stream.remaining() < len) return false
+  if (stream.remaining() < len) return
   res.map = stream.readString(len)
 
   // Players
-  if (stream.remaining() < 2) return false
+  if (stream.remaining() < 2) return
   res.players = stream.readByte()
   res.maxplayers = stream.readByte()
 
+  // Bugged server
+  if (res.maxplayers == 0) return
+
   // Gamemode
   if (flags & 32) {
-    if (stream.remaining() < 1) return false
+    if (stream.remaining() < 1) return
     res.gamemode = stream.readByte()
   } else {
     res.gamemode = 0
   }
 
   // Bots
-  if (stream.remaining() < 1) return false
+  if (stream.remaining() < 1) return
   res.bots = stream.readByte()
 
   // Flags
-  if (stream.remaining() < 1) return false
+  if (stream.remaining() < 1) return
   flags = stream.readByte()
   res.recoil = readFlag(flags, 0)
   res.offscreendamage = readFlag(flags, 1)
   res.hasdownloads = readFlag(flags, 2)
 
   // Playerlist
-  if (stream.remaining() < 3) return false
+  if (stream.remaining() < 3) return
   stream.readByte() // fb
   stream.readByte() // 05
   res.playerlist = []
   let player_num = stream.readByte()
   for (let i = 0; i < player_num; i++) {
     // Player ID
-    if (stream.remaining() < 1) return false
+    if (stream.remaining() < 1) return
     let id = stream.readByte()
 
     // Player Name
-    if (stream.remaining() < 1) return false
+    if (stream.remaining() < 1) return
     len = stream.readByte()
-    if (stream.remaining() < len) return false
+    if (stream.remaining() < len) return
     let name = stream.readString(len)
 
     // Player Stats
-    if (stream.remaining() < 9) return false
+    if (stream.remaining() < 9) return
     let team = stream.readByte()
     let score = stream.readInt()
     let deaths = stream.readInt()
@@ -128,9 +131,7 @@ function receivedServerQuery(buf, ip, port) {
   if (stream.readShort() == 1 && stream.readByte() == 251 && stream.readByte() == 1) {
     console.log(`Received server query from ${ip}:${port}`)
     const data = serverQuery(stream)
-    if (data == false) {
-      console.log(`Invalid packet`)
-    } else {
+    if (typeof data === 'object' && data !== null) {
       const index = servers.findIndex(obj => {
         return obj.ip == ip && obj.port == port
       })

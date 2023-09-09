@@ -168,35 +168,23 @@ function getData() {
       tmp.push(e)
     }
   }
-  tmp.sort((a, b) => {
-    a = a.players - a.bots
-    b = b.players - b.bots
-    return b - a
-  })
+  tmp.sort((a, b) => (b.players - b.bots) - (a.players - a.bots))
   return {
     servers: tmp,
     players: players
   }
 }
 
-function validateNum(input, min, max) {
-  let num = +input
-  return num >= min && num <= max && input === num.toString()
-}
-
-function validateIpAndPort(input) {
-  let parts = input.split(':')
-  let ip = parts[0].split('.')
-  let port = parts[1]
-  return validateNum(port, 1, 65535) &&
-    ip.length == 4 &&
-    ip.every(function (segment) {
-      return validateNum(segment, 0, 255)
-    })
+function validateIPPortFormat(input) {
+  const ipPortRegex = /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5})$/
+  return ipPortRegex.test(input)
 }
 
 function getServer(addr) {
-  if (validateIpAndPort(addr) == false) {
+  if (addr === undefined) {
+    return servers.find(server => server.hasOwnProperty('ts'))
+  }
+  if (validateIPPortFormat(addr) == false) {
     return {error: 'Invalid address'}
   }
   const parts = addr.split(':')

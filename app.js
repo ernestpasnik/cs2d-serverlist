@@ -1,4 +1,3 @@
-require('console-stamp')(console, 'HH:MM:ss.l')
 const servers = require(__dirname + '/src/servers')
 const express = require('express')
 const minifyHTML = require('express-minify-html-2')
@@ -11,7 +10,7 @@ app.use(minifyHTML({
   override: true,
   exception_url: false,
   htmlMinifier: {
-    removeComments: false,
+    removeComments: true,
     collapseWhitespace: true,
     collapseBooleanAttributes: true,
     removeAttributeQuotes: true,
@@ -30,19 +29,25 @@ app.get('/', (req, res) => {
 })
 
 app.get('/details/:address', (req, res) => {
-  res.render('details', {
-    sv: servers.getServer(req.params.address)
-  })
+  const result = servers.getServer(req.params.address)
+  if (result.error) {
+    res.status(404).send('404 - Not Found')
+  } else {
+    res.render('details', { sv: result })
+  }
 })
 
 app.get('/api', (req, res) => {
-  res.render('api', {
-    example: servers.getServer('54.38.156.49:36963')
-  })
+  res.render('api', { example: servers.getServer() })
 })
 
 app.get('/api/:address', (req, res) => {
-  res.json(servers.getServer(req.params.address))
+  const result = servers.getServer(req.params.address)
+  if (result.error) {
+    res.status(404).json(result)
+  } else {
+    res.json(result)
+  }
 })
 
 app.listen(port, () => {

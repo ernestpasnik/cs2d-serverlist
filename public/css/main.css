@@ -33,6 +33,15 @@ td {
   font-size: 14px;
 }
 
+/* Classes for mobile and desktop */
+.mobile {
+  display: none;
+}
+
+.desktop {
+  display: inline;
+}
+
 /* Classes for specific text colors */
 .spec {
   font-weight: 500;
@@ -280,6 +289,14 @@ td {
 
 /* Responsive layout for small screens */
 @media screen and (max-width: 940px) {
+  .mobile {
+    display: inline;
+  }
+
+  .desktop {
+    display: none;
+  }
+
   .box {
     display: grid;
     grid-template-columns: none;

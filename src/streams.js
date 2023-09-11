@@ -8,93 +8,79 @@ class streams {
       this.length = buff.length
     } else {
       this.buffer = Buffer.allocUnsafe(1500)
-      this.length = 0
+      this.length = 1500
     }
   }
 
-  readByte(offset) {
-    if (offset !== undefined) {
-      this.offset += offset
-    }
+  readByte(offset = 0) {
+    this.offset += offset
+    if (this.offset >= this.length) return 0
     const val = this.buffer.readUInt8(this.offset)
     this.offset += 1
     return val
   }
 
-  readShort(offset) {
-    if (offset !== undefined) {
-      this.offset += offset
-    }
+  readShort(offset = 0) {
+    this.offset += offset
+    if (this.offset + 2 > this.length) return 0
     const val = this.buffer.readUInt16LE(this.offset)
     this.offset += 2
     return val
   }
 
-  readInt(offset) {
-    if (offset !== undefined) {
-      this.offset += offset
-    }
+  readInt(offset = 0) {
+    this.offset += offset
+    if (this.offset + 4 > this.length) return 0
     const val = this.buffer.readInt32LE(this.offset)
     this.offset += 4
     return val
   }
 
-  readLong(offset) {
-    if (offset !== undefined) {
-      this.offset += offset
-    }
+  readLong(offset = 0) {
+    this.offset += offset
+    if (this.offset + 8 > this.length) return 0
     const val = this.buffer.readBigInt64LE(this.offset)
     this.offset += 8
     return val
   }
 
-  readFloat(offset) {
-    if (offset !== undefined) {
-      this.offset += offset
-    }
+  readFloat(offset = 0) {
+    this.offset += offset
+    if (this.offset + 4 > this.length) return 0
     const val = this.buffer.readFloatLE(this.offset)
     this.offset += 4
     return val
   }
 
-  readDouble(offset) {
-    if (offset !== undefined) {
-      this.offset += offset
-    }
+  readDouble(offset = 0) {
+    this.offset += offset
+    if (this.offset + 8 > this.length) return 0
     const val = this.buffer.readDoubleLE(this.offset)
     this.offset += 8
     return val
   }
 
-  readLine(offset) {
-    if (offset !== undefined) {
-      this.offset += offset
-    }
+  readLine(offset = 0) {
+    this.offset += offset
+    if (this.offset >= this.length) return ''
     let val = ''
     while (true) {
-      let n = this.readByte()
-      if (n == null || n == 10) {
-        break
-      } else if (n != 13) {
-        val = val + String.fromCharCode(n)
-      }
+      const n = this.readByte()
+      if (n === 0 || n === 10) break
+      if (n !== 13) val += String.fromCharCode(n)
     }
     return val
   }
 
-  readString(length, encoding) {
-    if (encoding === undefined) {
-      encoding = 'latin1'
-    }
+  readString(length, encoding = 'latin1') {
+    if (this.offset + length > this.length) return ''
     const val = this.buffer.slice(this.offset, this.offset + length).toString(encoding)
     this.offset += length
     return val
   }
 
-  readStringNT(length, encoding) {
-    if (encoding === undefined) {
-      encoding = 'latin1'
-    }
+  readStringNT(length, encoding = 'latin1') {
+    if (this.offset + length > this.length) return ''
     const val = this.readString(length, encoding)
     this.offset += 1
     return val

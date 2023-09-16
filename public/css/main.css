@@ -1,14 +1,12 @@
-/* Reset some default styles */
 body {
   margin: 0;
   font-family: 'Rubik', sans-serif;
-  background-image: url('../img/bg.jpg');
+  background-image: url('../img/bg.webp');
   background-position: center top;
   background-repeat: no-repeat;
   background-color: #1b2838;
 }
 
-/* Header styles */
 header {
   height: 60px;
   text-align: center;
@@ -16,7 +14,6 @@ header {
   box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 }
 
-/* Table styles */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -33,7 +30,6 @@ td {
   font-size: 14px;
 }
 
-/* Classes for mobile and desktop */
 .mobile {
   display: none;
 }
@@ -42,7 +38,6 @@ td {
   display: inline;
 }
 
-/* Classes for specific text colors */
 .spec {
   font-weight: 500;
   color: rgb(255, 220, 0);
@@ -58,7 +53,6 @@ td {
   color: rgb(50, 150, 255);
 }
 
-/* Logo styles */
 .logo {
   padding: 15px;
 }
@@ -68,13 +62,11 @@ td {
   width: 30px;
 }
 
-/* Container styles */
 .container {
   margin: 60px auto;
   max-width: 940px;
 }
 
-/* Statistics styles */
 .statistics {
   display: flex;
   margin-bottom: 20px;
@@ -97,45 +89,40 @@ td {
   min-width: 60px;
 }
 
-/* Details and Playerlist styles */
 .details tr, .playerlist tr {
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: #fbfbfb;
 }
 
 .details th, .details td {
-  padding: 7px 10px;
+  padding: 6px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  width: 50%;
 }
 
 .playerlist td, .playerlist th {
-  padding: 7px 10px;
+  padding: 6px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive styles */
 .responsive {
   overflow-x: auto;
 }
 
-/* Serverlist styles */
-.serverlist {
+section {
   padding: 3px 0;
+  border: 1px solid #000;
   border-radius: 3px;
   background: #e6e6e6;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
 
-/* Serverlist header styles */
-.serverlist thead {
+section thead {
   background: #e6e6e6;
   border-bottom: 1px solid #cfcfcf;
 }
 
-.serverlist th {
-  padding: 0 10px;
-  height: 38px;
+section th {
+  padding: 8px;
   color: #808080;
   font-size: 10px;
   text-align: left;
@@ -143,87 +130,49 @@ td {
   text-transform: uppercase;
 }
 
-/* Serverlist table styles */
-.serverlist tr>th:first-child, .serverlist tr>td:first-child {
+section tr>th:first-child, section tr>td:first-child {
   padding-right: 0;
 }
 
-.serverlist tbody {
+section tbody {
   background: #fff;
 }
 
-.serverlist td {
-  padding: 0 10px;
-  height: 38px;
+section td {
   color: #4d4d4d;
-  font-size: 13px;
+  font-size: 14px;
 }
 
-/* Serverlist link styles */
-.sv a {
-  font-size: 14px;
-  color: #4d4d4d;
+section.responsive > table > tbody > tr > td {
+  padding: 8px;
+}
+
+section.responsive > table > tbody > tr > td:nth-child(1) {
+  padding: 0 0 0 10px;
+  width: 0;
+}
+
+section.responsive > table > tbody > tr > td:nth-child(1) > img {
+  margin-top: 2px;
+}
+
+section.responsive > table > tbody > tr > td:nth-child(2) > a {
+  color: #27475a;
   text-decoration: none;
 }
 
-/* Font icons styles */
-.fi {
-  background-size: contain;
-  background-position: 50%;
-  background-repeat: no-repeat;
-  position: relative;
-  display: inline-block;
-  line-height: 1em;
-  width: 16px !important;
-  height: 12px !important;
-  border-radius: 2px;
-}
-
-.sv {
-  padding-left: 6px !important;
-}
-
-/* Class styles for specific text colors */
-.c, .gm {
-  width: 0;
-  padding-right: 0 !important;
-  font-weight: 500;
-}
-
-.gm-s {
-  color: #afaf32;
-}
-
-.gm-d {
-  color: #b65c5b;
-}
-
-.gm-t {
-  color: #c87d32;
-}
-
-.gm-c {
-  color: #6395ad;
-}
-
-.gm-z {
-  color: #64af64;
-}
-
-/* Alternating row colors for serverlist */
-.serverlist tr {
+section tr {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.serverlist tr:nth-child(even) {
+section tr:nth-child(even) {
   background: #fbfbfb;
 }
 
-.serverlist tbody > tr:hover {
+section tbody > tr:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 
-/* Panel styles */
 .panel {
   padding: 3px 0;
   background: #e6e6e6;
@@ -231,10 +180,9 @@ td {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
 
-/* Content styles */
 .content {
   background: #fff;
-  padding: 10px;
+  padding: 16px;
   color: #4d4d4d;
 }
 
@@ -243,11 +191,11 @@ td {
   font-size: 14px;
 }
 
-.content h2 {
+.content h1 {
   color: #000;
   font-size: 18px;
   font-weight: 500;
-  margin: 10px 0;
+  margin: 0 0 10px 0;
   padding: 0;
 }
 
@@ -266,7 +214,8 @@ td {
 }
 
 .content pre {
-  font-size: 14px;
+  font-family: monospace;
+  font-size: 13px;
   background-color: #f7f7f7;
   margin: 0.5em 0;
   overflow: auto;
@@ -280,32 +229,12 @@ td {
   line-height: 20px;
 }
 
-/* Box layout styles */
 .box {
   display: grid;
-  grid-template-columns: 50% calc(50% - 10px);
-  grid-gap: 10px;
+  grid-template-columns: 50% calc(50% - 16px);
+  grid-gap: 16px;
 }
 
-/* Responsive layout for small screens */
-@media screen and (max-width: 940px) {
-  .mobile {
-    display: inline;
-  }
-
-  .desktop {
-    display: none;
-  }
-
-  .box {
-    display: grid;
-    grid-template-columns: none;
-    grid-gap: 10px;
-    row-gap: 10px;
-  }
-}
-
-/* Sortable table headers */
 .sortable th {
   cursor: pointer;
 }
@@ -330,32 +259,22 @@ td {
   content: " \025B4";
 }
 
-/* Footer styles */
 footer {
-  position: relative;
-  margin: 60px auto;
-  max-width: 940px;
-  color: #808080;
-  z-index: 1;
-}
-
-footer p {
-  margin: 0;
-  padding: 3px 0;
-  text-align: center;
-  font-size: 12px;
+  display: flex;
+  margin: 25px 10px 80px 10px;
+  justify-content: space-between;
 }
 
 footer a {
   color: #adadad;
   text-decoration: none;
+  font-size: 13px;
 }
 
 footer a:hover {
   color: #fff;
 }
 
-/* Breadcrumb styles */
 .breadcrumb {
   display: flex;
   margin: 80px 10px 25px 10px;
@@ -401,4 +320,30 @@ footer a:hover {
 
 .breadcrumb-item a:hover {
   color: #fff;
+}
+
+@media screen and (max-width: 940px) {
+  .mobile {
+    display: inline;
+  }
+
+  .desktop {
+    display: none;
+  }
+
+  .content {
+    padding: 10px;
+  }
+
+  .box {
+    display: grid;
+    grid-template-columns: none;
+    grid-gap: 10px;
+    row-gap: 10px;
+  }
+
+  .content h1 {
+    overflow: hidden;
+    text-wrap: nowrap;
+  }
 }

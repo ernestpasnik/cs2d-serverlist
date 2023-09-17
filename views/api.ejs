@@ -1,17 +1,16 @@
 <%- include('header') %>
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="/">CS2D Serverlist</a></li>
-  <li class="breadcrumb-item">API Documentation</li>
+<ul class="bc">
+  <li class="bc-item"><a href="/">CS2D Serverlist</a></li>
+  <li class="bc-item"><%= title %></li>
 </ul>
-
 <div class="panel">
   <div class="content">
     <h1>Retrieve detailed data of CS2D Server</h1>
     <p>This API call gets a server data updated every 15 seconds.</p>
-    <code>https://cs2d.serverpit.com/api/{address}</code>
+    <code>https://cs2d.serverpit.com/api/<strong>address</strong></code>
     <ul>
-      <li><code>{address}</code> IP address and port separated by a colon (for example, <%=example.ip%>:<%=example.port%>)</li>
+      <li><strong><code>address</code></strong> IP address and port separated by a colon</li>
     </ul>
     <p>The following is an example of response:</p>
     <pre><%-JSON.stringify(example, null, 2)%></pre>

@@ -1,33 +1,32 @@
 <%- include('header') %>
 
-<ul class="breadcrumb">
-  <li class="breadcrumb-item"><a href="/">CS2D Serverlist</a></li>
-  <li class="breadcrumb-item">Server Details</li>
+<ul class="bc">
+  <li class="bc-item"><a href="/">CS2D Serverlist</a></li>
+  <li class="bc-item">Server Details</li>
 </ul>
-
 <div class="panel">
   <div class="content">
-    <h1><%=sv.name%></h1>
+    <h1><%= s.name %></h1>
     <div class="box">
       <div class="responsive">
         <table class="details">
           <tbody>
             <tr>
               <th>Address</th>
-              <td><%=sv.ip%>:<%=sv.port%></td>
+              <td><%= s.ip %>:<%= s.port %></td>
             </tr>
             <tr>
               <th>Map</th>
-              <td><%=sv.map%></td>
+              <td><%= s.map %></td>
             </tr>
             <tr>
               <th>Players</th>
-              <td><%= sv.players %>/<%= sv.maxplayers %><% if (sv.bots > 0) { %> (<%= sv.bots %> bots)<% } %></td>
+              <td><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></td>
             </tr>
             <tr>
               <th>Game Mode</th>
               <td>
-                <% switch (sv.gamemode) {
+                <% switch (s.gamemode) {
                   case 0: %>
                 Standard
                 <% break;
@@ -49,35 +48,35 @@
             </tr>
             <tr>
               <th>Lua Scripts</th>
-              <td><% if (sv.lua == true) { %>Yes<% } else { %>No<% } %></td>
+              <td><% if (s.lua) { %>Yes<% } else { %>No<% } %></td>
             </tr>
             <tr>
               <th>Password</th>
-              <td><% if (sv.password == true) { %>Yes<% } else { %>No<% } %></td>
+              <td><% if (s.password) { %>Yes<% } else { %>No<% } %></td>
             </tr>
             <tr>
               <th>USGN Only</th>
-              <td><% if (sv.usgnonly == true) { %>Yes<% } else { %>No<% } %></td>
+              <td><% if (s.usgnonly) { %>Yes<% } else { %>No<% } %></td>
             </tr>
             <tr>
               <th>Fog of War</th>
-              <td><% if (sv.fow == true) { %>Yes<% } else { %>No<% } %></td>
+              <td><% if (s.fow) { %>Yes<% } else { %>No<% } %></td>
             </tr>
             <tr>
               <th>Force Lighting</th>
-              <td><% if (sv.forcelight == true) { %>Yes<% } else { %>No<% } %></td>
+              <td><% if (s.forcelight) { %>Yes<% } else { %>No<% } %></td>
             </tr>
             <tr>
               <th>Recoil</th>
-              <td><% if (sv.recoil == true) { %>Yes<% } else { %>No<% } %></td>
+              <td><% if (s.recoil) { %>Yes<% } else { %>No<% } %></td>
             </tr>
             <tr>
               <th>Off-Screen Dmg</th>
-              <td><% if (sv.offscreendamage == true) { %>Yes<% } else { %>No<% } %></td>
+              <td><% if (s.offscreendamage) { %>Yes<% } else { %>No<% } %></td>
             </tr>
             <tr>
               <th>Has downloads</th>
-              <td><% if (sv.hasdownloads == true) { %>Yes<% } else { %>No<% } %></td>
+              <td><% if (s.hasdownloads) { %>Yes<% } else { %>No<% } %></td>
             </tr>
           </tbody>
         </table>
@@ -93,15 +92,15 @@
             </tr>
           </thead>
           <tbody>
-            <% if (sv.players == 0) { %>
+            <% if (s.players == 0) { %>
             <tr>
               <td colspan="4">Server is empty</td>
             </tr>
             <% } else { %>
-            <% for (var i = 0; i < sv.playerlist.length; i++) { %>
+            <% s.playerlist.forEach(function(p) { %>
             <tr>
-              <td><%= sv.playerlist[i].id %></td>
-              <% switch (sv.playerlist[i].team) {
+              <td><%= p.id %></td>
+              <% switch (p.team) {
                 case 0: %>
               <td class="spec">
               <% break;
@@ -111,12 +110,12 @@
                 default: %>
               <td class="ct">
               <% break; } %>
-                <%= sv.playerlist[i].name %>
+                <%= p.name %>
               </td>
-              <td><%= sv.playerlist[i].score %></td>
-              <td><%= sv.playerlist[i].deaths %></td>
+              <td><%= p.score %></td>
+              <td><%= p.deaths %></td>
             </tr>
-            <% } %>
+            <% }); %>
             <% } %>
           </tbody>
         </table>

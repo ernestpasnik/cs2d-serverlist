@@ -1,4 +1,5 @@
 const servers = require(__dirname + '/src/servers')
+const common = require(__dirname + '/src/common')
 const express = require('express')
 const minifyHTML = require('express-minify-html-2')
 const app = express()
@@ -20,25 +21,31 @@ app.use(minifyHTML({
 }))
 
 app.get('/', (req, res) => {
-  const data = servers.getData()
+  const result = servers.getServers()
   res.render('serverlist', {
-    servers: data.servers.length,
-    players: data.players,
-    svlst: data.servers
+    serversNum: result.servers.length,
+    playersNum: result.players,
+    servers: result.servers
   })
 })
 
 app.get('/details/:address', (req, res) => {
   const result = servers.getServer(req.params.address)
   if (result.error) {
-    res.status(404).send('404 - Not Found')
+    res.status(404)
   } else {
-    res.render('details', { sv: result })
+    res.render('details', {
+      title: result.name,
+      s: result
+    })
   }
 })
 
 app.get('/api', (req, res) => {
-  res.render('api', { example: servers.getServer() })
+  res.render('api', {
+    title: 'API Documentation',
+    example: common.example
+  })
 })
 
 app.get('/api/:address', (req, res) => {
@@ -48,6 +55,16 @@ app.get('/api/:address', (req, res) => {
   } else {
     res.json(result)
   }
+})
+
+app.get('/stats', (req, res) => {
+  const result = servers.getStats()
+  res.render('stats', {
+    title: 'Application Statistics',
+    uptime: common.secondsToUptime(process.uptime()),
+    recvSize: common.bytesToSize(result.recvSize),
+    sentSize: common.bytesToSize(result.sentSize)
+  })
 })
 
 app.listen(port, () => {

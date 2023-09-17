@@ -1,6 +1,9 @@
+* {
+  font-family: 'Rubik', sans-serif;
+}
+
 body {
   margin: 0;
-  font-family: 'Rubik', sans-serif;
   background-image: url('../img/bg.webp');
   background-position: center top;
   background-repeat: no-repeat;
@@ -28,6 +31,10 @@ th {
 
 td {
   font-size: 14px;
+}
+
+strong {
+  font-weight: 500;
 }
 
 .mobile {
@@ -64,7 +71,7 @@ td {
 
 .container {
   margin: 60px auto;
-  max-width: 940px;
+  max-width: 900px;
 }
 
 .statistics {
@@ -130,10 +137,6 @@ section th {
   text-transform: uppercase;
 }
 
-section tr>th:first-child, section tr>td:first-child {
-  padding-right: 0;
-}
-
 section tbody {
   background: #fff;
 }
@@ -144,12 +147,25 @@ section td {
 }
 
 section.responsive > table > tbody > tr > td {
-  padding: 8px;
+  padding: 8px 1px;
 }
 
+section.responsive > table > thead > tr > th:nth-child(1) {
+  max-width: 8px;
+}
+
+section.responsive > table > thead > tr > th:nth-child(1),
 section.responsive > table > tbody > tr > td:nth-child(1) {
-  padding: 0 0 0 10px;
+  padding: 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   width: 0;
+}
+
+section.responsive > table > thead > tr > th:nth-child(2),
+section.responsive > table > tbody > tr > td:nth-child(2) {
+  padding-left: 0;
 }
 
 section.responsive > table > tbody > tr > td:nth-child(1) > img {
@@ -157,7 +173,7 @@ section.responsive > table > tbody > tr > td:nth-child(1) > img {
 }
 
 section.responsive > table > tbody > tr > td:nth-child(2) > a {
-  color: #27475a;
+  color: #203a53;
   text-decoration: none;
 }
 
@@ -200,8 +216,9 @@ section tbody > tr:hover {
 }
 
 .content ul {
-  margin: 10px;
-  padding: 0 10px;
+  margin: 5px 0;
+  padding: 0;
+  list-style-type: none;
 }
 
 .content code {
@@ -214,8 +231,7 @@ section tbody > tr:hover {
 }
 
 .content pre {
-  font-family: monospace;
-  font-size: 13px;
+  font-size: 14px;
   background-color: #f7f7f7;
   margin: 0.5em 0;
   overflow: auto;
@@ -237,6 +253,7 @@ section tbody > tr:hover {
 
 .sortable th {
   cursor: pointer;
+  user-select: none;
 }
 
 .sortable th:hover::after {
@@ -261,8 +278,9 @@ section tbody > tr:hover {
 
 footer {
   display: flex;
-  margin: 25px 10px 80px 10px;
-  justify-content: space-between;
+  gap: 25px;
+  margin: 25px 10px 25px 10px;
+  justify-content: center;
 }
 
 footer a {
@@ -275,19 +293,19 @@ footer a:hover {
   color: #fff;
 }
 
-.breadcrumb {
+.bc {
   display: flex;
   margin: 80px 10px 25px 10px;
   padding: 0;
   list-style-type: none;
 }
 
-.breadcrumb-item {
-  font-size: 14px;
+.bc-item {
+  font-size: 13px;
   text-decoration: none;
 }
 
-.breadcrumb-item::before {
+.bc-item::before {
   content: "";
   bottom: 0;
   left: 0;
@@ -295,34 +313,34 @@ footer a:hover {
   height: .0625rem;
 }
 
-.breadcrumb-item:not(:first-child) {
+.bc-item:not(:first-child) {
   padding-left: .5625rem;
 }
 
-.breadcrumb-item:not(:first-child)::before {
+.bc-item:not(:first-child)::before {
   content: "/";
   padding-right: .5625rem;
   color: #cfcfcf;
 }
 
-.breadcrumb-item:not(:last-child) {
+.bc-item:not(:last-child) {
   color: #cfcfcf;
 }
 
-.breadcrumb-item:last-child {
+.bc-item:last-child {
   color: #adadad;
 }
 
-.breadcrumb-item a {
+.bc-item a {
   color: #cfcfcf;
   text-decoration: none;
 }
 
-.breadcrumb-item a:hover {
+.bc-item a:hover {
   color: #fff;
 }
 
-@media screen and (max-width: 940px) {
+@media screen and (max-width: 900px) {
   .mobile {
     display: inline;
   }
@@ -345,5 +363,13 @@ footer a:hover {
   .content h1 {
     overflow: hidden;
     text-wrap: nowrap;
+  }
+
+  section.responsive > table > tbody > tr > td {
+    padding: 8px 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 160px;
   }
 }

@@ -3,18 +3,18 @@
 <div class="statistics">
   <div>
     <small>Servers</small>
-    <span id="servers"><%= servers %></span>
+    <span id="servers"><%= serversNum %></span>
   </div>
   <div>
     <small>Players</small>
-    <span id="players"><%= players %></span>
+    <span id="players"><%= playersNum %></span>
   </div>
 </div>
 <section class="responsive">
   <table class="sortable asc">
     <thead>
       <tr>
-        <th>ISO</th>
+        <th>Country</th>
         <th>Name</th>
         <th>Map</th>
         <th>Players</th>
@@ -22,22 +22,22 @@
       </tr>
     </thead>
     <tbody>
-      <% for (var i = 0; i < svlst.length; i++) { %>
+      <% servers.forEach(function(s) { %>
       <tr>
-        <td data-sort="<%= svlst[i].country %>">
-          <img src="https://flagcdn.com/16x12/<%= svlst[i].country %>.png" alt="<%= svlst[i].country %>" width="16" height="12">
+        <td data-sort="<%= s.country %>">
+          <img src="https://flagcdn.com/16x12/<%= s.country.toLowerCase() %>.webp" alt="<%= s.country %>" width="16" height="12">
         </td>
         <td>
-          <a href="/details/<%= svlst[i].ip %>:<%= svlst[i].port %>"><%= svlst[i].name %></a>
+          <a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a>
         </td>
-        <td><%= svlst[i].map %></td>
-        <td data-sort="<%= svlst[i].players-svlst[i].bots %>">
-          <%= svlst[i].players %>/<%= svlst[i].maxplayers %>
-          <% if (svlst[i].bots > 0) { %> (<%= svlst[i].bots %> bots)<% } %>
+        <td><%= s.map %></td>
+        <td data-sort="<%= s.players - s.bots %>">
+          <%= s.players %>/<%= s.maxplayers %>
+          <% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %>
         </td>
-        <td><%= svlst[i].ip %>:<%= svlst[i].port %></td>
+        <td><%= s.ip %>:<%= s.port %></td>
       </tr>
-      <% } %>
+      <% }); %>
     </tbody>
   </table>
 </section>

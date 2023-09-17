@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>CS2D Serverlist</title>
+  <title><% if (typeof title !== 'undefined') { %><%= title %> - <% } %>CS2D Serverlist</title>
   <meta charset="UTF-8">
   <meta name="description" content="Explore a diverse CS2D server list with active servers and players online. Join thrilling matches on various maps from around the world.">
   <meta name="keywords" content="CS2D, server list, multiplayer, gaming, maps, game modes">
@@ -12,7 +12,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <script async defer src="/js/main.js?v=16092023"></script>
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
   <script async defer src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"></script>
 </head>
 <body>

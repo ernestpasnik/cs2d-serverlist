@@ -1,15 +1,29 @@
 <%- include('header') %>
 
-<ul class="bc">
-  <li class="bc-item"><a href="/">CS2D Serverlist</a></li>
-  <li class="bc-item">Server Details</li>
-</ul>
-<div class="content">
-  <h1><%= s.name %></h1>
-  <div class="box">
-    <div class="responsive">
-      <table class="details">
+<section>
+  <div class="flex">
+    <div>
+      <a href="/"><h1>CS2D Server List</h1><small>cs2d.serverpit.com</small></a>
+    </div>
+    <div>
+      <span><strong>Last Update</strong></span>
+      <span id="timestampDiv" data-ts="<%= s.ts %>"></span>
+    </div>
+  </div>
+  <div class="details">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Value</th>
+          </tr>
+        </thead>
         <tbody>
+          <tr>
+            <th>Name</th>
+            <td><%= s.name %></td>
+          </tr>
           <tr>
             <th>Address</th>
             <td><%= s.ip %>:<%= s.port %></td>
@@ -80,14 +94,14 @@
         </tbody>
       </table>
     </div>
-    <div class="responsive">
-      <table class="playerlist sortable">
+    <div class="table-responsive">
+      <table class="sortable asc">
         <thead>
           <tr>
             <th>ID</th>
             <th>Name</th>
-            <th><span class="desktop">Score</span><span class="mobile">S</span></th>
-            <th><span class="desktop">Deaths</span><span class="mobile">D</span></th>
+            <th>Score</th>
+            <th>Deaths</th>
           </tr>
         </thead>
         <tbody>
@@ -97,20 +111,9 @@
           </tr>
           <% } else { %>
           <% s.playerlist.forEach(function(p) { %>
-          <tr>
+          <tr class="<% if (p.team == 0) { %>spec<% } else if (p.team == 1) { %>t<% } else { %>ct<% } %>">
             <td><%= p.id %></td>
-            <% switch (p.team) {
-              case 0: %>
-            <td class="spec">
-            <% break;
-              case 1: %>
-            <td class="t">
-            <% break;
-              default: %>
-            <td class="ct">
-            <% break; } %>
-              <%= p.name %>
-            </td>
+            <td><%= p.name %></td>
             <td><%= p.score %></td>
             <td><%= p.deaths %></td>
           </tr>
@@ -120,6 +123,6 @@
       </table>
     </div>
   </div>
-</div>
+</section>
 
 <%- include('footer') %>

@@ -1,23 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title><% if (typeof title !== 'undefined') { %><%= title %> - <% } %>CS2D Serverlist</title>
-  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Explore a diverse CS2D server list with active servers and players online. Join thrilling matches on various maps from around the world.">
   <meta name="keywords" content="CS2D, server list, multiplayer, gaming, maps, game modes">
   <meta name="author" content="Ernest Paśnik">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title><% if (typeof title !== 'undefined') { %><%= title %> - <% } %>CS2D Serverlist</title>
   <link rel="stylesheet" href="/css/main.css?v=18092023">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <script async defer src="/js/main.js?v=18092023"></script>
-  <script async defer src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"></script>
+  <script async src="/js/main.js?v=18092023"></script>
+  <script async src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable/sortable.min.js"></script>
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <a href="/"><img src="/img/cs2d.webp" alt="CS2D Serverlist"></a>
-    </div>
-  </header>
-  <div class="container">

@@ -1,45 +1,39 @@
 <%- include('header') %>
 
-<div class="statistics">
-  <div>
-    <small>Servers</small>
-    <span id="servers"><%= serversNum %></span>
+<section>
+  <div class="flex">
+    <div>
+      <a href="/"><h1>CS2D Server List</h1><small>cs2d.serverpit.com</small></a>
+    </div>
+    <div>
+      <span><strong id="servers"><%= serversNum %></strong> Servers</span>
+      <span><strong id="players"><%= playersNum %></strong> Players</span>
+    </div>
   </div>
-  <div>
-    <small>Players</small>
-    <span id="players"><%= playersNum %></span>
+  <div class="table-responsive">
+    <table class="sortable asc">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Map</th>
+          <th>Players</th>
+          <th>Address</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% servers.forEach(function(s) { %>
+        <tr>
+          <td data-sort="<%= s.country %>"><img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.11.1/flags/4x3/<%= s.country.toLowerCase() %>.svg" alt="<%= s.country %>" width="16" height="12"></td>
+          <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a></td>
+          <td><%= s.map %></td>
+          <td data-sort="<%= s.players-s.bots %>"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></td>
+          <td><%= s.ip %>:<%= s.port %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
   </div>
-</div>
-<section class="responsive">
-  <table class="sortable asc">
-    <thead>
-      <tr>
-        <th>Loc</th>
-        <th>Name</th>
-        <th>Map</th>
-        <th>Players</th>
-        <th>Address</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% servers.forEach(function(s) { %>
-      <tr>
-        <td data-sort="<%= s.country %>">
-          <img src="https://flagcdn.com/16x12/<%= s.country.toLowerCase() %>.webp" alt="<%= s.country %>" width="16" height="12">
-        </td>
-        <td>
-          <a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a>
-        </td>
-        <td><%= s.map %></td>
-        <td data-sort="<%= s.players - s.bots %>">
-          <%= s.players %>/<%= s.maxplayers %>
-          <% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %>
-        </td>
-        <td><%= s.ip %>:<%= s.port %></td>
-      </tr>
-      <% }); %>
-    </tbody>
-  </table>
 </section>
 
 <%- include('footer') %>

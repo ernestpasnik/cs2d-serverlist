@@ -1,7 +1,7 @@
 ## ⚡️ Introduction
 A NodeJS application to display list of servers from [CS2D](https://cs2d.com)
 
-![screenshot](https://i.imgur.com/XiF1Zdc.png)
+![screenshot](https://i.imgur.com/uSUaWvQ.png)
 
 ## ⚙️ Installation
 Make sure you have Node.js installed

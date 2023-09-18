@@ -39,7 +39,7 @@ module.exports = {
     "playerlist": [
       {
         "id": 1,
-        "name": "<DANGER> SHN",
+        "name": "Player",
         "team": 2,
         "score": 0,
         "deaths": 0
@@ -47,4 +47,5 @@ module.exports = {
     ],
     "ts": 1694980752
   }
+
 };

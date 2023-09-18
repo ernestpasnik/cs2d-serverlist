@@ -22,10 +22,14 @@ app.use(minifyHTML({
 
 app.get('/', (req, res) => {
   const result = servers.getServers();
+  const stats = servers.getStats();
   res.render('serverlist', {
     serversNum: result.servers.length,
     playersNum: result.players,
-    servers: result.servers
+    servers: result.servers,
+    uptime: common.secondsToUptime(process.uptime()),
+    recv: common.bytesToSize(stats.recvSize),
+    sent: common.bytesToSize(stats.sentSize)
   });
 });
 
@@ -35,20 +39,28 @@ app.get('/details', (req, res) => {
 
 app.get('/details/:address', (req, res) => {
   const result = servers.getServer(req.params.address);
+  const stats = servers.getStats();
   if (result.error) {
     res.redirect('/');
   } else {
     res.render('details', {
       title: result.name,
-      s: result
+      s: result,
+      uptime: common.secondsToUptime(process.uptime()),
+      recv: common.bytesToSize(stats.recvSize),
+      sent: common.bytesToSize(stats.sentSize)
     });
   }
 });
 
 app.get('/api', (req, res) => {
+  const stats = servers.getStats();
   res.render('api', {
     title: 'API Documentation',
-    example: common.example
+    example: common.example,
+    uptime: common.secondsToUptime(process.uptime()),
+    recv: common.bytesToSize(stats.recvSize),
+    sent: common.bytesToSize(stats.sentSize)
   });
 });
 
@@ -59,16 +71,6 @@ app.get('/api/:address', (req, res) => {
   } else {
     res.json(result);
   }
-});
-
-app.get('/stats', (req, res) => {
-  const result = servers.getStats();
-  res.render('stats', {
-    title: 'Application Statistics',
-    uptime: common.secondsToUptime(process.uptime()),
-    recvSize: common.bytesToSize(result.recvSize),
-    sentSize: common.bytesToSize(result.sentSize)
-  });
 });
 
 app.listen(port, () => {

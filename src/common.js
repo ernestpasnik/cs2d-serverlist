@@ -1,7 +1,7 @@
 module.exports = {
   bytesToSize: function (bytes) {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes === 0) return '0 Byte';
+    if (bytes === 0) return '0 B';
     const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
     return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i];
   },
@@ -21,8 +21,6 @@ module.exports = {
     "ip": "45.235.98.50",
     "port": 36450,
     "country": "AR",
-    "city": "",
-    "ll": [-34.6033, -58.3817],
     "password": false,
     "usgnonly": false,
     "fow": false,

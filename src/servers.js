@@ -68,9 +68,7 @@ function receivedServerlist(stream) {
       const lookup = geoip.lookup(ip);
       if (lookup !== null) {
         const country = lookup.country;
-        const city = lookup.city;
-        const ll = lookup.ll;
-        servers.push({ ip, port, country, city, ll });
+        servers.push({ ip, port, country });
       } else {
         servers.push({ ip, port });
       }

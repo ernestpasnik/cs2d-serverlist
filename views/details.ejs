@@ -7,7 +7,7 @@
     </div>
     <div>
       <span><strong>Last Update</strong></span>
-      <span id="timestampDiv" data-ts="<%= s.ts %>"></span>
+      <span id="ts" data-ts="<%= s.ts %>"></span>
     </div>
   </div>
   <div class="details">
@@ -22,23 +22,23 @@
         <tbody>
           <tr>
             <th>Name</th>
-            <td><%= s.name %></td>
+            <td id="name"><%= s.name %></td>
           </tr>
           <tr>
             <th>Address</th>
-            <td><%= s.ip %>:<%= s.port %></td>
+            <td id="address"><%= s.ip %>:<%= s.port %></td>
           </tr>
           <tr>
             <th>Map</th>
-            <td><%= s.map %></td>
+            <td id="map"><%= s.map %></td>
           </tr>
           <tr>
             <th>Players</th>
-            <td><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></td>
+            <td id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></td>
           </tr>
           <tr>
             <th>Game Mode</th>
-            <td>
+            <td id="gamemode">
               <% switch (s.gamemode) {
                 case 0: %>
               Standard
@@ -61,35 +61,35 @@
           </tr>
           <tr>
             <th>Lua Scripts</th>
-            <td><% if (s.lua) { %>Yes<% } else { %>No<% } %></td>
+            <td id="lua"><% if (s.lua) { %>Yes<% } else { %>No<% } %></td>
           </tr>
           <tr>
             <th>Password</th>
-            <td><% if (s.password) { %>Yes<% } else { %>No<% } %></td>
+            <td id="password"><% if (s.password) { %>Yes<% } else { %>No<% } %></td>
           </tr>
           <tr>
             <th>USGN Only</th>
-            <td><% if (s.usgnonly) { %>Yes<% } else { %>No<% } %></td>
+            <td id="usgnonly"><% if (s.usgnonly) { %>Yes<% } else { %>No<% } %></td>
           </tr>
           <tr>
             <th>Fog of War</th>
-            <td><% if (s.fow) { %>Yes<% } else { %>No<% } %></td>
+            <td id="fow"><% if (s.fow) { %>Yes<% } else { %>No<% } %></td>
           </tr>
           <tr>
             <th>Force Lighting</th>
-            <td><% if (s.forcelight) { %>Yes<% } else { %>No<% } %></td>
+            <td id="forcelight"><% if (s.forcelight) { %>Yes<% } else { %>No<% } %></td>
           </tr>
           <tr>
             <th>Recoil</th>
-            <td><% if (s.recoil) { %>Yes<% } else { %>No<% } %></td>
+            <td id="recoil"><% if (s.recoil) { %>Yes<% } else { %>No<% } %></td>
           </tr>
           <tr>
             <th>Off-Screen Dmg</th>
-            <td><% if (s.offscreendamage) { %>Yes<% } else { %>No<% } %></td>
+            <td id="offscreendamage"><% if (s.offscreendamage) { %>Yes<% } else { %>No<% } %></td>
           </tr>
           <tr>
             <th>Has downloads</th>
-            <td><% if (s.hasdownloads) { %>Yes<% } else { %>No<% } %></td>
+            <td id="hasdownloads"><% if (s.hasdownloads) { %>Yes<% } else { %>No<% } %></td>
           </tr>
         </tbody>
       </table>
@@ -104,7 +104,7 @@
             <th>Deaths</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="playerlist">
           <% if (s.players == 0) { %>
           <tr>
             <td colspan="4">Server is empty</td>

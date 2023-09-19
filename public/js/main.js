@@ -30,6 +30,7 @@ function fetchData(url) {
     })
     .then(d => {
       document.querySelector("#ts").setAttribute("data-ts", d.ts);
+      updateTimeAgo();
       document.querySelector("#name").textContent = d.name;
       document.querySelector("#map").textContent = d.map;
       const players = `${d.players}/${d.maxplayers}${d.bots > 0 ? ` (${d.bots} bots)` : ''}`;
@@ -78,10 +79,10 @@ function fetchData(url) {
 
 function updateTimeAgo() {
   const myDiv = document.getElementById('ts');
-  const timestamp = parseInt(myDiv.getAttribute('data-ts'), 10);
+  const timestamp = myDiv.getAttribute('data-ts');
   const currentTime = Math.floor(Date.now() / 1000);
   const timeDifference = currentTime - timestamp;
-  if (timeDifference > 15) {
+  if (timeDifference >= 10) {
     fetchData('/api/' + document.querySelector('#address').textContent);
   }
   myDiv.textContent = `${timeDifference} seconds ago`;

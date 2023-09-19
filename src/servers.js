@@ -122,18 +122,18 @@ function serverlistRequest() {
   server.send(Buffer.from([1, 0, 20, 1]), usgnPort, usgnAddress);
   setTimeout(serverlistRequest, 60000);
 }
-serverlistRequest();
 
-// Every 15 seconds
+// Every 10 seconds
 function serverqueryRequest() {
   console.log(`Sending serverquery requests`);
   for (const e of servers) {
     sentSize += 8;
     server.send(Buffer.from([1, 0, 251, 1, 245, 3, 251, 5]), e.port, e.ip);
   }
-  setTimeout(serverqueryRequest, 15000);
+  setTimeout(serverqueryRequest, 10000);
 }
-setTimeout(serverqueryRequest, 2000);
+setTimeout(serverlistRequest, 2000);
+setTimeout(serverqueryRequest, 3000);
 
 module.exports = {
   getServers: function () {

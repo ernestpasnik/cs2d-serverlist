@@ -6,123 +6,74 @@
       <a href="/"><h1>CS2D Server List</h1><small>cs2d.serverpit.com</small></a>
     </div>
     <div>
-      <span><strong>Last Update</strong></span>
-      <span id="ts" data-ts="<%= s.ts %>"></span>
+      <div class="loader hide"></div>
     </div>
+  </div>
+  <div class="bar">
+    <div><span>Name</span><span id="name"><%= s.name %></span></div>
+    <div><span>Map</span><span id="map"><%= s.map %></span></div>
+    <div><span>Players</span><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
+    <div><span>Game Mode</span><span id="gamemode"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] || '' %></span></div>
+    <div><span>Location</span><span id="location"><%= s.country %></span></div>
+    <div><span>Address</span><span id="address"><%= s.ip %>:<%= s.port %></span></div>
+  </div>
+  <div class="bar">
+    <div><span>Lua Scripts</span><span id="lua"><% if (s.lua) { %>Yes<% } else { %>No<% } %></span></div>
+    <div><span>Password</span><span id="password"><% if (s.password) { %>Yes<% } else { %>No<% } %></span></div>
+    <div><span>USGN Only</span><span id="usgnonly"><% if (s.usgnonly) { %>Yes<% } else { %>No<% } %></span></div>
+    <div><span>Fog of War</span><span id="fow"><% if (s.fow) { %>Yes<% } else { %>No<% } %></span></div>
+    <div><span>Force Lighting</span><span id="forcelight"><% if (s.forcelight) { %>Yes<% } else { %>No<% } %></span></div>
+    <div><span>Recoil</span><span id="recoil"><% if (s.recoil) { %>Yes<% } else { %>No<% } %></span></div>
+    <div><span>Off-Screen Dmg</span><span id="offscreendamage"><% if (s.offscreendamage) { %>Yes<% } else { %>No<% } %></span></div>
+    <div><span>Has Downloads</span><span id="hasdownloads"><% if (s.hasdownloads) { %>Yes<% } else { %>No<% } %></span></div>
   </div>
   <div class="details">
     <div class="table-responsive">
-      <table>
+      <table class="ct">
         <thead>
           <tr>
-            <th>Key</th>
-            <th>Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Name</th>
-            <td id="name"><%= s.name %></td>
-          </tr>
-          <tr>
-            <th>Address</th>
-            <td id="address"><%= s.ip %>:<%= s.port %></td>
-          </tr>
-          <tr>
-            <th>Map</th>
-            <td id="map"><%= s.map %></td>
-          </tr>
-          <tr>
-            <th>Players</th>
-            <td id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></td>
-          </tr>
-          <tr>
-            <th>Game Mode</th>
-            <td id="gamemode">
-              <% switch (s.gamemode) {
-                case 0: %>
-              Standard
-              <% break;
-                case 1: %>
-              Deathmatch
-              <% break;
-                case 2: %>
-              Team Deathmatch
-              <% break;
-                case 3: %>
-              Construction
-              <% break;
-                case 4: %>
-              Zombies!
-              <% break;
-                default:
-                break; } %>
-            </td>
-          </tr>
-          <tr>
-            <th>Lua Scripts</th>
-            <td id="lua"><% if (s.lua) { %>Yes<% } else { %>No<% } %></td>
-          </tr>
-          <tr>
-            <th>Password</th>
-            <td id="password"><% if (s.password) { %>Yes<% } else { %>No<% } %></td>
-          </tr>
-          <tr>
-            <th>USGN Only</th>
-            <td id="usgnonly"><% if (s.usgnonly) { %>Yes<% } else { %>No<% } %></td>
-          </tr>
-          <tr>
-            <th>Fog of War</th>
-            <td id="fow"><% if (s.fow) { %>Yes<% } else { %>No<% } %></td>
-          </tr>
-          <tr>
-            <th>Force Lighting</th>
-            <td id="forcelight"><% if (s.forcelight) { %>Yes<% } else { %>No<% } %></td>
-          </tr>
-          <tr>
-            <th>Recoil</th>
-            <td id="recoil"><% if (s.recoil) { %>Yes<% } else { %>No<% } %></td>
-          </tr>
-          <tr>
-            <th>Off-Screen Dmg</th>
-            <td id="offscreendamage"><% if (s.offscreendamage) { %>Yes<% } else { %>No<% } %></td>
-          </tr>
-          <tr>
-            <th>Has downloads</th>
-            <td id="hasdownloads"><% if (s.hasdownloads) { %>Yes<% } else { %>No<% } %></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="table-responsive">
-      <table class="sortable asc">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Name</th>
+            <th>Player</th>
             <th>Score</th>
             <th>Deaths</th>
           </tr>
         </thead>
-        <tbody id="playerlist">
-          <% if (s.players == 0) { %>
-          <tr>
-            <td colspan="4">Server is empty</td>
-          </tr>
-          <% } else { %>
+        <tbody id="ct">
           <% s.playerlist.forEach(function(p) { %>
-          <tr class="<% if (p.team == 0) { %>spec<% } else if (p.team == 1) { %>t<% } else { %>ct<% } %>">
-            <td><%= p.id %></td>
+          <% if (p.team == 2 || p.team == 3) { %>
+          <tr>
             <td><%= p.name %></td>
             <td><%= p.score %></td>
             <td><%= p.deaths %></td>
           </tr>
-          <% }); %>
           <% } %>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-responsive">
+      <table class="t">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Score</th>
+            <th>Deaths</th>
+          </tr>
+        </thead>
+        <tbody id="t">
+          <% s.playerlist.forEach(function(p) { %>
+          <% if (p.team == 1) { %>
+          <tr>
+            <td><%= p.name %></td>
+            <td><%= p.score %></td>
+            <td><%= p.deaths %></td>
+          </tr>
+          <% } %>
+          <% }); %>
         </tbody>
       </table>
     </div>
   </div>
+  <div class="spec<% if (spectators.length == 0) {%> hide<% } %>">Spectators: <%= spectators.map(p => p.name).join(', ') %></div>
 </section>
 
 <%- include('footer') %>

@@ -43,9 +43,11 @@ app.get('/details/:address', (req, res) => {
   if (result.error) {
     res.redirect('/');
   } else {
+    const spectators = result.playerlist.filter(p => p.team === 0);
     res.render('details', {
       title: result.name,
       s: result,
+      spectators: spectators,
       uptime: common.secondsToUptime(process.uptime()),
       recv: common.bytesToSize(stats.recvSize),
       sent: common.bytesToSize(stats.sentSize)

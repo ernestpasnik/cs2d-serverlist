@@ -81,8 +81,8 @@ pre {
 
 .bar {
   display: flex;
-  margin-bottom: 1em;
-  gap: 1em;
+  margin-bottom: 0.5em;
+  gap: 0.5em;
   font-size: 0.9em;
   flex-wrap: wrap;
   justify-content: center;
@@ -96,7 +96,7 @@ pre {
   padding: 0.25em 0.5em;
   background: hsla(204, 10%, 50%, 0.05);
   border-radius: 4px;
-  font-size: 0.9em;
+  font-size: 0.83em;
 }
 
 .bar > div > span {

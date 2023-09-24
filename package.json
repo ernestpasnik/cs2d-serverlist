@@ -1,8 +1,8 @@
 {
   "dependencies": {
+    "doc999tor-fast-geoip": "*",
     "ejs": "*",
     "express": "*",
-    "express-minify-html-2": "*",
-    "geoip-lite": "*"
+    "express-minify-html-2": "*"
   }
 }

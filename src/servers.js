@@ -1,5 +1,5 @@
 const dgram = require('node:dgram');
-const geoip = require('geoip-lite');
+const geoip = require('doc999tor-fast-geoip');
 const server = dgram.createSocket('udp4');
 const streams = require(__dirname + '/streams');
 const usgnAddress = '81.169.236.243';
@@ -51,7 +51,7 @@ function serverQuery(stream) {
   return res;
 }
 
-function receivedServerlist(stream) {
+async function receivedServerlist(stream) {
   if (stream.readByte() != 20) {
     return;
   }
@@ -65,7 +65,7 @@ function receivedServerlist(stream) {
     const ip = `${oct1}.${oct2}.${oct3}.${oct4}`;
     const exists = servers.find(obj => obj.ip === ip && obj.port === port);
     if (!exists) {
-      const lookup = geoip.lookup(ip);
+      const lookup = await geoip.lookup(ip);
       if (lookup !== null) {
         const country = lookup.country;
         servers.push({ ip, port, country });
@@ -132,8 +132,8 @@ function serverqueryRequest() {
   }
   setTimeout(serverqueryRequest, 10000);
 }
-setTimeout(serverlistRequest, 2000);
-setTimeout(serverqueryRequest, 3000);
+setTimeout(serverlistRequest, 500);
+setTimeout(serverqueryRequest, 1000);
 
 module.exports = {
   getServers: function () {

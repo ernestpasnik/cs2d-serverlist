@@ -13,7 +13,7 @@ fi
 # Download CS2D server files
 echo "Downloading CS2D server files..."
 ver=$(curl -H "User-Agent:" -Ss "http://unrealsoftware.de/game_cs2d.php" | grep -Po "([0-9]\.)+([0-9]\.)+([0-9]\.)+([0-9])" | sed -e 's/\.//g')
-cid=$(curl -H "User-Agent:" -Ss "http://unrealsoftware.de/get.php?get=cs2d_${ver}_linux.zip" | grep -o '"get.php[^"]\+"' | cut -d'"' -f2 | sed 's/.\+cid=//g')
+cid=$(curl -H "User-Agent:" -Ss "http://unrealsoftware.de/get.php?get=cs2d_${ver}_linux.zip" | grep -m 1 -o '"get.php[^"]\+"' | cut -d'"' -f2 | sed 's/.\+cid=//g')
 curl --progress-bar -H "User-Agent:" -S "http://unrealsoftware.de/get.php?get=cs2d_${ver}_linux.zip&p=1&cid=${cid}" -o cs2d_${ver}_linux.zip
 curl --progress-bar -H "User-Agent:" -S "http://unrealsoftware.de/files_pub/cs2d_dedicated_linux.zip" -o cs2d_dedicated_linux.zip
 

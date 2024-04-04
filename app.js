@@ -3,7 +3,7 @@ const common = require(__dirname + '/src/common');
 const express = require('express');
 const minifyHTML = require('express-minify-html-2');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -29,7 +29,8 @@ app.get('/', (req, res) => {
     servers: result.servers,
     uptime: common.secondsToUptime(process.uptime()),
     recv: common.bytesToSize(stats.recvSize),
-    sent: common.bytesToSize(stats.sentSize)
+    sent: common.bytesToSize(stats.sentSize),
+    host: req.headers.host
   });
 });
 
@@ -50,7 +51,8 @@ app.get('/details/:address', (req, res) => {
       spectators: spectators,
       uptime: common.secondsToUptime(process.uptime()),
       recv: common.bytesToSize(stats.recvSize),
-      sent: common.bytesToSize(stats.sentSize)
+      sent: common.bytesToSize(stats.sentSize),
+      host: req.headers.host
     });
   }
 });
@@ -62,7 +64,8 @@ app.get('/api', (req, res) => {
     example: common.example,
     uptime: common.secondsToUptime(process.uptime()),
     recv: common.bytesToSize(stats.recvSize),
-    sent: common.bytesToSize(stats.sentSize)
+    sent: common.bytesToSize(stats.sentSize),
+    host: req.headers.host
   });
 });
 

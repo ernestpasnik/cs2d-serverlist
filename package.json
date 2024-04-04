@@ -1,4 +1,17 @@
 {
+  "name": "CS2D Serverlist",
+  "version": "1.0.0",
+  "description": "A NodeJS application to display list of servers from CS2D",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ernestpasnik/cs2d-serverlist.git"
+  },
+  "license": "MIT",
+  "author": "Ernest Paśnik",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "doc999tor-fast-geoip": "*",
     "ejs": "*",

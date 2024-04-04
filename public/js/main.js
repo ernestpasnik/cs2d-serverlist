@@ -46,7 +46,7 @@ function update(address, loader) {
       document.querySelector('#map').textContent = d.map;
       const players = `${d.players}/${d.maxplayers}${d.bots > 0 ? ` (${d.bots} bots)` : ''}`;
       document.querySelector('#players').textContent = players;
-      document.title = `(${d.players}) ${d.name} - CS2D Server List`;
+      document.title = `(${d.players}) ${d.name} - CS2D Serverlist`;
       document.querySelector('#gamemode').textContent = gamemodeMap[d.gamemode] || '';
       document.querySelector('#lua').textContent = d.lua ? 'Yes' : 'No';
       document.querySelector('#password').textContent = d.password ? 'Yes' : 'No';

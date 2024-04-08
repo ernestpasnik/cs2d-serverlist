@@ -1,5 +1,5 @@
 ## ⚡️ Introduction
-A NodeJS application to display list of servers from CS2D. [Click here](https://cs2d-serverlist.erpa.cc/) to view live demo.
+A NodeJS application to display list of servers from CS2D. [Live demo](https://cs2d-serverlist.erpa.cc/) is available.
 
 ## ⚙️ Installation
 1. Install geoipupdate package on your system `apt install -y geoipupdate`
@@ -16,7 +16,7 @@ EditionIDs GeoLite2-Country
 57 22 * * 0,4 geoipupdate >/dev/null 2>&1
 ``` 
 5. Clone repository `git clone https://github.com/ernestpasnik/cs2d-serverlist.git`
-6. Configure enviroment variables `nano cs2d-serverlist/.env`
+6. Configure environment variables `nano cs2d-serverlist/.env`
 ```env
 PORT=3000
 COUNTRYDB=/usr/share/GeoIP/GeoLite2-Country.mmdb

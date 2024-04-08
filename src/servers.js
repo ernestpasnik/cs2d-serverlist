@@ -1,9 +1,11 @@
 const dgram = require('node:dgram');
-const geoip = require('doc999tor-fast-geoip');
+const mmdbreader = require('maxmind-db-reader');
+const db = process.env.COUNTRYDB || '/usr/share/GeoIP/GeoLite2-Country.mmdb';
+const countries = mmdbreader.openSync(db);
 const server = dgram.createSocket('udp4');
 const streams = require(__dirname + '/streams');
-const usgnAddress = '81.169.236.243';
-const usgnPort = 36963;
+const usgnAddress = process.env.USGNIP || '81.169.236.243';
+const usgnPort = process.env.USGNPORT || 36963;
 let servers = [];
 let recvSize = 0;
 let sentSize = 0;
@@ -64,15 +66,16 @@ async function receivedServerlist(stream) {
     const port = stream.readShort();
     const ip = `${oct1}.${oct2}.${oct3}.${oct4}`;
     const exists = servers.find(obj => obj.ip === ip && obj.port === port);
-    if (!exists) {
-      const lookup = await geoip.lookup(ip);
-      if (lookup !== null) {
-        const country = lookup.country;
-        servers.push({ ip, port, country });
-      } else {
-        servers.push({ ip, port });
-      }
+    if (exists) {
+      continue;
     }
+    countries.getGeoData(ip, function(err, geodata) {
+      let country = 'xx';
+      if (geodata) {
+        country = geodata.country.iso_code;
+      }
+      servers.push({ ip, port, country });
+    });
   }
 }
 

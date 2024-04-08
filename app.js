@@ -1,3 +1,4 @@
+require('dotenv').config();
 const servers = require(__dirname + '/src/servers');
 const common = require(__dirname + '/src/common');
 const express = require('express');

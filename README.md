@@ -1,7 +1,7 @@
-## ⚡️ Introduction
+## Introduction
 A NodeJS application to display list of servers from CS2D. [Live demo](https://cs2d-serverlist.erpa.cc/) is available.
 
-## ⚙️ Installation
+## Installation
 1. Install geoipupdate package on your system `apt install -y geoipupdate`
 2. Generate a license key by following the [instructions](https://support.maxmind.com/hc/en-us/articles/4407111582235-Generate-a-License-Key) and configure the GeoIP updater `nano /etc/GeoIP.conf`
 ```
@@ -26,11 +26,8 @@ USGNPORT=36963
 7. Install dependencies `cd cs2d-serverlist && npm install`
 8. Run the application `node app.js`
 
-## 📜 Extra
-This command will retrieve and extract CS2D server files into the current working directory:
-```bash
-curl -sSL https://cs2d-serverlist.erpa.cc/cs2d_server_downloader.sh | bash
-```
+## Download the dedicated server
+If you're interested in downloading the CS2D dedicated server, you can utilize the guide I've crafted on my [devblog](https://dev.erpa.cc/how-to-install-cs2d-server-on-ubuntu/).
 
 ## License
 This project is licensed under the [MIT License](LICENSE).

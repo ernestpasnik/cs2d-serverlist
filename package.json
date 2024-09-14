@@ -1,6 +1,6 @@
 {
   "name": "cs2d-serverlist",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A NodeJS application to display list of servers from CS2D",
   "repository": {
     "type": "git",
@@ -13,10 +13,12 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "ejs": "^3.1.9",
-    "express": "^4.19.2",
-    "express-minify-html-2": "^2.0.0",
-    "maxmind-db-reader": "^0.2.1"
+    "dotenv": "*",
+    "ejs": "*",
+    "fastify": "*",
+    "@fastify/view": "*",
+    "@fastify/static": "*",
+    "fastify-minify": "*",
+    "maxmind-db-reader": "*"
   }
 }

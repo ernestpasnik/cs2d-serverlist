@@ -1,84 +1,86 @@
-require('dotenv').config();
-const servers = require(__dirname + '/src/servers');
-const common = require(__dirname + '/src/common');
-const express = require('express');
-const minifyHTML = require('express-minify-html-2');
-const app = express();
-const port = process.env.PORT || 3000;
+const path = require('path')
+const fastify = require('fastify')()
+require('dotenv').config()
+const servers = require(path.join(__dirname, 'src', 'servers.js'))
+const common = require(path.join(__dirname, 'src', 'common.js'))
 
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
-app.use(minifyHTML({
-  override: true,
-  exception_url: false,
-  htmlMinifier: {
-    removeComments: true,
-    collapseWhitespace: true,
-    collapseBooleanAttributes: true,
-    removeAttributeQuotes: true,
-    removeEmptyAttributes: true,
-    minifyJS: true
-  }
-}));
+fastify.register(require('@fastify/view'), {
+  engine: {
+    ejs: require('ejs')
+  },
+  root: 'views'
+})
 
-app.get('/', (req, res) => {
-  const result = servers.getServers();
-  const stats = servers.getStats();
-  res.render('serverlist', {
+fastify.register(require('@fastify/static'), {
+  root: path.join(__dirname, 'public')
+})
+
+fastify.register(require('fastify-minify'), {
+  cache: 2000,
+  global: true
+})
+
+fastify.get('/', async function (req, reply) {
+  const result = servers.getServers()
+  const stats = servers.getStats()
+  return reply.view('serverlist.ejs', {
     serversNum: result.servers.length,
     playersNum: result.players,
     servers: result.servers,
     uptime: common.secondsToUptime(process.uptime()),
     recv: common.bytesToSize(stats.recvSize),
     sent: common.bytesToSize(stats.sentSize),
-    host: req.headers.host
-  });
-});
+    host: req.hostname
+  })
+})
 
-app.get('/details', (req, res) => {
-  res.redirect('/');
-});
+fastify.get('/details', async function (req, reply) {
+  return reply.redirect('/')
+})
 
-app.get('/details/:address', (req, res) => {
-  const result = servers.getServer(req.params.address);
-  const stats = servers.getStats();
+fastify.get('/details/:address', async function (req, reply) {
+  const result = servers.getServer(req.params.address)
+  const stats = servers.getStats()
   if (result.error) {
-    res.redirect('/');
-  } else {
-    const spectators = result.playerlist.filter(p => p.team === 0);
-    res.render('details', {
-      title: result.name,
-      s: result,
-      spectators: spectators,
-      uptime: common.secondsToUptime(process.uptime()),
-      recv: common.bytesToSize(stats.recvSize),
-      sent: common.bytesToSize(stats.sentSize),
-      host: req.headers.host
-    });
+    return reply.redirect('/')
   }
-});
+  const spectators = result.playerlist.filter(p => p.team === 0)
+  return reply.view('details', {
+    title: result.name,
+    s: result,
+    spectators: spectators,
+    uptime: common.secondsToUptime(process.uptime()),
+    recv: common.bytesToSize(stats.recvSize),
+    sent: common.bytesToSize(stats.sentSize),
+    host: req.hostname
+  })
+})
 
-app.get('/api', (req, res) => {
-  const stats = servers.getStats();
-  res.render('api', {
+fastify.get('/api', async function (req, reply) {
+  const stats = servers.getStats()
+  return reply.view('api', {
     title: 'API Documentation',
     example: common.example,
     uptime: common.secondsToUptime(process.uptime()),
     recv: common.bytesToSize(stats.recvSize),
     sent: common.bytesToSize(stats.sentSize),
-    host: req.headers.host
-  });
-});
+    host: req.hostname,
+    prot: req.protocol
+  })
+})
 
-app.get('/api/:address', (req, res) => {
-  const result = servers.getServer(req.params.address);
+fastify.get('/api/:address', async function (req, reply) {
+  const result = servers.getServer(req.params.address)
   if (result.error) {
-    res.status(404).json(result);
-  } else {
-    res.json(result);
+    return reply.status(404).send(result)
   }
-});
+  return reply.send(result)
+})
 
-app.listen(port, () => {
-  console.log(`CS2D Serverlist listening on port ${port}`);
-});
+fastify.listen({ port: process.env.PORT || 3000 }, function (err, address) {
+  if (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+  console.log(`Server is now listening on ${address}`)
+})

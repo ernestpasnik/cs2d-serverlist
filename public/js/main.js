@@ -5,7 +5,7 @@ function loadCSS(url) {
   document.head.appendChild(link)
 }
 
-loadCSS('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap')
+loadCSS('https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css')
 
 const gamemodeMap = {
   0: 'Standard',

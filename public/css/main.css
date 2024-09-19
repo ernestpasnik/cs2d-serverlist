@@ -1,6 +1,8 @@
 * {
   font-family: 'Inter', sans-serif;
   color: rgb(187, 198, 206);
+  font-feature-settings: "cv11", "ss01";
+  font-variation-settings: "opsz" 32;
 }
 
 body {
@@ -175,41 +177,21 @@ tbody > tr:nth-of-type(odd) {
 }
 
 th, td {
-  padding: 0.5em 1em;
-}
-
-th:nth-child(1), td:nth-child(1) {
-  padding-left: 0.5em;
-  padding-right: 0;
-}
-
-th:nth-child(2), td:nth-child(2) {
-  padding: 0.5em 0.5em;
-}
-
-th:nth-child(3), td:nth-child(3) {
-  padding: 0.5em 0.5em;
+  padding: 0.5em 0.3em;
   max-width: 200px;
   overflow: clip;
 }
 
-th:nth-child(4), td:nth-child(4) {
-  padding: 0.5em 0.5em;
+.serverlist > tbody > tr > th:nth-child(1),
+.serverlist > tbody > tr > td:nth-child(1) {
+  font-size: 1.5rem;
+  padding: 0;
 }
 
-th:nth-child(5), td:nth-child(5) {
-  padding-left: 0;
-  padding-right: 0.5em;
-}
-
-td > img {
-  background-size: contain;
-  background-position: 50%;
-  background-repeat: no-repeat;
-  position: relative;
-  display: inline-block;
-  line-height: 1em;
-  border-radius: 2px;
+.serverlist > tbody > tr > th:nth-child(2),
+.serverlist > tbody > tr > td:nth-child(2) {
+  padding-left: 0.2em;
+  padding-right: 0;
 }
 
 ::-webkit-scrollbar {

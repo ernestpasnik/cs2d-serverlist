@@ -11,7 +11,7 @@
     </div>
   </div>
   <div class="table-responsive">
-    <table class="sortable asc">
+    <table class="sortable asc serverlist">
       <thead>
         <tr>
           <th>#</th>
@@ -24,7 +24,7 @@
       <tbody>
         <% servers.forEach(function(s) { %>
         <tr>
-          <td data-sort="<%= s.country %>"><img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/6.11.1/flags/4x3/<%= s.country.toLowerCase() %>.svg" alt="<%= s.country %>" width="16" height="12"></td>
+          <td data-sort="<%= s.country %>"><%= s.countryFlag %></td>
           <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a></td>
           <td><%= s.map %></td>
           <td data-sort="<%= s.players-s.bots %>"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></td>

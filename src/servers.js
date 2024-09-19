@@ -1,5 +1,6 @@
 const dgram = require('node:dgram')
 const mmdbreader = require('maxmind-db-reader')
+const countryFlagEmoji = require('country-flag-emoji')
 const db = process.env.COUNTRYDB || '/usr/share/GeoIP/GeoLite2-Country.mmdb'
 const countries = mmdbreader.openSync(db)
 const server = dgram.createSocket('udp4')
@@ -71,10 +72,12 @@ async function receivedServerlist(stream) {
     }
     countries.getGeoData(ip, function(err, geodata) {
       let country = 'xx'
+      let countryFlag = '🏴‍☠️'
       if (geodata) {
         country = geodata.country.iso_code
+        countryFlag = countryFlagEmoji.get(country).emoji
       }
-      servers.push({ ip, port, country })
+      servers.push({ ip, port, country, countryFlag })
     })
   }
 }

@@ -19,6 +19,7 @@
     "@fastify/view": "*",
     "@fastify/static": "*",
     "fastify-minify": "*",
-    "maxmind-db-reader": "*"
+    "maxmind-db-reader": "*",
+    "country-flag-emoji": "*"
   }
 }

@@ -1,5 +1,7 @@
 const path = require('path')
-const fastify = require('fastify')()
+const fastify = require('fastify')({
+  trustProxy: true
+})
 require('dotenv').config()
 const servers = require(path.join(__dirname, 'src', 'servers.js'))
 const common = require(path.join(__dirname, 'src', 'common.js'))
@@ -20,6 +22,12 @@ fastify.register(require('fastify-minify'), {
   global: true
 })
 
+fastify.addHook('onRequest', (req, reply, done) => {
+  reply.locals.host = req.hostname
+  reply.locals.prot = req.protocol
+  done()
+})
+
 fastify.get('/', async function (req, reply) {
   const result = servers.getServers()
   const stats = servers.getStats()
@@ -29,8 +37,7 @@ fastify.get('/', async function (req, reply) {
     servers: result.servers,
     uptime: common.secondsToUptime(process.uptime()),
     recv: common.bytesToSize(stats.recvSize),
-    sent: common.bytesToSize(stats.sentSize),
-    host: req.hostname
+    sent: common.bytesToSize(stats.sentSize)
   })
 })
 
@@ -51,8 +58,7 @@ fastify.get('/details/:address', async function (req, reply) {
     spectators: spectators,
     uptime: common.secondsToUptime(process.uptime()),
     recv: common.bytesToSize(stats.recvSize),
-    sent: common.bytesToSize(stats.sentSize),
-    host: req.hostname
+    sent: common.bytesToSize(stats.sentSize)
   })
 })
 
@@ -63,9 +69,7 @@ fastify.get('/api', async function (req, reply) {
     example: common.example,
     uptime: common.secondsToUptime(process.uptime()),
     recv: common.bytesToSize(stats.recvSize),
-    sent: common.bytesToSize(stats.sentSize),
-    host: req.hostname,
-    prot: req.protocol
+    sent: common.bytesToSize(stats.sentSize)
   })
 })
 

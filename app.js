@@ -66,7 +66,7 @@ fastify.get('/api', async function (req, reply) {
   const stats = servers.getStats()
   return reply.view('api', {
     title: 'API Documentation',
-    example: common.example,
+    example: servers.getServers().servers[0],
     uptime: common.secondsToUptime(process.uptime()),
     recv: common.bytesToSize(stats.recvSize),
     sent: common.bytesToSize(stats.sentSize)

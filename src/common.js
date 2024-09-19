@@ -16,35 +16,5 @@ module.exports = {
     const formattedMinutes = minutes.toString().padStart(2, '0')
     const formattedSeconds = seconds.toString().padStart(2, '0')
     return `${formattedDays}${formattedHours}:${formattedMinutes}:${formattedSeconds}`
-  },
-  example: {
-    ip: '45.235.98.50',
-    port: 36450,
-    country: 'AR',
-    password: false,
-    usgnonly: false,
-    fow: false,
-    friendlyfire: false,
-    bots: 0,
-    lua: true,
-    forcelight: false,
-    name: '[CS2D] Argentina | Standard',
-    map: 'de_desert',
-    players: 1,
-    maxplayers: 32,
-    gamemode: 0,
-    recoil: false,
-    offscreendamage: true,
-    hasdownloads: true,
-    playerlist: [
-      {
-        id: 1,
-        name: 'Player',
-        team: 2,
-        score: 0,
-        deaths: 0
-      }
-    ],
-    ts: 1694980752
   }
 }

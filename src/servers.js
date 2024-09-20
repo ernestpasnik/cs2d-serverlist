@@ -141,26 +141,26 @@ setTimeout(serverqueryRequest, 1000)
 
 module.exports = {
   getServers: function () {
-    const ts = Math.floor(Date.now() / 1000)
-    const filteredServers = servers.filter((e) => e.ts !== undefined && ts - e.ts < 60)
-    const players = filteredServers.reduce((totalPlayers, server) => totalPlayers + (server.players - server.bots), 0)
-    filteredServers.sort((a, b) => b.players - b.bots - (a.players - a.bots))
+    const t = Math.floor(Date.now() / 1000)
+    const f = servers.filter((e) => e.ts !== undefined && t - e.ts < 60)
+    const p = f.reduce((t, s) => t + (s.players - s.bots), 0)
+    f.sort((a, b) => b.players - b.bots - (a.players - a.bots))
     return {
-      servers: filteredServers,
-      players: players
+      servers: f,
+      players: p
     }
   },
   getServer: function (addr) {
     if (!validateIPPortFormat(addr)) {
       return { error: 'Invalid address' }
     }
-    const parts = addr.split(':')
-    const server = servers.find((obj) => obj.ip === parts[0] && obj.port === parseInt(parts[1]))
-    if (!server || server.ts === undefined) {
+    const p = addr.split(':')
+    const s = servers.find((o) => o.ip === p[0] && o.port === parseInt(p[1]))
+    if (!s || s.ts === undefined) {
       return { error: 'Server does not exist' }
     }
-    server.playerlist.sort((a, b) => b.score - a.score)
-    return server    
+    s.playerlist.sort((a, b) => b.score - a.score)
+    return s
   },
   getStats: function () {
     return {

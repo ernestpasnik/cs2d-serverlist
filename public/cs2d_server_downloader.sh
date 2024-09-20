@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# CS2D Linux Server Downloader
-# Copyright (c) 2023, Ernest Paśnik
-# Released under the MIT License
+# CS2D Server Downloader (MIT License)
+# Copyright (c) 2023 Ernest Paśnik
 
 # Check if 'unzip' command is available
 if ! command -v unzip >/dev/null 2>&1 ; then
@@ -29,5 +28,8 @@ rm -f sys/autobuy.cfg sys/autoexec.cfg sys/config.cfg sys/controls.cfg sys/edito
 rm -f sys/controls.lst sys/favorites.lst sys/maptypes.lst
 rm -f sys/core/dls.cache sys/core/svl.cache sys/core/version.cfg
 rm -rf help logos screens gfx/fonts sys/cache sys/language
+
+# Make the CS2D dedicated server executable
+chmod +x cs2d_dedicated
 
 echo "CS2D server files downloaded and extracted successfully."

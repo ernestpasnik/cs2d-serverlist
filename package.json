@@ -1,7 +1,7 @@
 {
   "name": "cs2d-serverlist",
   "version": "1.0.2",
-  "description": "A NodeJS application to display list of servers from CS2D",
+  "description": "A web application for browsing the server list from CS2D",
   "repository": {
     "type": "git",
     "url": "https://github.com/ernestpasnik/cs2d-serverlist.git"

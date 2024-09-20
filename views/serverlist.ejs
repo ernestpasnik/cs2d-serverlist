@@ -23,7 +23,7 @@
       </thead>
       <tbody>
         <% servers.forEach(function(s) { %>
-        <tr>
+        <tr <% if ((s.players - s.bots) === 0) { %> class="empty" <% } %>>
           <td data-sort="<%= s.country %>"><%= s.countryFlag %></td>
           <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a></td>
           <td><%= s.map %></td>

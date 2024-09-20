@@ -1,5 +1,5 @@
 ## Introduction
-A NodeJS application to display list of servers from CS2D. [Live demo](https://cs2d-serverlist.erpa.cc) is available.
+A web application for browsing the server list from CS2D, featuring a [live demo](https://cs2d-serverlist.erpa.cc). The app also provides an [API](https://cs2d-serverlist.erpa.cc/api) for retrieving server data in JSON format, which you can freely use.
 
 ## Installation
 1. Install geoipupdate package on your system `apt install -y geoipupdate`

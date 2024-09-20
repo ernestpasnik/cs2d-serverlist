@@ -236,6 +236,10 @@ footer > a:hover {
   user-select: none;
 }
 
+.empty > td {
+  color: rgb(106 113 118);
+}
+
 @media (max-width: 899px) {
   body {
     width: auto;

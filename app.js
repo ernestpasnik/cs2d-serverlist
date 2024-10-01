@@ -1,8 +1,6 @@
-const path = require('path')
-const fastify = require('fastify')({
-  trustProxy: true
-})
 require('dotenv').config()
+const path = require('path')
+const fastify = require('fastify')({ trustProxy: true })
 const servers = require(path.join(__dirname, 'src', 'servers.js'))
 const common = require(path.join(__dirname, 'src', 'common.js'))
 
@@ -11,10 +9,6 @@ fastify.register(require('@fastify/view'), {
     ejs: require('ejs')
   },
   root: 'views'
-})
-
-fastify.register(require('@fastify/static'), {
-  root: path.join(__dirname, 'public')
 })
 
 fastify.register(require('fastify-minify'), {

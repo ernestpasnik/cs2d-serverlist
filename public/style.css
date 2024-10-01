@@ -9,7 +9,7 @@ body {
   margin: 0 auto;
   width: 900px;
   background-color: rgb(26, 40, 55);
-  background-image: url(../img/bg.webp);
+  background-image: url(bg.webp);
   background-position: top center;
   background-repeat: no-repeat;
   background-size: 100%;
@@ -22,8 +22,8 @@ strong {
 section {
   margin: 50px 0 25px 0;
   background-color: rgba(16, 24, 30, 0.9);
-  border-radius: .75rem;
-  padding: 2em;
+  border-radius: 0.25rem;
+  padding: 1.5em;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 }
 
@@ -53,8 +53,8 @@ code {
   font-size: 0.83em;
   background-color: rgba(115, 130, 140, 0.05);
   border: 1px solid rgba(115, 130, 140, 0.05);
-  padding: 0.5em;
-  border-radius: 0.5rem;
+  padding: 1em;
+  border-radius: 0.25rem;
   display: block;
   margin: 0;
   overflow: auto;
@@ -65,7 +65,7 @@ pre {
   background-color: rgba(115, 130, 140, 0.05);
   border: 1px solid rgba(115, 130, 140, 0.05);
   padding: 1em;
-  border-radius: 0.5rem;
+  border-radius: 0.25rem;
   margin: 0;
 }
 
@@ -97,7 +97,7 @@ pre {
   border: 1px solid hsla(204, 10%, 50%, 0.2);
   padding: 0.25em 0.5em;
   background: hsla(204, 10%, 50%, 0.05);
-  border-radius: 4px;
+  border-radius: 0.25rem;
   font-size: 0.83em;
 }
 

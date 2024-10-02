@@ -1,5 +1,19 @@
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/Inter (web)/Inter-Regular.woff2?v=3.19") format("woff2");
+}
+
+@font-face {
+  font-family: "Twemoji Country Flags";
+  unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E0063, U+E0065, U+E0067, U+E006C, U+E006E, U+E0073-E0074, U+E0077, U+E007F;
+  src: url("https://cdn.jsdelivr.net/npm/country-flag-emoji-polyfill@0.1/dist/TwemojiCountryFlags.woff2") format("woff2");
+}
+
 * {
-  font-family: 'Inter', sans-serif;
+  font-family: "Twemoji Country Flags", "Inter", sans-serif;
   color: rgb(187, 198, 206);
   font-feature-settings: "cv11", "ss01";
   font-variation-settings: "opsz" 32;
@@ -9,14 +23,10 @@ body {
   margin: 0 auto;
   width: 900px;
   background-color: rgb(26, 40, 55);
-  background-image: url(bg.webp);
+  background-image: url("bg.webp");
   background-position: top center;
   background-repeat: no-repeat;
   background-size: 100%;
-}
-
-strong {
-  font-weight: 500;
 }
 
 section {
@@ -28,7 +38,7 @@ section {
 }
 
 h1 {
-  font-weight: 500;
+  font-weight: 400;
   color: rgb(255, 255, 255);
   margin: 0;
   font-size: 1em;
@@ -107,7 +117,6 @@ pre {
 }
 
 .bar>div>span:nth-child(1) {
-  font-weight: 500;
   color: rgb(221, 230, 237);
 }
 
@@ -165,8 +174,8 @@ table {
 
 th {
   text-align: left;
-  font-weight: 500;
-  color: rgb(221, 230, 237)
+  color: rgb(221, 230, 237);
+  font-weight: 400;
 }
 
 thead>tr>th {
@@ -180,7 +189,7 @@ tbody>tr:nth-of-type(odd) {
 th,
 td {
   padding: 0.5em 0.3em;
-  max-width: 200px;
+  max-width: 180px;
   overflow: clip;
 }
 

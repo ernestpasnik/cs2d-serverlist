@@ -1,10 +1,10 @@
 module.exports = {
   bytesToSize: function (b) {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
     if (b === 0) return '0 B'
     const i = parseInt(Math.floor(Math.log(b) / Math.log(1024)))
-    return Math.round((b / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i]
-  },
+    return Math.round(b / Math.pow(1024, i)) + ' ' + sizes[i]
+  },  
   secondsToUptime: function (s) {
     const secs = Math.round(s)
     const days = Math.floor(secs / (3600 * 24))

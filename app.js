@@ -16,12 +16,6 @@ fastify.register(require('fastify-minify'), {
   global: true
 })
 
-fastify.addHook('onRequest', (req, reply, done) => {
-  reply.locals.host = req.hostname
-  reply.locals.prot = req.protocol
-  done()
-})
-
 fastify.get('/', async function (req, reply) {
   const result = servers.getServers()
   const stats = servers.getStats()
@@ -63,7 +57,9 @@ fastify.get('/api', async function (req, reply) {
     example: servers.getServers().servers[0],
     uptime: common.secondsToUptime(process.uptime()),
     recv: common.bytesToSize(stats.recvSize),
-    sent: common.bytesToSize(stats.sentSize)
+    sent: common.bytesToSize(stats.sentSize),
+    host: req.hostname,
+    prot: req.protocol
   })
 })
 

@@ -136,8 +136,9 @@ function serverqueryRequest() {
   }
   setTimeout(serverqueryRequest, 10000)
 }
-setTimeout(serverlistRequest, 500)
-setTimeout(serverqueryRequest, 1000)
+
+serverlistRequest()
+setTimeout(serverqueryRequest, 500)
 
 module.exports = {
   getServers: function () {

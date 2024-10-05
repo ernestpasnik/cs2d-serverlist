@@ -84,7 +84,7 @@ pre {
 
 .flex {
   display: flex;
-  margin-bottom: 2em;
+  margin-bottom: 1.5em;
   justify-content: space-between;
   align-items: flex-start;
 }
@@ -96,8 +96,8 @@ pre {
 
 .bar {
   display: flex;
-  margin-bottom: 0.5em;
-  gap: 0.5em;
+  margin-bottom: 1.5em;
+  gap: 0.25em;
   font-size: 0.9em;
   flex-wrap: wrap;
   justify-content: center;
@@ -126,8 +126,7 @@ pre {
 .details {
   display: flex;
   gap: 1em;
-  margin-top: 2em;
-  min-height: 500px;
+  min-height: 35vw;
 }
 
 .details>div {
@@ -152,6 +151,7 @@ pre {
   border-bottom-color: transparent;
   border-radius: 50%;
   animation: rotation 1s linear infinite;
+  display: inline;
 }
 
 @keyframes rotation {
@@ -192,7 +192,7 @@ tbody>tr:nth-of-type(odd) {
 th,
 td {
   padding: 0.5em 0.3em;
-  max-width: 180px;
+  max-width: 190px;
   overflow: clip;
 }
 
@@ -294,7 +294,7 @@ footer>a:hover {
   }
 
   .bar {
-    gap: 0.5em;
+    gap: 0.25em;
     justify-content: space-between;
     margin-bottom: 0.5em;
   }

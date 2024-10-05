@@ -19,12 +19,7 @@ function incNbrRec(e, t, i) {
   }, 10))
 }
 
-function update(address, loader) {
-  loader.classList.remove('hide')
-  setTimeout(function() {
-    loader.classList.add('hide')
-  }, 500)
-
+function update(address) {
   fetch(address)
     .then(response => {
       if (!response.ok) {
@@ -37,8 +32,9 @@ function update(address, loader) {
       document.querySelector('#map').textContent = d.map
       const players = `${d.players}/${d.maxplayers}${d.bots > 0 ? ` (${d.bots} bots)` : ''}`
       document.querySelector('#players').textContent = players
-      document.title = `(${d.players}) ${d.name} - CS2D Serverlist`
+      document.title = `[${players}] ${d.name} · CS2D Serverlist`
       document.querySelector('#gamemode').textContent = gamemodeMap[d.gamemode] || ''
+      document.querySelector('#loc').textContent = `${d.countryFlag} ${d.country}`
       document.querySelector('#lua').textContent = d.lua ? 'Yes' : 'No'
       document.querySelector('#password').textContent = d.password ? 'Yes' : 'No'
       document.querySelector('#usgnonly').textContent = d.usgnonly ? 'Yes' : 'No'
@@ -87,9 +83,7 @@ function update(address, loader) {
       if (spec.length > 0) {
         const lst = spec.map(player => player.name).join(', ')
         div.textContent = 'Spectators: ' + lst
-        div.classList.remove('hide')
       } else {
-        div.classList.add('hide')
       }
     })
     .catch(error => {
@@ -102,9 +96,8 @@ function update(address, loader) {
   incEltNbr('players')
   if (document.querySelector('#address')) {
     const address = '/api/' + document.querySelector('#address').textContent
-    const loader = document.getElementsByClassName('loader')[0]
     setInterval(function() {
-      update(address, loader)
+      update(address)
     }, 10000)
   }
 })

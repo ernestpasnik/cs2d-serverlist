@@ -3,21 +3,21 @@
 <section>
   <div class="flex">
     <div>
-      <a href="/"><h1>CS2D Serverlist</h1><small><%= host %></small></a>
+        <a href="/"><h1 id="name"><%= s.name %></h1><small id="address"><%= s.ip %>:<%= s.port %></small></a>
     </div>
     <div>
-      <div class="loader hide"></div>
+      <div>
+        <span id="map"><%= s.map %></span>
+      </div>
+      <div>
+        <span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span>
+      </div>
     </div>
+
   </div>
   <div class="bar">
-    <div><span>Name</span><span id="name"><%= s.name %></span></div>
-    <div><span>Map</span><span id="map"><%= s.map %></span></div>
-    <div><span>Players</span><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
+    <div><span>Location</span><span id="loc"><%= s.countryFlag %> <%= s.country %></span></div>
     <div><span>Game Mode</span><span id="gamemode"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] || '' %></span></div>
-    <div><span>Location</span><span id="location"><%= s.country %></span></div>
-    <div><span>Address</span><span id="address"><%= s.ip %>:<%= s.port %></span></div>
-  </div>
-  <div class="bar">
     <div><span>Lua Scripts</span><span id="lua"><% if (s.lua) { %>Yes<% } else { %>No<% } %></span></div>
     <div><span>Password</span><span id="password"><% if (s.password) { %>Yes<% } else { %>No<% } %></span></div>
     <div><span>USGN Only</span><span id="usgnonly"><% if (s.usgnonly) { %>Yes<% } else { %>No<% } %></span></div>

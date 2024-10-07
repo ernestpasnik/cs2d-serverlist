@@ -18,7 +18,7 @@
   <div class="bar">
     <div><span>Location</span><span id="loc"><%= s.countryFlag %> <%= s.country %></span></div>
     <div><span>Game Mode</span><span id="gamemode"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] || '' %></span></div>
-    <div><span>Lua Scripts</span><span id="lua"><% if (s.lua) { %>Yes<% } else { %>No<% } %></span></div>
+    <div><span>Lua</span><span id="lua"><% if (s.lua) { %>Yes<% } else { %>No<% } %></span></div>
     <div><span>Password</span><span id="password"><% if (s.password) { %>Yes<% } else { %>No<% } %></span></div>
     <div><span>USGN Only</span><span id="usgnonly"><% if (s.usgnonly) { %>Yes<% } else { %>No<% } %></span></div>
     <div><span>Fog of War</span><span id="fow"><% if (s.fow) { %>Yes<% } else { %>No<% } %></span></div>

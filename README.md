@@ -22,12 +22,16 @@ PORT=3000
 COUNTRYDB=/usr/share/GeoIP/GeoLite2-Country.mmdb
 USGNIP=81.169.236.243
 USGNPORT=36963
+URL=https://cs2d-serverlist.erpa.cc/
 ```
 7. Install dependencies `cd cs2d-serverlist && npm install`
 8. Run the application `node app.js`
 
 ## Download the dedicated server
-If you're interested in downloading the CS2D dedicated server, you can utilize the guide I've crafted on my [devblog](https://erpa.cc/how-to-install-cs2d-server-on-ubuntu).
+This script will download the CS2D dedicated server to the current user's directory.
+```bash
+curl -sL https://cs2d-serverlist.erpa.cc/cs2d_server_downloader.sh | bash
+```
 
 ## License
 This project is licensed under the [MIT License](LICENSE).

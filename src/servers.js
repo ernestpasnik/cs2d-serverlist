@@ -119,7 +119,6 @@ server.on('message', (buf, rinfo) => {
   }
 })
 
-// Sending serverlist request every 60 seconds
 function serverlistRequest() {
   const ts = Math.floor(Date.now() / 1000)
   servers = servers.filter((e) => e.ts === undefined || (ts - e.ts) < 60)
@@ -128,17 +127,16 @@ function serverlistRequest() {
   setTimeout(serverlistRequest, 60000)
 }
 
-// Sending serverquery requests every 10 seconds
 function serverqueryRequest() {
   for (const e of servers) {
     sentSize += 8
     server.send(Buffer.from([1, 0, 251, 1, 245, 3, 251, 5]), e.port, e.ip)
   }
-  setTimeout(serverqueryRequest, 10000)
+  setTimeout(serverqueryRequest, 15000)
 }
 
-serverlistRequest()
-setTimeout(serverqueryRequest, 500)
+setTimeout(serverlistRequest, 500)
+setTimeout(serverqueryRequest, 1000)
 
 module.exports = {
   getServers: function () {

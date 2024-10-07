@@ -71,7 +71,7 @@ code {
   border-radius: 0.25rem;
   display: block;
   margin: 0;
-  overflow: none;
+  overflow: auto;
 }
 
 pre {
@@ -142,16 +142,6 @@ pre {
 
 .hide {
   display: none;
-}
-
-.loader {
-  width: 16px;
-  height: 16px;
-  border: 2px solid hsla(204, 10%, 50%, 0.2);
-  border-bottom-color: transparent;
-  border-radius: 50%;
-  animation: rotation 1s linear infinite;
-  display: inline;
 }
 
 @keyframes rotation {

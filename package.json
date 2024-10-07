@@ -1,7 +1,7 @@
 {
   "name": "cs2d-serverlist",
-  "version": "1.0.3",
-  "description": "A web application for browsing the server list from CS2D",
+  "version": "1.0.4",
+  "description": "Web application for browsing the serverlist from CS2D",
   "repository": {
     "type": "git",
     "url": "https://github.com/ernestpasnik/cs2d-serverlist.git"
@@ -13,12 +13,13 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "@fastify/static": "*",
+    "@fastify/view": "*",
+    "country-flag-emoji": "*",
     "dotenv": "*",
     "ejs": "*",
     "fastify": "*",
-    "@fastify/view": "*",
     "fastify-minify": "*",
-    "maxmind-db-reader": "*",
-    "country-flag-emoji": "*"
+    "maxmind-db-reader": "*"
   }
 }

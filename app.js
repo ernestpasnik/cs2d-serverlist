@@ -3,6 +3,11 @@ const path = require('path')
 const fastify = require('fastify')({ trustProxy: true })
 const servers = require(path.join(__dirname, 'src', 'servers.js'))
 const common = require(path.join(__dirname, 'src', 'common.js'))
+const url = process.env.URL || 'http://localhost:3000/'
+
+fastify.register(require('@fastify/static'), {
+  root: path.join(__dirname, 'public')
+})
 
 fastify.register(require('@fastify/view'), {
   engine: {
@@ -58,8 +63,7 @@ fastify.get('/api', async function (req, reply) {
     uptime: common.secondsToUptime(process.uptime()),
     recv: common.bytesToSize(stats.recvSize),
     sent: common.bytesToSize(stats.sentSize),
-    host: req.hostname,
-    prot: req.protocol
+    url: url
   })
 })
 

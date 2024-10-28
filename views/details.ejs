@@ -6,11 +6,13 @@
         <a href="/"><h1 id="name"><%= s.name %></h1><small>← CS2D Serverlist</small></a>
     </div>
     <div>
+      <div id="progress-container">
+        <div id="progress"></div>
+      </div>
       <div>
         <pre><code id="address" class="language-bash"><%= s.ip %>:<%= s.port %></code></pre>
       </div>
     </div>
-
   </div>
   <div class="bar">
     <div><b>Map</b><span id="map"><%= s.map %></span></div>

@@ -18,11 +18,11 @@ EditionIDs GeoLite2-Country
 5. Clone repository `git clone https://github.com/ernestpasnik/cs2d-serverlist.git`
 6. Configure environment variables `nano cs2d-serverlist/.env`
 ```env
+HOST=0.0.0.0
 PORT=3000
 COUNTRYDB=/usr/share/GeoIP/GeoLite2-Country.mmdb
 USGNIP=81.169.236.243
 USGNPORT=36963
-URL=https://cs2d-serverlist.erpa.cc/
 ```
 7. Install dependencies `cd cs2d-serverlist && npm install`
 8. Run the application `node app.js`

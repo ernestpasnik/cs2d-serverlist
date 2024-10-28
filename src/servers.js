@@ -141,11 +141,11 @@ function serverqueryRequest() {
     e.debug.sentBytes += 8
     e.debug.lastRequest = Date.now()
   }
-  setTimeout(serverqueryRequest, 5000)
+  setTimeout(serverqueryRequest, 10000)
 }
 
-setTimeout(serverlistRequest, 1500)
-setTimeout(serverqueryRequest, 3000)
+setTimeout(serverlistRequest, 1000)
+setTimeout(serverqueryRequest, 2000)
 
 module.exports = {
   getServers: function () {

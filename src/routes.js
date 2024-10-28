@@ -45,7 +45,7 @@ function routes(fastify) {
       uptime: common.secondsToUptime(process.uptime()),
       recv: common.bytesToSize(stats.recvSize),
       sent: common.bytesToSize(stats.sentSize),
-      url: req.host
+      url: `${req.protocol}://${req.host}`
     })
   })
 

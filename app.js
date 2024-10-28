@@ -5,12 +5,10 @@ const routes = require(path.join(__dirname, 'src', 'routes.js'))
 const host = process.env.HOST || '0.0.0.0'
 const port = process.env.PORT || 3000
 
-// Static file serving
 fastify.register(require('@fastify/static'), {
   root: path.join(__dirname, 'public')
 })
 
-// View engine setup
 fastify.register(require('@fastify/view'), {
   engine: {
     ejs: require('ejs')
@@ -18,13 +16,11 @@ fastify.register(require('@fastify/view'), {
   root: 'views'
 })
 
-// Minification
 fastify.register(require('fastify-minify'), {
-  cache: 2000,
+  cache: 10000,
   global: true
 })
 
-// Register routes
 routes(fastify)
 
 fastify.listen({ host: host, port: port }, (err, address) => {

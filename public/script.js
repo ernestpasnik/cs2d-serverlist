@@ -19,9 +19,24 @@ function incNbrRec(e, t, i) {
       }, 10))
 }
 
+function fillProgressBar(address) {
+  let progressBar = document.getElementById('progress')
+  let width = 0
+  const interval = setInterval(() => {
+    if (width >= 100) {
+      clearInterval(interval)
+      update(address)
+    } else {
+      width++
+      progressBar.style.width = width + '%'
+    }
+  }, 100)
+}
+
 function update(address) {
-  fetch(address)
+  fetch(`/api/${address}`)
     .then(response => {
+      fillProgressBar(address)
       if (!response.ok) {
         throw new Error('HTTP error! Status: ' + response.status)
       }
@@ -96,9 +111,7 @@ function update(address) {
   incEltNbr('players')
   const address = document.querySelector('#address')
   if (address) {
-    setInterval(function () {
-      update(`/api/${address.textContent}`)
-    }, 5000)
+    fillProgressBar(address.textContent)
   }
 })
 

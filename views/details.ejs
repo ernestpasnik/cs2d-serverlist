@@ -3,36 +3,36 @@
 <section>
   <div class="flex">
     <div>
-        <a href="/"><h1 id="name"><%= s.name %></h1><small id="address"><%= s.ip %>:<%= s.port %></small></a>
+        <a href="/"><h1 id="name"><%= s.name %></h1><small>← CS2D Serverlist</small></a>
     </div>
     <div>
       <div>
-        <span id="map"><%= s.map %></span>
-      </div>
-      <div>
-        <span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span>
+        <pre><code id="address" class="language-bash"><%= s.ip %>:<%= s.port %></code></pre>
       </div>
     </div>
 
   </div>
   <div class="bar">
-    <div><span>Location</span><span id="loc"><%= s.countryFlag %> <%= s.country %></span></div>
-    <div><span>Game Mode</span><span id="gamemode"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] || '' %></span></div>
-    <div><span>Lua</span><span id="lua"><% if (s.lua) { %>Yes<% } else { %>No<% } %></span></div>
-    <div><span>Password</span><span id="password"><% if (s.password) { %>Yes<% } else { %>No<% } %></span></div>
-    <div><span>USGN Only</span><span id="usgnonly"><% if (s.usgnonly) { %>Yes<% } else { %>No<% } %></span></div>
-    <div><span>Fog of War</span><span id="fow"><% if (s.fow) { %>Yes<% } else { %>No<% } %></span></div>
-    <div><span>Force Lighting</span><span id="forcelight"><% if (s.forcelight) { %>Yes<% } else { %>No<% } %></span></div>
-    <div><span>Recoil</span><span id="recoil"><% if (s.recoil) { %>Yes<% } else { %>No<% } %></span></div>
-    <div><span>Off-Screen Dmg</span><span id="offscreendamage"><% if (s.offscreendamage) { %>Yes<% } else { %>No<% } %></span></div>
-    <div><span>Has Downloads</span><span id="hasdownloads"><% if (s.hasdownloads) { %>Yes<% } else { %>No<% } %></span></div>
+    <div><b>Map</b><span id="map"><%= s.map %></span></div>
+    <div><b>Players</b><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
+    <div><b>Game Mode</b><span id="gamemode"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] || '' %></span></div>
+    <div><b>Password</b><span id="password"><% if (s.password) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+    <div><b>USGN Only</b><span id="usgDisablednly"><% if (s.usgDisablednly) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+    <div><b>Fog of War</b><span id="fow"><% if (s.fow) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+    <div><b>Lighting</b><span id="forcelight"><% if (s.forcelight) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+    <div><b>Recoil</b><span id="recoil"><% if (s.recoil) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+    <div><b>Off-Screen</b><span id="offscreendamage"><% if (s.offscreendamage) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+    <div>
+      <b id="lua"><% if (s.lua) { %>Lua Scripts<% } else { %>No Lua Scripts<% } %></b>
+      <b id="hasdownloads"><% if (s.hasdownloads) { %>Downloads<% } else { %>No Downloads<% } %></b>
+    </div>
   </div>
   <div class="details">
     <div class="table-responsive">
       <table class="ct sortable asc">
         <thead>
           <tr>
-            <th>Player</th>
+            <th>Counter-Terrorist Forces</th>
             <th>Score</th>
             <th>Deaths</th>
           </tr>
@@ -54,7 +54,7 @@
       <table class="t sortable asc">
         <thead>
           <tr>
-            <th>Player</th>
+            <th>Terrorist Forces</th>
             <th>Score</th>
             <th>Deaths</th>
           </tr>
@@ -73,7 +73,7 @@
       </table>
     </div>
   </div>
-  <div class="spec<% if (spectators.length == 0) {%> hide<% } %>">Spectators: <%= spectators.map(p => p.name).join(', ') %></div>
+  <div class="spec"><% if (spectators.length > 0) {%>Spectators: <%= spectators.map(p => p.name).join(', ') %> <% } %></div>
 </section>
 
 <%- include('footer') %>

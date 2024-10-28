@@ -3,7 +3,7 @@
 <section>
   <div class="flex">
     <div>
-      <a href="/"><h1>CS2D Serverlist</h1><small>Find the best CS2D servers</small></a>
+      <a href="/"><h1>CS2D Serverlist</h1><small>Community Server Browser</small></a>
     </div>
     <div>
       <div><span id="servers"><%= serversNum %></span> Servers</div>
@@ -21,13 +21,13 @@
           <th>Address</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="serverlist">
         <% servers.forEach(function(s) { %>
-        <tr <% if ((s.players - s.bots) === 0) { %> class="empty" <% } %>>
-          <td><%= s.countryFlag %></td>
+        <tr onclick="window.location.href='/details/<%= s.ip %>:<%= s.port %>'" <% if ((s.players - s.bots) === 0) { %> class="empty" <% } %>>
+          <td><%= s.geoip.flag %></td>
           <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a></td>
           <td><%= s.map %></td>
-          <td data-sort="<%= s.players-s.bots %>"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></td>
+          <td data-sort="<%= ((s.players-s.bots)*100) + s.bots %>"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></td>
           <td><%= s.ip %>:<%= s.port %></td>
         </tr>
         <% }); %>

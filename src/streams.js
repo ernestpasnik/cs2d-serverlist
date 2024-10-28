@@ -86,6 +86,10 @@ class streams {
     return val
   }
 
+  getSize() {
+    return this.length
+  }
+
   remaining() {
     return this.length - this.offset
   }

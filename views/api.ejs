@@ -3,14 +3,14 @@
 <section>
   <div class="flex">
     <div>
-      <a href="/"><h1>API Documentation</h1><small>Fast, accurate, reliable</small></a>
+      <a href="/"><h1>API Documentation</h1><small>← CS2D Serverlist</small></a>
     </div>
   </div>
   <div>
-    <p>Acquire in-depth information from the CS2D Server, ensuring updated data is obtained at 15-second intervals.</p>
-    <code><%= url %>api/<%= example.ip %>:<%= example.port %></code>
+    <p>Acquire in-depth information from the CS2D Server, ensuring updated data is obtained at 5-second intervals.</p>
+    <pre><code class="language-bash"><%= url %>/api/<%= example.ip %>:<%= example.port %></code></pre>
     <p>The following is an example of response:</p>
-    <pre><%-JSON.stringify(example, null, 2)%></pre>
+    <pre><code class="language-json"><%=JSON.stringify(example, null, 2)%></code></pre>
   </div>
 </section>
 

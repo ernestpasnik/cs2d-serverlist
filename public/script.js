@@ -22,21 +22,24 @@ function incNbrRec(e, t, i) {
 function fillProgressBar(address) {
   let progressBar = document.getElementById('progress')
   let width = 0
+  const totalTime = 10000
+  const refreshRate = 7
+  const increment = 100 / (totalTime / refreshRate)
+
   const interval = setInterval(() => {
     if (width >= 100) {
       clearInterval(interval)
       update(address)
     } else {
-      width++
+      width += increment
       progressBar.style.width = width + '%'
     }
-  }, 100)
+  }, refreshRate)
 }
 
 function update(address) {
   fetch(`/api/${address}`)
     .then(response => {
-      fillProgressBar(address)
       if (!response.ok) {
         throw new Error('HTTP error! Status: ' + response.status)
       }
@@ -48,15 +51,15 @@ function update(address) {
       const players = `${d.players}/${d.maxplayers}${d.bots > 0 ? ` (${d.bots} bots)` : ''}`
       document.querySelector('#players').textContent = players
       document.title = `${players} ${d.name} · CS2D Serverlist`
-      document.querySelector('#gamemode').textContent = gamemodeMap[d.gamemode] || ''
+      const gm = document.querySelector('#gm')
+      gm.textContent = ['S', 'D', 'T', 'C', 'Z'][d.gamemode] || ''
+      gm.className = ['s', 'd', 't', 'c', 'z'][d.gamemode] || ''
       document.querySelector('#password').textContent = d.password ? 'Enabled' : 'Disabled'
       document.querySelector('#usgDisablednly').textContent = d.usgDisablednly ? 'Enabled' : 'Disabled'
       document.querySelector('#fow').textContent = d.fow ? 'Enabled' : 'Disabled'
       document.querySelector('#forcelight').textContent = d.forcelight ? 'Enabled' : 'Disabled'
       document.querySelector('#recoil').textContent = d.recoil ? 'Enabled' : 'Disabled'
       document.querySelector('#offscreendamage').textContent = d.offscreendamage ? 'Enabled' : 'Disabled'
-      document.querySelector('#lua').textContent = d.lua ? 'Lua Scripts' : 'No Lua Scripts'
-      document.querySelector('#hasdownloads').textContent = d.hasdownloads ? 'Downloads' : 'No Downloads'
 
       const ct = d.playerlist.filter(player => player.team === 2 || player.team === 3)
       const tbodyCt = document.getElementById('ct')
@@ -100,9 +103,11 @@ function update(address) {
       } else {
         div.textContent = ''
       }
+      fillProgressBar(address)
     })
     .catch(error => {
       console.error('Fetch error:', error)
+      fillProgressBar(address)
     })
 }
 
@@ -143,7 +148,7 @@ class CopyButtonPlugin {
       navigator.clipboard
         .writeText(newText)
         .then(function () {
-          button.innerHTML = "✓";
+          button.innerHTML = '<i class="bi bi-check"></i>'
           button.dataset.copied = true;
           let alert = Object.assign(document.createElement("div"), { role: "status", className: "hljs-copy-alert", innerHTML: "Copied to clipboard" });
           el.parentElement.appendChild(alert);

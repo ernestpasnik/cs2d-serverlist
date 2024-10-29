@@ -1,0 +1,81 @@
+<%- include('header') %>
+
+<section>
+  <div class="flex">
+    <div>
+      <a href="/">
+        <h1 id="name"><i class="bi bi-bar-chart-fill"></i>
+          <%= title %>
+        </h1>
+        <div><i class="bi bi-arrow-left"></i>Serverlist</div>
+      </a>
+    </div>
+    <div>&nbsp;</div>
+  </div>
+  <p>Here, you'll find detailed statistics on uptime, memory usage, network traffic, and player distribution. Gain insights into which locations are most active, the maps that players prefer, and how many requests the server processes. More detailed metrics and features are coming soon!</p>
+  <div class="stats">
+    <div class="stats-container">
+      <h2><i class="bi bi-server"></i>Service Details</h2>
+      <div class="stat-item">
+        <strong>Uptime</strong>
+        <span>
+          <%= uptime %>
+        </span>
+      </div>
+      <div class="stat-item">
+        <strong>Requests</strong>
+        <span>
+          <%= requestCount %>
+        </span>
+      </div>
+      <div class="stat-item">
+        <strong>Memory</strong>
+        <span>
+          <%= memory.rss %> MB
+        </span>
+      </div>
+      <div class="stat-item">
+        <strong>UDP Sent</strong>
+        <span>
+          <%= sent %>
+        </span>
+      </div>
+      <div class="stat-item">
+        <strong>UDP Recv</strong>
+        <span>
+          <%= recv %>
+        </span>
+      </div>
+    </div>
+
+    <div class="stats-container">
+      <h2><i class="bi bi-geo-alt-fill"></i>Popular Locations</h2>
+      <% locations.slice(0, 5).forEach(country=> { %>
+        <div class="stat-item">
+          <strong>
+            <%= country.country %>
+          </strong>
+          <span>
+            <%= country.count %>
+          </span>
+        </div>
+        <% }); %>
+    </div>
+
+    <div class="stats-container">
+      <h2><i class="bi bi-map-fill"></i>Popular Maps</h2>
+      <% maps.slice(0, 5).forEach(map=> { %>
+        <div class="stat-item">
+          <strong>
+            <%= map.map %>
+          </strong>
+          <span>
+            <%= map.count %>
+          </span>
+        </div>
+        <% }); %>
+    </div>
+  </div>
+</section>
+
+<%- include('footer') %>

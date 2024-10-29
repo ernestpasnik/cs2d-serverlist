@@ -3,31 +3,29 @@
 <section>
   <div class="flex">
     <div>
-        <a href="/"><h1 id="name"><%= s.name %></h1><small>← CS2D Serverlist</small></a>
+      <a href="/">
+        <span id="gm" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span><h1 id="name"><%= s.name %></h1>
+        <div><i class="bi bi-arrow-left"></i>Serverlist</div>
+      </a>
     </div>
     <div>
-      <div id="progress-container">
-        <div id="progress"></div>
-      </div>
       <div>
         <pre><code id="address" class="language-bash"><%= s.ip %>:<%= s.port %></code></pre>
       </div>
     </div>
   </div>
+  <div id="progress-container">
+    <div id="progress"></div>
+  </div>
   <div class="bar">
-    <div><b>Map</b><span id="map"><%= s.map %></span></div>
     <div><b>Players</b><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
-    <div><b>Game Mode</b><span id="gamemode"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] || '' %></span></div>
     <div><b>Password</b><span id="password"><% if (s.password) { %>Enabled<% } else { %>Disabled<% } %></span></div>
     <div><b>USGN Only</b><span id="usgDisablednly"><% if (s.usgDisablednly) { %>Enabled<% } else { %>Disabled<% } %></span></div>
     <div><b>Fog of War</b><span id="fow"><% if (s.fow) { %>Enabled<% } else { %>Disabled<% } %></span></div>
     <div><b>Lighting</b><span id="forcelight"><% if (s.forcelight) { %>Enabled<% } else { %>Disabled<% } %></span></div>
     <div><b>Recoil</b><span id="recoil"><% if (s.recoil) { %>Enabled<% } else { %>Disabled<% } %></span></div>
     <div><b>Off-Screen</b><span id="offscreendamage"><% if (s.offscreendamage) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-    <div>
-      <b id="lua"><% if (s.lua) { %>Lua Scripts<% } else { %>No Lua Scripts<% } %></b>
-      <b id="hasdownloads"><% if (s.hasdownloads) { %>Downloads<% } else { %>No Downloads<% } %></b>
-    </div>
+    <div><b>Map</b><span id="map"><%= s.map %></span></div>
   </div>
   <div class="details">
     <div class="table-responsive">

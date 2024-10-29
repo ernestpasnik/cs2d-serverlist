@@ -2,17 +2,20 @@ const path = require('path')
 const servers = require(path.join(__dirname, 'servers.js'))
 const common = require(path.join(__dirname, 'common.js'))
 
+let requestCount = 0
+
 function routes(fastify) {
+  fastify.addHook('onRequest', (request, reply, done) => {
+    requestCount++
+    done()
+  })
+
   fastify.get('/', async (req, reply) => {
     const result = servers.getServers()
-    const stats = servers.getStats()
     return reply.view('serverlist.ejs', {
       serversNum: result.servers.length,
       playersNum: result.players,
-      servers: result.servers,
-      uptime: common.secondsToUptime(process.uptime()),
-      recv: common.bytesToSize(stats.recvSize),
-      sent: common.bytesToSize(stats.sentSize)
+      servers: result.servers
     })
   })
 
@@ -22,7 +25,6 @@ function routes(fastify) {
 
   fastify.get('/details/:address', async (req, reply) => {
     const result = servers.getServer(req.params.address)
-    const stats = servers.getStats()
     if (result.error) {
       return reply.redirect('/')
     }
@@ -30,22 +32,30 @@ function routes(fastify) {
     return reply.view('details', {
       title: result.name,
       s: result,
-      spectators: spectators,
-      uptime: common.secondsToUptime(process.uptime()),
-      recv: common.bytesToSize(stats.recvSize),
-      sent: common.bytesToSize(stats.sentSize)
+      spectators: spectators
     })
   })
 
   fastify.get('/api', async (req, reply) => {
-    const stats = servers.getStats()
     return reply.view('api', {
-      title: 'API Documentation',
+      title: 'API Docs',
       example: servers.getServers().servers[0],
+      url: `${req.protocol}://${req.host}`
+    })
+  })
+
+  fastify.get('/stats', async (req, reply) => {
+    const result = servers.getServers().servers
+    const stats = servers.getStats()
+    return reply.view('stats', {
+      title: 'Statistics',
       uptime: common.secondsToUptime(process.uptime()),
       recv: common.bytesToSize(stats.recvSize),
       sent: common.bytesToSize(stats.sentSize),
-      url: `${req.protocol}://${req.host}`
+      requestCount: requestCount,
+      locations: common.sortedCountries(result),
+      maps: common.mostPopularMaps(result),
+      memory: common.getMemoryUsage()
     })
   })
 

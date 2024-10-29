@@ -1,0 +1,26 @@
+name: SSH Command Execution
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ssh-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.2.2
+
+      - name: Execute SSH Commands
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd cs2d-serverlist
+            git reset --hard origin/main
+            pm2 restart cs2d-serverlist

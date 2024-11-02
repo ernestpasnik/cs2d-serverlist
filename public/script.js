@@ -21,18 +21,28 @@ function incNbrRec(e, t, i) {
 
 function fillProgressBar(address) {
   let progressBar = document.getElementById('progress')
+  let progressText = document.querySelector('#progress-container span')
   let width = 0
   const totalTime = 10000
-  const refreshRate = 7
-  const increment = 100 / (totalTime / refreshRate)
+  const refreshRate = 1000 / 60
+  const totalSeconds = totalTime / 1000
+  let remainingSeconds = totalSeconds
+  const increment = 100 / totalSeconds
 
   const interval = setInterval(() => {
     if (width >= 100) {
       clearInterval(interval)
       update(address)
     } else {
-      width += increment
+      width += (increment * refreshRate) / 1000
+      remainingSeconds = Math.max(0, totalSeconds - (width / 100 * totalTime) / 1000)
       progressBar.style.width = width + '%'
+      
+      if (remainingSeconds > 0) {
+        progressText.textContent = `Refresh in ${Math.ceil(remainingSeconds)} ${Math.ceil(remainingSeconds) === 1 ? 'second' : 'seconds'}`
+      } else {
+        progressText.textContent = `Refreshing...`
+      }
     }
   }, refreshRate)
 }

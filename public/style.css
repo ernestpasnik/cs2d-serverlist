@@ -91,7 +91,6 @@ p {
 .api {
   color: #c9d1d9;
   padding: 1em 1em;
-  border-radius: 8px;
   display: block;
   background-color: rgba(115, 130, 140, .05);
   border-radius: 8px;
@@ -107,6 +106,12 @@ pre {
   text-wrap: nowrap;
 }
 
+pre {
+  margin: 0.5em 0;
+  padding: 0;
+  font-size: 1em;
+}
+
 code {
   color: #c9d1d9;
   padding: 1em;
@@ -120,9 +125,7 @@ code {
 
 pre {
   background-color: rgba(115, 130, 140, .05);
-  padding: 0;
   border-radius: 8px;
-  margin: 0;
 }
 
 .bi {
@@ -186,18 +189,33 @@ pre {
 }
 
 #progress-container {
-  width: 100%;
-  background-color: hsla(204, 10%, 50%, 0.05);
   overflow: hidden;
-  margin: 1em 0;
+  position: relative;
+  z-index: 2;
+  min-width: 160px;
+  text-align: center;
   border-radius: 8px;
+  background-color: rgba(115, 130, 140, .05);
+  height: 100%;
+  align-content: center;
+  margin-bottom: 0.5em;
+  padding: 0.5em 0.75em;
 }
 
 #progress {
-  height: 0.25em;
+  height: 100%;
   width: 0;
-  background-color: hsla(204, 10%, 50%, 0.2);
-  transition: width 0.1s ease;
+  background-color: hsla(204, 10%, 50%, 0.05);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+}
+
+#progress-container span {
+  position: relative; 
+  z-index: 4;
+  font-size: .88em;
 }
 
 .details {
@@ -228,11 +246,6 @@ pre {
 .spec {
   padding: 0.5em;
   font-size: 0.92em;
-}
-
-#address {
-  text-align: left;
-  font-weight: 500;
 }
 
 .table-responsive {
@@ -454,7 +467,7 @@ footer>a:hover {
   }
 
   .bar>div {
-    width: calc(33% - 0.3em);
+    width: calc(33% - 0.4em);
   }
 }
 
@@ -465,7 +478,7 @@ footer>a:hover {
 }
 
 .hljs-copy-container {
-  --hljs-theme-padding: 16px;
+  --hljs-theme-padding: 1em;
   position: absolute;
   top: 0;
   right: 0;
@@ -476,9 +489,8 @@ footer>a:hover {
   cursor: pointer;
   position: relative;
   margin: calc(var(--hljs-theme-padding) / 2);
-  width: calc(16px + var(--hljs-theme-padding));
-  height: calc(16px + var(--hljs-theme-padding));
-  font-size: 0.9em;
+  width: calc(1em + var(--hljs-theme-padding));
+  height: calc(1em + var(--hljs-theme-padding));
   text-indent: -9999px;
   color: rgba(201, 209, 217, 0.75);
   border-radius: 8px;
@@ -548,8 +560,6 @@ footer>a:hover {
 pre code.hljs {
   display: block;
   text-overflow: ellipsis;
-  padding: 1em;
-  font-size: 0.9em;
 }
 
 .hljs {

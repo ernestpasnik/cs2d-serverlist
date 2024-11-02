@@ -59,12 +59,17 @@ function routes(fastify) {
     })
   })
 
-  fastify.get('/api/:address', async (req, reply) => {
-    const result = servers.getServer(req.params.address)
-    if (result.error) {
-      return reply.status(404).send(result)
+  fastify.get('/api/:addresses', async (req, reply) => {
+    const addresses = req.params.addresses.split(',').map(address => address.trim())
+    const results = addresses.map(address => servers.getServer(address))
+    const successfulResults = results.filter(result => !result.error)
+    if (successfulResults.length === 0) {
+      return reply.status(404).send({ error: 'No valid servers found' })
     }
-    return reply.send(result)
+    if (successfulResults.length === 1) {
+      return reply.send(successfulResults[0])
+    }
+    return reply.send(successfulResults)
   })
 }
 

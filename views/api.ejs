@@ -12,13 +12,15 @@
   </div>
   <div>
     <p>The CS2D Server API offers free, real-time information about CS2D game servers. It updates every 10 seconds, giving you the latest server status and player stats. You can easily integrate this data into your apps, websites, or monitoring tools for live updates on server performance and player activity. Plus, there are no rate limits, so you can use it as much as you need!</p>
+    <p>You can request information for one or multiple servers by specifying their addresses separated by commas. For example:</p>
     <pre><code class="language-bash"><%= url %>/api/<%= example.ip %>:<%= example.port %></code></pre>
-    <p>The following is an example of response:</p>
     <div class="details">
       <div>
-        <pre><code class="language-json"><%=JSON.stringify(example, null, 2)%></code></pre>
+        <p>The following is an example response:</p>
+        <pre><code class="language-json"><%= JSON.stringify(example, null, 2) %></code></pre>
       </div>
       <div>
+        <p>The parameters are defined as follows:</p>
         <ul class="api">
           <li><strong>ip:</strong> The server's IP address.</li>
           <li><strong>port:</strong> The server's port number.</li>

@@ -20,9 +20,11 @@ EditionIDs GeoLite2-Country
 ```env
 HOST=0.0.0.0
 PORT=3000
-COUNTRYDB=/usr/share/GeoIP/GeoLite2-Country.mmdb
+UDPHOST=0.0.0.0
+UDPPORT=36963
 USGNIP=81.169.236.243
 USGNPORT=36963
+COUNTRYDB=/usr/share/GeoIP/GeoLite2-Country.mmdb
 ```
 7. Install dependencies `cd cs2d-serverlist && npm install`
 8. Run the application `node app.js`

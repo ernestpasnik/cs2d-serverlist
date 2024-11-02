@@ -454,7 +454,7 @@ footer>a:hover {
   }
 
   .bar>div {
-    width: 25%;
+    width: calc(33% - 0.3em);
   }
 }
 

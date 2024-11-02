@@ -25,6 +25,7 @@
     <div><b>Lighting</b><span id="forcelight"><% if (s.forcelight) { %>Enabled<% } else { %>Disabled<% } %></span></div>
     <div><b>Recoil</b><span id="recoil"><% if (s.recoil) { %>Enabled<% } else { %>Disabled<% } %></span></div>
     <div><b>Off-Screen</b><span id="offscreendamage"><% if (s.offscreendamage) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+    <div><b>Location</b><span id="country"><%= s.geoip.name %></span></div>
     <div><b>Map</b><span id="map"><%= s.map %></span></div>
   </div>
   <div class="details">

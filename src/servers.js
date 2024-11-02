@@ -125,6 +125,21 @@ server.on('message', (buf, rinfo) => {
   }
 })
 
+server.on('listening', () => {
+  const host = server.address().address
+  const port = server.address().port
+  console.log(`UDP Server listening on ${host}:${port}`)
+  serverlistRequest()
+  setTimeout(serverqueryRequest, 500)
+})
+
+server.on('error', (err) => {
+  console.error(`UDP Server error:\n${err.stack}`)
+  server.close()
+})
+
+server.bind(process.env.UDPPORT || 36963, process.env.UDPHOST || '0.0.0.0')
+
 function serverlistRequest() {
   const ts = Math.floor(Date.now() / 1000)
   servers = servers.filter((e) => e.ts === undefined || (ts - e.ts) < 60)
@@ -143,9 +158,6 @@ function serverqueryRequest() {
   }
   setTimeout(serverqueryRequest, 10000)
 }
-
-setTimeout(serverlistRequest, 1000)
-setTimeout(serverqueryRequest, 2000)
 
 module.exports = {
   getServers: function () {

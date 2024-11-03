@@ -1,42 +1,36 @@
-<%- include('header') %>
-
-<section>
-  <div class="flex">
-    <div>
-        <a href="/">
-        <h1 id="name"><i class="bi bi-list-task"></i>CS2D Serverlist</h1>
-        <div><i class="bi bi-arrow-clockwise"></i>Refresh</div>
-      </a>
-    </div>
-    <div>
-      <div><%= serversNum %> Servers</div>
-      <div><%= playersNum %> Players</div>
-    </div>
+<div class="flex">
+  <div>
+      <a href="/">
+      <h1 id="name"><i class="bi bi-list-task"></i>CS2D Serverlist</h1>
+      <div><i class="bi bi-arrow-clockwise"></i>Refresh</div>
+    </a>
   </div>
-  <div class="table-responsive">
-    <table class="sortable asc serverlist">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Map</th>
-          <th>Players</th>
-          <th>Address</th>
-        </tr>
-      </thead>
-      <tbody class="serverlist">
-        <% servers.forEach(function(s) { %>
-        <tr onclick="window.location.href='/details/<%= s.ip %>:<%= s.port %>'" <% if ((s.players - s.bots) === 0) { %> class="empty" <% } %>>
-          <td><%= s.geoip.flag %></td>
-          <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a></td>
-          <td><%= s.map %></td>
-          <td data-sort="<%= ((s.players-s.bots)*100) + s.bots %>"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></td>
-          <td><%= s.ip %>:<%= s.port %></td>
-        </tr>
-        <% }); %>
-      </tbody>
-    </table>
+  <div>
+    <div><%= serversNum %> Servers</div>
+    <div><%= playersNum %> Players</div>
   </div>
-</section>
-
-<%- include('footer') %>
+</div>
+<div class="table-responsive">
+  <table class="sortable asc serverlist">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Map</th>
+        <th>Players</th>
+        <th>Address</th>
+      </tr>
+    </thead>
+    <tbody class="serverlist">
+      <% servers.forEach(function(s) { %>
+      <tr onclick="window.location.href='/details/<%= s.ip %>:<%= s.port %>'" <% if ((s.players - s.bots) === 0) { %> class="e" <% } %>>
+        <td><%= s.geoip.flag %></td>
+        <td><%= s.name %></td>
+        <td><%= s.map %></td>
+        <td data-sort="<%= ((s.players-s.bots)*100) + s.bots %>"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></td>
+        <td><%= s.ip %>:<%= s.port %></td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

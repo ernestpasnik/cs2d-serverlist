@@ -19,10 +19,7 @@ const countMaps = (servers) => {
 }
 
 const getMemoryUsage = () => {
-  const memoryUsage = process.memoryUsage()
-  return {
-    rss: bytesToSize(memoryUsage.rss)
-  }
+  return bytesToSize(process.memoryUsage().rss)
 }
 
 const bytesToSize = (b) => {

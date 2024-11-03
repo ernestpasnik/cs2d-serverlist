@@ -128,7 +128,7 @@ server.on('message', (buf, rinfo) => {
 server.on('listening', () => {
   const host = server.address().address
   const port = server.address().port
-  console.log(`UDP Server listening on ${host}:${port}`)
+  console.log(`UDP Server address: ${host}:${port}`)
   serverlistRequest()
   setTimeout(serverqueryRequest, 500)
 })

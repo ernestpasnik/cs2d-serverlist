@@ -1,77 +1,71 @@
-<%- include('header') %>
-
-<section>
-  <div class="flex">
-    <div>
-      <a href="/">
-        <h1 id="name"><i class="bi bi-file-code-fill"></i><%= title %></h1>
-        <div><i class="bi bi-arrow-left"></i>Serverlist</div>
-      </a>
-    </div>
-    <div>&nbsp;</div>
-  </div>
+<div class="flex">
   <div>
-    <p>The CS2D Server API offers free, real-time information about CS2D game servers. It updates every 10 seconds, giving you the latest server status and player stats. You can easily integrate this data into your apps, websites, or monitoring tools for live updates on server performance and player activity. Plus, there are no rate limits, so you can use it as much as you need!</p>
-    <p>You can request information for one or multiple servers by specifying their addresses separated by commas. For example:</p>
-    <pre><code class="language-bash"><%= url %>/api/<%= example.ip %>:<%= example.port %></code></pre>
-    <div class="details">
-      <div>
-        <p>The following is an example response:</p>
-        <pre><code class="language-json"><%= JSON.stringify(example, null, 2) %></code></pre>
-      </div>
-      <div>
-        <p>The parameters are defined as follows:</p>
-        <ul class="api">
-          <li><strong>ip:</strong> The server's IP address.</li>
-          <li><strong>port:</strong> The server's port number.</li>
-          <li><strong>geoip:</strong>
-              <ul>
-                  <li><strong>name:</strong> Country name.</li>
-                  <li><strong>code:</strong> Country code.</li>
-                  <li><strong>flag:</strong> Emoji flag representation.</li>
-              </ul>
-          </li>
-          <li><strong>debug:</strong>
-              <ul>
-                  <li><strong>sent:</strong> Number of packets sent.</li>
-                  <li><strong>recv:</strong> Number of packets received.</li>
-                  <li><strong>sentBytes:</strong> Total bytes sent.</li>
-                  <li><strong>recvBytes:</strong> Total bytes received.</li>
-                  <li><strong>lastRequest:</strong> Timestamp of the last request.</li>
-                  <li><strong>ping:</strong> Current server ping in milliseconds.</li>
-              </ul>
-          </li>
-          <li><strong>ts:</strong> Current timestamp.</li>
-          <li><strong>password:</strong> Indicates if the server requires a password (true/false).</li>
-          <li><strong>usgnonly:</strong> Indicates if only U.S.G.N players are allowed (true/false).</li>
-          <li><strong>fow:</strong> Indicates if the server has field of view restrictions (true/false).</li>
-          <li><strong>friendlyfire:</strong> Indicates if friendly fire is enabled (true/false).</li>
-          <li><strong>bots:</strong> Number of bots currently in the game.</li>
-          <li><strong>lua:</strong> Indicates if Lua scripting is enabled (true/false).</li>
-          <li><strong>forcelight:</strong> Indicates if forced lighting is enabled (true/false).</li>
-          <li><strong>name:</strong> Name of the server.</li>
-          <li><strong>map:</strong> Current map being played.</li>
-          <li><strong>players:</strong> Number of players currently in the game.</li>
-          <li><strong>maxplayers:</strong> Maximum number of players allowed on the server.</li>
-          <li><strong>gamemode:</strong> Current game mode (0 for standard, etc.).</li>
-          <li><strong>recoil:</strong> Indicates if recoil is enabled (true/false).</li>
-          <li><strong>offscreendamage:</strong> Indicates if offscreen damage is enabled (true/false).</li>
-          <li><strong>hasdownloads:</strong> Indicates if the server has downloadable content (true/false).</li>
-          <li><strong>playerlist:</strong> An array of current players on the server, with each player containing:
-              <ul>
-                  <li><strong>id:</strong> Unique player identifier.</li>
-                  <li><strong>name:</strong> Player's name.</li>
-                  <li><strong>team:</strong> Team identifier (0 for spectators, 1/2 for teams).</li>
-                  <li><strong>score:</strong> Player's score.</li>
-                  <li><strong>deaths:</strong> Number of deaths.</li>
-              </ul>
-          </li>
-      </ul>
-      
-      </div>
-
-    </div>
+    <a href="/">
+      <h1 id="name"><i class="bi bi-file-code-fill"></i><%= title %></h1>
+      <div><i class="bi bi-arrow-left"></i>Serverlist</div>
+    </a>
   </div>
-</section>
+  <div>&nbsp;</div>
+</div>
+<div>
+  <p>The CS2D Server API provides free, real-time data about CS2D game servers, updating every 10 seconds. Easily integrate the latest server status and player stats into your apps or websites, with no rate limits for usage!</p>
+  <p>You can request information for one or multiple servers by specifying their addresses separated by commas.</p>
+  <pre><code class="language-bash"><%= url %>/api/<%= example.ip %>:<%= example.port %></code></pre>
+  <div class="details">
+    <div>
+      <p>The following is an example response:</p>
+      <pre><code class="language-json"><%= JSON.stringify(example, null, 2) %></code></pre>
+    </div>
+    <div>
+      <p>The parameters are defined as follows:</p>
+      <ul class="api">
+        <li><strong>ip:</strong> The server's IP address.</li>
+        <li><strong>port:</strong> The server's port number.</li>
+        <li><strong>geoip:</strong>
+            <ul>
+                <li><strong>name:</strong> Country name.</li>
+                <li><strong>code:</strong> Country code.</li>
+                <li><strong>flag:</strong> Emoji flag representation.</li>
+            </ul>
+        </li>
+        <li><strong>debug:</strong>
+            <ul>
+                <li><strong>sent:</strong> Number of packets sent.</li>
+                <li><strong>recv:</strong> Number of packets received.</li>
+                <li><strong>sentBytes:</strong> Total bytes sent.</li>
+                <li><strong>recvBytes:</strong> Total bytes received.</li>
+                <li><strong>lastRequest:</strong> Timestamp of the last sent request.</li>
+                <li><strong>ping:</strong> Current server ping in milliseconds.</li>
+            </ul>
+        </li>
+        <li><strong>ts:</strong> Timestamp of the last received request.</li>
+        <li><strong>password:</strong> Indicates if the server requires a password (true/false).</li>
+        <li><strong>usgnonly:</strong> Indicates if only U.S.G.N players are allowed (true/false).</li>
+        <li><strong>fow:</strong> Indicates if the server has field of view restrictions (true/false).</li>
+        <li><strong>friendlyfire:</strong> Indicates if friendly fire is enabled (true/false).</li>
+        <li><strong>bots:</strong> Number of bots currently in the game.</li>
+        <li><strong>lua:</strong> Indicates if Lua scripting is enabled (true/false).</li>
+        <li><strong>forcelight:</strong> Indicates if forced lighting is enabled (true/false).</li>
+        <li><strong>name:</strong> Name of the server.</li>
+        <li><strong>map:</strong> Current map being played.</li>
+        <li><strong>players:</strong> Number of players currently in the game.</li>
+        <li><strong>maxplayers:</strong> Maximum number of players allowed on the server.</li>
+        <li><strong>gamemode:</strong> Current game mode (0 for standard, etc.).</li>
+        <li><strong>recoil:</strong> Indicates if recoil is enabled (true/false).</li>
+        <li><strong>offscreendamage:</strong> Indicates if offscreen damage is enabled (true/false).</li>
+        <li><strong>hasdownloads:</strong> Indicates if the server has downloadable content (true/false).</li>
+        <li><strong>playerlist:</strong> An array of current players on the server, with each player containing:
+            <ul>
+                <li><strong>id:</strong> Unique player identifier.</li>
+                <li><strong>name:</strong> Player's name.</li>
+                <li><strong>team:</strong> Team identifier (0 for spectators, 1/2 for teams).</li>
+                <li><strong>score:</strong> Player's score.</li>
+                <li><strong>deaths:</strong> Number of deaths.</li>
+            </ul>
+        </li>
+    </ul>
+    
+    </div>
 
-<%- include('footer') %>
+  </div>
+</div>

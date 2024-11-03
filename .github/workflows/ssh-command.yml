@@ -21,7 +21,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd cs2d-serverlist
+            cd /var/www/cs2d-serverlist
             git fetch origin
             git reset --hard origin/main
             pm2 restart cs2d-serverlist

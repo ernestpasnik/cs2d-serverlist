@@ -32,7 +32,7 @@ COUNTRYDB=/usr/share/GeoIP/GeoLite2-Country.mmdb
 ## Download the dedicated server
 This script will download the CS2D dedicated server to the current user's directory.
 ```bash
-curl -sL https://cs2d-serverlist.erpa.cc/cs2d_server_downloader.sh | bash
+curl -sL https://cs2d-serverlist.erpa.cc/downloader.sh | bash
 ```
 
 ## License

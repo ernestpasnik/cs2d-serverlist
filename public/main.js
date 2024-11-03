@@ -75,7 +75,7 @@ function updateGameMode(data) {
 }
 
 function updateSettings(data) {
-  const settings = ['password', 'usgDisablednly', 'fow', 'forcelight', 'recoil', 'offscreendamage']
+  const settings = ['password', 'usgnonly', 'fow', 'forcelight', 'recoil', 'offscreendamage']
   settings.forEach(setting => {
     document.querySelector(`#${setting}`).textContent = data[setting] ? 'Enabled' : 'Disabled'
   })

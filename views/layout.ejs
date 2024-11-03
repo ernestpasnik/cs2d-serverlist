@@ -5,14 +5,23 @@
   <meta name="description" content="Discover active CS2D servers worldwide. Explore maps, check player stats, and join dynamic multiplayer matches.">
   <meta name="keywords" content="cs2d, serverlist, active servers, server browser, cs2d maps">  
   <title><% if (typeof title !== 'undefined') { %><%= title %> · <% } %>CS2D Serverlist</title>
-  <link rel="icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/style.css?20241102300">
+  <link rel="icon" href="/favicon.ico?v=<%= version %>">
+  <link rel="stylesheet" href="/main.css?v=<%= version %>">
   <script defer src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/sortable.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script defer src="/script.js?20241102300"></script>
+  <script defer src="/main.js?v=<%= version %>"></script>
 </head>
 <body>
   <nav>
     <a href="/api"><i class="bi bi-file-code-fill"></i>API Docs</a>
     <a href="/stats"><i class="bi bi-bar-chart-fill"></i>Statistics</a>
   </nav>
+  <section>
+    <%- body %>
+  </section>
+  <footer>
+    <a href="https://github.com/ernestpasnik/cs2d-serverlist" target="_blank"><i class="bi bi-github"></i>GitHub</a>
+    <a href="https://cs2d.com/" target="_blank"><i class="bi bi-box-arrow-up-right"></i>CS2D</a>
+  </footer>
+</body>
+</html>

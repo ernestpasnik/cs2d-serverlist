@@ -1,81 +1,76 @@
-<%- include('header') %>
 
-<section>
-  <div class="flex">
+<div class="flex">
+  <div>
+    <a href="/">
+      <span id="gm" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span><h1 id="name"><%= s.name %></h1>
+      <div><i class="bi bi-arrow-left"></i>Serverlist</div>
+    </a>
+  </div>
+  <div>
     <div>
-      <a href="/">
-        <span id="gm" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span><h1 id="name"><%= s.name %></h1>
-        <div><i class="bi bi-arrow-left"></i>Serverlist</div>
-      </a>
-    </div>
-    <div>
-      <div>
-        <pre><code id="address" class="language-bash"><%= s.ip %>:<%= s.port %></code></pre>
-      </div>
+      <pre><code id="address" class="language-bash"><%= s.ip %>:<%= s.port %></code></pre>
     </div>
   </div>
-  <div id="pro">
-    <span><i class="bi bi-arrow-clockwise"></i>Refresh in 10 seconds</span></span>
-    <div id="progress"></div>
+</div>
+<div id="pro">
+  <span><i class="bi bi-arrow-clockwise"></i>Refresh in 10 seconds</span></span>
+  <div id="progress"></div>
+</div>
+<div class="bar">
+  <div><b>Players</b><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
+  <div><b>Password</b><span id="password"><% if (s.password) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><b>USGN Only</b><span id="usgnonly"><% if (s.usgnonly) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><b>Fog of War</b><span id="fow"><% if (s.fow) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><b>Lighting</b><span id="forcelight"><% if (s.forcelight) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><b>Recoil</b><span id="recoil"><% if (s.recoil) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><b>Off-Screen</b><span id="offscreendamage"><% if (s.offscreendamage) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><b>Location</b><span id="country"><%= s.geoip.name %></span></div>
+  <div><b>Map</b><span id="map"><%= s.map %></span></div>
+</div>
+<div class="details">
+  <div class="table-responsive">
+    <table class="ct sortable asc">
+      <thead>
+        <tr>
+          <th>Counter-Terrorist Forces</th>
+          <th>Score</th>
+          <th>Deaths</th>
+        </tr>
+      </thead>
+      <tbody id="ct">
+        <% s.playerlist.forEach(function(p) { %>
+        <% if (p.team == 2 || p.team == 3) { %>
+        <tr>
+          <td><%= p.name %></td>
+          <td><%= p.score %></td>
+          <td><%= p.deaths %></td>
+        </tr>
+        <% } %>
+        <% }) %>
+      </tbody>
+    </table>
   </div>
-  <div class="bar">
-    <div><b>Players</b><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
-    <div><b>Password</b><span id="password"><% if (s.password) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-    <div><b>USGN Only</b><span id="usgDisablednly"><% if (s.usgDisablednly) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-    <div><b>Fog of War</b><span id="fow"><% if (s.fow) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-    <div><b>Lighting</b><span id="forcelight"><% if (s.forcelight) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-    <div><b>Recoil</b><span id="recoil"><% if (s.recoil) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-    <div><b>Off-Screen</b><span id="offscreendamage"><% if (s.offscreendamage) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-    <div><b>Location</b><span id="country"><%= s.geoip.name %></span></div>
-    <div><b>Map</b><span id="map"><%= s.map %></span></div>
+  <div class="table-responsive">
+    <table class="t sortable asc">
+      <thead>
+        <tr>
+          <th>Terrorist Forces</th>
+          <th>Score</th>
+          <th>Deaths</th>
+        </tr>
+      </thead>
+      <tbody id="t">
+        <% s.playerlist.forEach(function(p) { %>
+        <% if (p.team == 1) { %>
+        <tr>
+          <td><%= p.name %></td>
+          <td><%= p.score %></td>
+          <td><%= p.deaths %></td>
+        </tr>
+        <% } %>
+        <% }) %>
+      </tbody>
+    </table>
   </div>
-  <div class="details">
-    <div class="table-responsive">
-      <table class="ct sortable asc">
-        <thead>
-          <tr>
-            <th>Counter-Terrorist Forces</th>
-            <th>Score</th>
-            <th>Deaths</th>
-          </tr>
-        </thead>
-        <tbody id="ct">
-          <% s.playerlist.forEach(function(p) { %>
-          <% if (p.team == 2 || p.team == 3) { %>
-          <tr>
-            <td><%= p.name %></td>
-            <td><%= p.score %></td>
-            <td><%= p.deaths %></td>
-          </tr>
-          <% } %>
-          <% }); %>
-        </tbody>
-      </table>
-    </div>
-    <div class="table-responsive">
-      <table class="t sortable asc">
-        <thead>
-          <tr>
-            <th>Terrorist Forces</th>
-            <th>Score</th>
-            <th>Deaths</th>
-          </tr>
-        </thead>
-        <tbody id="t">
-          <% s.playerlist.forEach(function(p) { %>
-          <% if (p.team == 1) { %>
-          <tr>
-            <td><%= p.name %></td>
-            <td><%= p.score %></td>
-            <td><%= p.deaths %></td>
-          </tr>
-          <% } %>
-          <% }); %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="spec"><% if (spectators.length > 0) {%>Spectators: <%= spectators.map(p => p.name).join(', ') %> <% } %></div>
-</section>
-
-<%- include('footer') %>
+</div>
+<div class="spec"><% if (spectators.length > 0) {%>Spectators: <%= spectators.map(p => p.name).join(', ') %> <% } %></div>

@@ -17,7 +17,6 @@
 @font-face {
   font-display: block;
   font-family: "bootstrap-icons";
-  font-display: swap;
   src: url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/fonts/bootstrap-icons.woff2") format("woff2");
 }
 
@@ -340,11 +339,11 @@ thead>tr>th {
   width: 50%;
 }
 
-.empty>td, .empty>td>a {
+.e>td {
   color: rgba(128,128,128,0.6);
 }
 
-.empty>td:first-child {
+.e>td:first-child {
   opacity: 0.6;
 }
 
@@ -509,7 +508,7 @@ thead>tr>th {
   padding-left: 0;
 }
 
-.serverlist>tr:hover>td, .serverlist>tr:hover>td>a {
+.serverlist>tr:hover>td {
   color: rgb(255,255,255);
   cursor: pointer;
   opacity: 1;

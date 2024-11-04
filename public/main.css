@@ -142,7 +142,7 @@ pre {
   border-radius: 8px;
 }
 
-section {
+main {
   margin: 0;
   background-color: rgba(16,24,30,0.85);
   border-radius: 8px;
@@ -597,7 +597,7 @@ thead>tr>th {
     border-radius: 4px;
   }
 
-  section {
+  main {
     padding: 1.5em 1em;
   }
 

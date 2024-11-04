@@ -12,6 +12,13 @@
   "scripts": {
     "start": "node app.js"
   },
+  "keywords": [
+    "nodejs",
+    "webapp",
+    "ejs",
+    "fastify",
+    "cs2d"
+  ],
   "dependencies": {
     "@fastify/static": "*",
     "@fastify/view": "*",
@@ -21,5 +28,12 @@
     "fastify": "*",
     "fastify-minify": "*",
     "maxmind-db-reader": "*"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "homepage": "https://cs2d-serverlist.erpa.cc",
+  "bugs": {
+    "url": "https://github.com/ernestpasnik/cs2d-serverlist/issues"
   }
 }

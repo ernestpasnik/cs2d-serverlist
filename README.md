@@ -1,9 +1,9 @@
 ## Introduction
-A web application for browsing the server list from CS2D, featuring a [live demo](https://cs2d-serverlist.erpa.cc). The app also provides an [API](https://cs2d-serverlist.erpa.cc/api) for retrieving server data in JSON format, which you can freely use.
+This application allows users to browse a list of servers for the game CS2D. It features a user-friendly interface and provides an [API](https://cs2d-serverlist.erpa.cc/api) for retrieving server data in JSON format, making it easy to integrate with other applications. You can check out a live demo of the application [here](https://cs2d-serverlist.erpa.cc).
 
 ## Installation
-1. Install geoipupdate package on your system `apt install -y geoipupdate`
-2. Generate a license key by following the [instructions](https://support.maxmind.com/hc/en-us/articles/4407111582235-Generate-a-License-Key) and configure the GeoIP updater `nano /etc/GeoIP.conf`
+1. Install geoipupdate on your system `apt install -y geoipupdate`
+2. Generate a [license key](https://support.maxmind.com/hc/en-us/articles/4407111582235-Generate-a-License-Key) and configure `nano /etc/GeoIP.conf`
 ```
 AccountID your_account_id_here
 LicenseKey your_license_key_here
@@ -28,12 +28,6 @@ COUNTRYDB=/usr/share/GeoIP/GeoLite2-Country.mmdb
 ```
 7. Install dependencies `cd cs2d-serverlist && npm install`
 8. Run the application `node app.js`
-
-## Download the dedicated server
-This script will download the CS2D dedicated server to the current user's directory.
-```bash
-curl -sL https://cs2d-serverlist.erpa.cc/downloader.sh | bash
-```
 
 ## License
 This project is licensed under the [MIT License](LICENSE).

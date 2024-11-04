@@ -190,6 +190,17 @@ thead>tr>th {
 #address {
   cursor: pointer;
   text-align: center;
+  font-size: 0.88em;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+#address:hover {
+  background-color: hsla(204,10%,50%,0.05);
+  color: #fff;
 }
 
 #gm {
@@ -360,7 +371,6 @@ thead>tr>th {
 .flex {
   display: flex;
   justify-content: space-between;
-  gap: .25em;
 }
 
 .flex>div {

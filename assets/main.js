@@ -109,18 +109,15 @@ if (addressElement) {
   addressElement.addEventListener('click', function () {
     if (clicked) return
     const text = this.textContent
-    const originalWidth = this.offsetWidth
     navigator.clipboard.writeText(text)
       .then(() => {
         const originalText = this.textContent
-        this.innerHTML = '<i class="bi bi-check-lg"></i>Copied!'
-        this.style.width = originalWidth + 'px'
+        this.textContent = 'Copied to clipboard!'
         clicked = true
         setTimeout(() => {
           this.textContent = originalText
-          this.style.width = ''
           clicked = false
-        }, 1000)
+        }, 2000)
       })
       .catch(err => {
         console.error('Failed to copy: ', err)

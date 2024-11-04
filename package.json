@@ -1,6 +1,6 @@
 {
   "name": "cs2d-serverlist",
-  "version": "1.4",
+  "version": "1.5",
   "description": "Web application for browsing the serverlist from CS2D",
   "repository": {
     "type": "git",

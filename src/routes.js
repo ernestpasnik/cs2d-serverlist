@@ -71,8 +71,8 @@ function routes(fastify) {
     return reply.send(successfulResults)
   })
 
-  fastify.setNotFoundHandler(async (request, reply) => {
-    return reply.view('404', {
+  fastify.setNotFoundHandler(async (req, reply) => {
+    return reply.status(404).view('404', {
       title: 'Error 404'
     })
   })

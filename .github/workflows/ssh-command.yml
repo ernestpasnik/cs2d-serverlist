@@ -22,6 +22,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd /var/www
+            rm -rf cs2d-serverlist
             git clone https://github.com/ernestpasnik/cs2d-serverlist
             cd cs2d-serverlist
             npm install

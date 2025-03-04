@@ -1,5 +1,5 @@
 require('dotenv').config()
-const fastify = require('fastify')()
+const fastify = require('fastify')({ trustProxy: true })
 const package = require(`${__dirname}/package.json`)
 const routes = require(`${__dirname}/src/routes.js`)
 const opt = {

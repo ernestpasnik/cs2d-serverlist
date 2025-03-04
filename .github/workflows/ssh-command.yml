@@ -21,7 +21,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            cd /var/www/cs2d-serverlist
-            git pull origin main
+            cd /var/www
+            git clone https://github.com/ernestpasnik/cs2d-serverlist
+            cd cs2d-serverlist
             npm install
             pm2 restart cs2d-serverlist

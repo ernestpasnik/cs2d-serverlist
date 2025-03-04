@@ -1,33 +1,21 @@
 ## Introduction
-This application allows users to browse a list of servers for the game CS2D. It features a user-friendly interface and provides an [API](https://cs2d-serverlist.erpa.cc/api) for retrieving server data in JSON format, making it easy to integrate with other applications. You can check out a live demo of the application [here](https://cs2d-serverlist.erpa.cc).
+A Node.js application that serves an HTTP page with an integrated API for querying and displaying a CS2D server list. The app provides real-time server information, including server status, players, and map details, through a dedicated API endpoint.
 
 ## Installation
-1. Install geoipupdate on your system `apt install -y geoipupdate`
-2. Generate a [license key](https://support.maxmind.com/hc/en-us/articles/4407111582235-Generate-a-License-Key) and configure `nano /etc/GeoIP.conf`
-```
-AccountID your_account_id_here
-LicenseKey your_license_key_here
-DatabaseDirectory /usr/share/GeoIP
-EditionIDs GeoLite2-Country
-```
-3. Run the following command to update the GeoIP database `geoipupdate`
-4. Add a crontab entry to update the GeoIP database twice a week `crontab -e`
-```
-57 22 * * 0,4 geoipupdate >/dev/null 2>&1
-``` 
-5. Clone repository `git clone https://github.com/ernestpasnik/cs2d-serverlist.git`
-6. Configure environment variables `nano cs2d-serverlist/.env`
+1. Clone the Repository `git clone https://github.com/ernestpasnik/cs2d-serverlist.git`
+2. Change into the repository directory `cd cs2d-serverlist`
+3. Configure environment variables `nano .env`
 ```env
 HOST=0.0.0.0
 PORT=3000
-UDPHOST=0.0.0.0
-UDPPORT=36963
-USGNIP=81.169.236.243
-USGNPORT=36963
-COUNTRYDB=/usr/share/GeoIP/GeoLite2-Country.mmdb
+UDP_HOST=0.0.0.0
+UDP_PORT=36963
+IPDATA_APIKEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
-7. Install dependencies `cd cs2d-serverlist && npm install`
-8. Run the application `node app.js`
+Note: You can get the IPDATA_APIKEY value by creating a free account at [ipdata.co](https://ipdata.co)
+
+4. Install dependencies `npm install`
+5. Run the application `npm start`
 
 ## License
 This project is licensed under the [MIT License](LICENSE).

@@ -1,12 +1,11 @@
 const dgram = require('node:dgram')
-const mmdbreader = require('maxmind-db-reader')
-const countryFlagEmoji = require('country-flag-emoji')
-const db = process.env.COUNTRYDB || '/usr/share/GeoIP/GeoLite2-Country.mmdb'
-const countries = mmdbreader.openSync(db)
+const IPData = require('ipdata').default
+const ipdata = new IPData(process.env.IPDATA_APIKEY)
+const fields = ['country_name', 'country_code', 'emoji_flag']
 const server = dgram.createSocket('udp4')
 const streams = require(__dirname + '/streams')
-const usgnIp = process.env.USGNIP || '81.169.236.243'
-const usgnPort = process.env.USGNPORT || 36963
+const usgnIp = '81.169.236.243'
+const usgnPort = 36963
 let servers = []
 let recvSize = 0
 let sentSize = 0
@@ -22,7 +21,6 @@ function serverQuery(stream) {
   res.usgnonly = readFlag(flags, 1)
   res.fow = readFlag(flags, 2)
   res.friendlyfire = readFlag(flags, 3)
-  res.bots = readFlag(flags, 5)
   res.lua = readFlag(flags, 6)
   res.forcelight = readFlag(flags, 7)
   res.name = stream.readString(stream.readByte())
@@ -70,15 +68,17 @@ async function receivedServerlist(stream) {
     if (exists) {
       continue
     }
-    countries.getGeoData(ip, function(err, geodata) {
-      const name = geodata?.country?.names?.en || 'Unknown'
-      const code = geodata?.country?.iso_code || 'ZZ'
-      const flag = countryFlagEmoji.get(code)?.emoji || '🏴󠁧󠁤󠀰󠀵󠁿'
+    sentSize += 8
+    server.send(Buffer.from([1, 0, 251, 1, 245, 3, 251, 5]), port, ip)
+    ipdata.lookup(ip, null, fields).then(function(data) {
+      const name = data.country_name || 'Unknown'
+      const code = data.country_code || 'ZZ'
+      const flag = data.emoji_flag || '🏴󠁧󠁤󠀰󠀵󠁿'
       const geoip = { name, code, flag }
       const debug = {
-        sent: 0, recv: 0,
-        sentBytes: 0, recvBytes: 0,
-        lastRequest: 0, ping: 0
+        sent: 1, recv: 0,
+        sentBytes: 8, recvBytes: 0,
+        lastRequest: Date.now(), ping: 0
       }
       servers.push({ ip, port, geoip, debug })
     })
@@ -128,9 +128,9 @@ server.on('message', (buf, rinfo) => {
 server.on('listening', () => {
   const host = server.address().address
   const port = server.address().port
-  console.log(`UDP Server address: ${host}:${port}`)
+  console.log(`UDP Server listening on ${host}:${port}`)
   serverlistRequest()
-  setTimeout(serverqueryRequest, 500)
+  setTimeout(serverqueryRequest, 10000)
 })
 
 server.on('error', (err) => {
@@ -138,7 +138,7 @@ server.on('error', (err) => {
   server.close()
 })
 
-server.bind(process.env.UDPPORT || 36963, process.env.UDPHOST || '0.0.0.0')
+server.bind(process.env.UDP_PORT || 36963, process.env.UDP_HOST || '0.0.0.0')
 
 function serverlistRequest() {
   const ts = Math.floor(Date.now() / 1000)

@@ -1,20 +1,22 @@
 require('dotenv').config()
-const path = require('path')
-const pjson = require('./package.json')
-const fastify = require('fastify')({ trustProxy: true })
-const routes = require(path.join(__dirname, 'src', 'routes.js'))
-const host = process.env.HOST || '0.0.0.0'
-const port = process.env.PORT || 3000
-const env = process.env.NODE_ENV || 'development'
-const nodeVersion = process.versions.node
-console.log(`Current Environment: ${env}`)
-console.log(`Node.js Version: ${nodeVersion}`)
-
-if (env !== 'production') {
-  fastify.register(require('@fastify/static'), {
-    root: path.join(__dirname, 'public')
-  })
+const fastify = require('fastify')()
+const package = require(`${__dirname}/package.json`)
+const routes = require(`${__dirname}/src/routes.js`)
+const opt = {
+  host: process.env.HOST || '0.0.0.0',
+  port: process.env.PORT || 3000
 }
+
+let minify = true
+let version = package.version
+if (process.env.NODE_ENV === 'development') {
+  minify = false
+  version = Math.floor(Date.now() / 1000)
+}
+
+fastify.register(require('@fastify/static'), {
+  root: `${__dirname}/public`
+})
 
 fastify.register(require('@fastify/view'), {
   engine: {
@@ -22,23 +24,22 @@ fastify.register(require('@fastify/view'), {
   },
   root: 'views',
   layout: 'layout.ejs',
-  maxCache: 5000,
   defaultContext: {
-    version: pjson.version
+    version: version,
+    env: process.env.NODE_ENV
   }
 })
 
 fastify.register(require('fastify-minify'), {
-  cache: 5000,
-  global: true
+  global: minify
 })
 
 routes(fastify)
 
-fastify.listen({ host: host, port: port }, (err, address) => {
+fastify.listen({ host: opt.host, port: opt.port }, (err, address) => {
   if (err) {
     fastify.log.error(err)
     process.exit(1)
   }
-  console.log(`HTTP Server address: ${host}:${port}`)
+  console.log(`HTTP Server listening on ${address}`)
 })

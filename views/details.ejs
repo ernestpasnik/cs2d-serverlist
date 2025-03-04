@@ -3,19 +3,19 @@
   <div>
     <a href="/">
       <span id="gm" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span><h1 id="name"><%= s.name %></h1>
-      <div><i class="bi bi-arrow-left"></i>Serverlist</div>
+      <div><i class="bi bi-arrow-left"></i>Return</div>
     </a>
   </div>
-  <div>
-    <div>
-      <pre><code id="address" class="language-bash"><%= s.ip %>:<%= s.port %></code></pre>
-    </div>
+</div>
+
+<div class="flex flex-details">
+  <code id="address" class="language-bash copy"><%= s.ip %>:<%= s.port %></code>
+  <div id="pro">
+    <span><i class="bi bi-arrow-clockwise"></i>Refresh in 10 s</span></span>
+    <div id="progress"></div>
   </div>
 </div>
-<div id="pro">
-  <span><i class="bi bi-arrow-clockwise"></i>Refresh in 10 seconds</span></span>
-  <div id="progress"></div>
-</div>
+
 <div class="bar">
   <div><b>Players</b><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
   <div><b>Password</b><span id="password"><% if (s.password) { %>Enabled<% } else { %>Disabled<% } %></span></div>
@@ -27,11 +27,13 @@
   <div><b>Location</b><span id="country"><%= s.geoip.name %></span></div>
   <div><b>Map</b><span id="map"><%= s.map %></span></div>
 </div>
+
 <div class="details">
   <div class="table-responsive">
     <table class="ct sortable asc">
       <thead>
         <tr>
+          <th>ID</th>
           <th>Counter-Terrorist Forces</th>
           <th>Score</th>
           <th>Deaths</th>
@@ -41,6 +43,7 @@
         <% s.playerlist.forEach(function(p) { %>
         <% if (p.team == 2 || p.team == 3) { %>
         <tr>
+          <td><%= p.id %></td>
           <td><%= p.name %></td>
           <td><%= p.score %></td>
           <td><%= p.deaths %></td>
@@ -54,6 +57,7 @@
     <table class="t sortable asc">
       <thead>
         <tr>
+          <th>ID</th>
           <th>Terrorist Forces</th>
           <th>Score</th>
           <th>Deaths</th>
@@ -63,6 +67,7 @@
         <% s.playerlist.forEach(function(p) { %>
         <% if (p.team == 1) { %>
         <tr>
+          <td><%= p.id %></td>
           <td><%= p.name %></td>
           <td><%= p.score %></td>
           <td><%= p.deaths %></td>

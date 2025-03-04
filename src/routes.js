@@ -39,7 +39,6 @@ function routes(fastify) {
   fastify.get('/api', async (req, reply) => {
     return reply.view('api', {
       title: 'API Docs',
-      example: servers.getServers().servers[0],
       url: `${req.protocol}://${req.host}`
     })
   })
@@ -70,6 +69,12 @@ function routes(fastify) {
       return reply.send(successfulResults[0])
     }
     return reply.send(successfulResults)
+  })
+
+  fastify.setNotFoundHandler(async (request, reply) => {
+    return reply.view('404', {
+      title: 'Error 404'
+    })
   })
 }
 

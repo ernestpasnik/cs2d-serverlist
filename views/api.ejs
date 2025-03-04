@@ -1,70 +1,114 @@
 <div class="flex">
   <div>
     <a href="/">
-      <h1 id="name"><i class="bi bi-file-code-fill"></i><%= title %></h1>
-      <div><i class="bi bi-arrow-left"></i>Serverlist</div>
+      <h1><i class="bi bi-file-code-fill"></i><%= title %></h1>
+      <div><i class="bi bi-arrow-left"></i>Return</div>
     </a>
   </div>
   <div>&nbsp;</div>
 </div>
 <div>
-  <p>The CS2D Server API provides free, real-time data about CS2D game servers, updating every 10 seconds. Easily integrate the latest server status and player stats into your apps or websites, with no rate limits for usage!</p>
-  <p>You can request information for one or multiple servers by specifying their addresses separated by commas.</p>
-  <pre><code class="language-bash"><%= url %>/api/<%= example.ip %>:<%= example.port %></code></pre>
+  <p>HTTP API endpoint that provides updated data on CS2D server(s).</p>
+  <code class="copy"><%= url %>/api/45.77.92.159:30001</code>
   <div class="details">
     <div>
-      <p>The following is an example response:</p>
-      <pre><code class="language-json"><%= JSON.stringify(example, null, 2) %></code></pre>
+      <p>Example response:</p>
+<pre><code class="language-json hljs" data-highlighted="yes"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">"ip"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"45.77.92.159"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"port"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">30001</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"geoip"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"United States"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"code"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"US"</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"flag"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"🇺🇸"</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"debug"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">"sent"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">16</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"recv"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"sentBytes"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">128</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"recvBytes"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2004</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"lastRequest"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1741051556752</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">"ping"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">161</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"ts"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1741051556</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"password"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"usgnonly"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"fow"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"friendlyfire"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"lua"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"forcelight"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"[Q] CS2D.org # Ranked - USA"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"map"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"de_dust"</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"players"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"maxplayers"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">32</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"gamemode"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"bots"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"recoil"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"offscreendamage"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"hasdownloads"</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">"playerlist"</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
+    <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">"id"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"name"</span><span class="hljs-punctuation">:</span> <span class="hljs-string">"[b]ZOMG"</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"team"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"score"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">"deaths"</span><span class="hljs-punctuation">:</span> <span class="hljs-number">5</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
     </div>
     <div>
-      <p>The parameters are defined as follows:</p>
+      <p>Parameter description:</p>
       <ul class="api">
-        <li><strong>ip:</strong> The server's IP address.</li>
-        <li><strong>port:</strong> The server's port number.</li>
-        <li><strong>geoip:</strong>
-            <ul>
-                <li><strong>name:</strong> Country name.</li>
-                <li><strong>code:</strong> Country code.</li>
-                <li><strong>flag:</strong> Emoji flag representation.</li>
-            </ul>
-        </li>
-        <li><strong>debug:</strong>
-            <ul>
-                <li><strong>sent:</strong> Number of packets sent.</li>
-                <li><strong>recv:</strong> Number of packets received.</li>
-                <li><strong>sentBytes:</strong> Total bytes sent.</li>
-                <li><strong>recvBytes:</strong> Total bytes received.</li>
-                <li><strong>lastRequest:</strong> Timestamp of the last sent request.</li>
-                <li><strong>ping:</strong> Current server ping in milliseconds.</li>
-            </ul>
-        </li>
-        <li><strong>ts:</strong> Timestamp of the last received request.</li>
-        <li><strong>password:</strong> Indicates if the server requires a password (true/false).</li>
-        <li><strong>usgnonly:</strong> Indicates if only U.S.G.N players are allowed (true/false).</li>
-        <li><strong>fow:</strong> Indicates if the server has field of view restrictions (true/false).</li>
-        <li><strong>friendlyfire:</strong> Indicates if friendly fire is enabled (true/false).</li>
-        <li><strong>bots:</strong> Number of bots currently in the game.</li>
-        <li><strong>lua:</strong> Indicates if Lua scripting is enabled (true/false).</li>
-        <li><strong>forcelight:</strong> Indicates if forced lighting is enabled (true/false).</li>
-        <li><strong>name:</strong> Name of the server.</li>
-        <li><strong>map:</strong> Current map being played.</li>
-        <li><strong>players:</strong> Number of players currently in the game.</li>
-        <li><strong>maxplayers:</strong> Maximum number of players allowed on the server.</li>
-        <li><strong>gamemode:</strong> Current game mode (0 for standard, etc.).</li>
-        <li><strong>recoil:</strong> Indicates if recoil is enabled (true/false).</li>
-        <li><strong>offscreendamage:</strong> Indicates if offscreen damage is enabled (true/false).</li>
-        <li><strong>hasdownloads:</strong> Indicates if the server has downloadable content (true/false).</li>
-        <li><strong>playerlist:</strong> An array of current players on the server, with each player containing:
-            <ul>
-                <li><strong>id:</strong> Unique player identifier.</li>
-                <li><strong>name:</strong> Player's name.</li>
-                <li><strong>team:</strong> Team identifier (0 for spectators, 1/2 for teams).</li>
-                <li><strong>score:</strong> Player's score.</li>
-                <li><strong>deaths:</strong> Number of deaths.</li>
-            </ul>
-        </li>
-    </ul>
-    
+          <li>&nbsp;</li>
+          <li><strong class="hljs-attr">ip:</strong> <span class="hljs-string">The server's IP address.</span></li>
+          <li><strong class="hljs-attr">port:</strong> <span class="hljs-number">The server's port number.</span></li>
+          <li><strong class="hljs-attr">geoip:</strong>
+              <ul>
+                  <li><strong class="hljs-attr">name:</strong> <span class="hljs-string">Country name.</span></li>
+                  <li><strong class="hljs-attr">code:</strong> <span class="hljs-string">Country code.</span></li>
+                  <li><strong class="hljs-attr">flag:</strong> <span class="hljs-string">Emoji flag representation.</span></li>
+              </ul>
+          </li>
+          <li>&nbsp;</li>
+          <li><strong class="hljs-attr">debug:</strong>
+              <ul>
+                  <li><strong class="hljs-attr">sent:</strong> <span class="hljs-number">Number of packets sent.</span></li>
+                  <li><strong class="hljs-attr">recv:</strong> <span class="hljs-number">Number of packets received.</span></li>
+                  <li><strong class="hljs-attr">sentBytes:</strong> <span class="hljs-number">Total bytes sent.</span></li>
+                  <li><strong class="hljs-attr">recvBytes:</strong> <span class="hljs-number">Total bytes received.</span></li>
+                  <li><strong class="hljs-attr">lastRequest:</strong> <span class="hljs-number">Timestamp of the last sent request.</span></li>
+                  <li><strong class="hljs-attr">ping:</strong> <span class="hljs-number">Current server ping in milliseconds.</span></li>
+              </ul>
+          </li>
+          <li>&nbsp;</li>
+          <li><strong class="hljs-attr">ts:</strong> <span class="hljs-number">Timestamp of the last received request.</span></li>
+          <li><strong class="hljs-attr">password:</strong> <span class="hljs-keyword">If the server requires a password.</span></li>
+          <li><strong class="hljs-attr">usgnonly:</strong> <span class="hljs-keyword">If only U.S.G.N players are allowed.</span></li>
+          <li><strong class="hljs-attr">fow:</strong> <span class="hljs-keyword">If the server has field of view restrictions.</span></li>
+          <li><strong class="hljs-attr">friendlyfire:</strong> <span class="hljs-keyword">If friendly fire is enabled.</span></li>
+          <li><strong class="hljs-attr">bots:</strong> <span class="hljs-number">Number of bots currently in the game.</span></li>
+          <li><strong class="hljs-attr">lua:</strong> <span class="hljs-keyword">If Lua scripting is enabled.</span></li>
+          <li><strong class="hljs-attr">forcelight:</strong> <span class="hljs-keyword">If forced lighting is enabled.</span></li>
+          <li><strong class="hljs-attr">name:</strong> <span class="hljs-string">Name of the server.</span></li>
+          <li><strong class="hljs-attr">map:</strong> <span class="hljs-string">Current map being played.</span></li>
+          <li><strong class="hljs-attr">players:</strong> <span class="hljs-number">Number of players currently in the game.</span></li>
+          <li><strong class="hljs-attr">maxplayers:</strong> <span class="hljs-number">Max number of players allowed on the server.</span></li>
+          <li><strong class="hljs-attr">gamemode:</strong> <span class="hljs-number">Current game mode.</span></li>
+          <li><strong class="hljs-attr">recoil:</strong> <span class="hljs-keyword">If recoil is enabled.</span></li>
+          <li><strong class="hljs-attr">offscreendamage:</strong> <span class="hljs-keyword">If offscreen damage is enabled.</span></li>
+          <li><strong class="hljs-attr">hasdownloads:</strong> <span class="hljs-keyword">If the server has downloadable content.</span></li>
+          <li><strong class="hljs-attr">playerlist:</strong> <span class="hljs-string">Current players on the server:</span>
+              <ul>
+                  <li><strong class="hljs-attr">id:</strong> <span class="hljs-number">Unique player identifier.</span></li>
+                  <li><strong class="hljs-attr">name:</strong> <span class="hljs-string">Player's name.</span></li>
+                  <li><strong class="hljs-attr">team:</strong> <span class="hljs-number">Team identifier (0 for spectators, 1/2 for teams).</span></li>
+                  <li><strong class="hljs-attr">score:</strong> <span class="hljs-number">Player's score.</span></li>
+                  <li><strong class="hljs-attr">deaths:</strong> <span class="hljs-number">Number of deaths.</span></li>
+              </ul>
+          </li>
+      </ul>
+
     </div>
 
   </div>

@@ -1,7 +1,7 @@
 {
   "name": "cs2d-serverlist",
-  "version": "1.5",
-  "description": "Web application for browsing the serverlist from CS2D",
+  "version": "2.0",
+  "description": "Node.js app serving an HTTP page with an API for querying and displaying a CS2D server list.",
   "repository": {
     "type": "git",
     "url": "https://github.com/ernestpasnik/cs2d-serverlist.git"
@@ -10,8 +10,7 @@
   "author": "Ernest Paśnik",
   "main": "app.js",
   "scripts": {
-    "build": "gulp",
-    "start": "npm run build && node app.js"
+    "start": "node app.js"
   },
   "keywords": [
     "nodejs",
@@ -23,24 +22,13 @@
   "dependencies": {
     "@fastify/static": "*",
     "@fastify/view": "*",
-    "country-flag-emoji": "*",
     "dotenv": "*",
     "ejs": "*",
     "fastify": "*",
     "fastify-minify": "*",
-    "maxmind-db-reader": "*"
+    "ipdata": "*"
   },
   "engines": {
     "node": ">=20.0.0"
-  },
-  "homepage": "https://cs2d-serverlist.erpa.cc",
-  "bugs": {
-    "url": "https://github.com/ernestpasnik/cs2d-serverlist/issues"
-  },
-  "devDependencies": {
-    "gulp": "*",
-    "gulp-clean-css": "*",
-    "gulp-concat": "*",
-    "gulp-uglify": "*"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "cs2d-serverlist",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Node.js app serving an HTTP page with an API for querying and displaying a CS2D server list.",
   "repository": {
     "type": "git",

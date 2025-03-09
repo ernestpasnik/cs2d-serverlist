@@ -11,86 +11,97 @@ const bufServerList = Buffer.from([1, 0, 20, 1])
 // Bytes 246 and 3 as a SHORT (UInt16LE) represent version 1014
 const bufServerQuery = Buffer.from([1, 0, 251, 1, 246, 3, 251, 5])
 const servers = []
-const stats = {
-  bytes: { sent: 0, recv: 0 },
-  packets: { sent: 0, recv: 0 }
-}
+const stats = { bytes: { sent: 0, recv: 0 }, packets: { sent: 0, recv: 0 } }
 
-function serverQuery(stream) {
-  const res = {}
-  let flags = stream.readByte()
+function serverQuery(d) {
+  const r = {}
+  let flags = d.readByte()
+
   // Skip parsing if versions don't match
-  if (Boolean(flags & 16) === false) return
+  if (Boolean(flags & 16) == false) return
 
-  res.password = Boolean(flags & 1)
-  res.usgnonly = Boolean(flags & 2)
-  res.fow = Boolean(flags & 4)
-  res.friendlyfire = Boolean(flags & 8)
-  res.lua = Boolean(flags & 64)
-  res.forcelight = Boolean(flags & 128)
-  res.name = stream.readString(stream.readByte())
-  res.map = stream.readString(stream.readByte())
-  res.players = stream.readByte()
-  res.maxplayers = stream.readByte()
-  res.gamemode = (flags & 32) ? stream.readByte() : 0
-  res.bots = stream.readByte()
-  flags = stream.readByte()
-  res.recoil = Boolean(flags & 1)
-  res.offscreendamage = Boolean(flags & 2)
-  res.hasdownloads = Boolean(flags & 4)
-  res.playerlist = Array.from({ length: stream.readByte(2) }, () => ({
-    id: stream.readByte(),
-    name: stream.readString(stream.readByte()),
-    team: stream.readByte(),
-    score: stream.readInt(),
-    deaths: stream.readInt()
+  r.password = Boolean(flags & 1)
+  r.usgnonly = Boolean(flags & 2)
+  r.fow = Boolean(flags & 4)
+  r.friendlyfire = Boolean(flags & 8)
+  r.lua = Boolean(flags & 64)
+  r.forcelight = Boolean(flags & 128)
+  r.name = d.readString(d.readByte())
+  r.map = d.readString(d.readByte())
+  r.players = d.readByte()
+  r.maxplayers = d.readByte()
+  r.gamemode = (flags & 32) ? d.readByte() : 0
+  r.bots = d.readByte()
+  flags = d.readByte()
+  r.recoil = Boolean(flags & 1)
+  r.offscreendamage = Boolean(flags & 2)
+  r.hasdownloads = Boolean(flags & 4)
+  r.playerlist = Array.from({ length: d.readByte(2) }, () => ({
+    id: d.readByte(),
+    name: d.readString(d.readByte()),
+    team: d.readByte(),
+    score: d.readInt(),
+    deaths: d.readInt()
   }))
-  return res
+  return r
 }
 
-function receivedServerlist(stream) {
-  if (stream.readByte() !== 20) return
-  const serverNum = stream.readShort()
+async function receivedServerlist(buf) {
+  const d = new streams(buf)
+  if (d.readShort() != 1 || d.readByte() != 20) {
+    console.error(`Invalid server list header received from USGN`)
+  }
+
+  const serverNum = d.readShort()
   for (let i = 0; i < serverNum; i++) {
-    const oct4 = stream.readByte()
-    const oct3 = stream.readByte()
-    const oct2 = stream.readByte()
-    const oct1 = stream.readByte()
-    const port = stream.readShort()
+    const oct4 = d.readByte()
+    const oct3 = d.readByte()
+    const oct2 = d.readByte()
+    const oct1 = d.readByte()
+    const port = d.readShort()
     const ip = [oct1, oct2, oct3, oct4].join('.')
-    stats.bytes.sent += 8
-    stats.packets.sent += 1
-    server.send(bufServerQuery, port, ip)
+    let i = servers.findIndex(obj => obj.port === port && obj.ip === ip)
+    if (i > -1) {
+      continue
+    }
+
+    // Send 3 requests to each server, 1 second apart
+    let queryCount = 1
+    const interval = setInterval(() => {
+      stats.packets.sent += 1
+      stats.bytes.sent += 8
+      server.send(bufServerQuery, port, ip)
+      queryCount += 1
+      if (queryCount > 3) {
+        clearInterval(interval)
+      }
+    }, 1000)
+
   }
 }
 
-function receivedServerquery(stream, ip, port) {
-  if (stream.readByte() !== 251 || stream.readByte() !== 1) return
-  const data = serverQuery(stream)
+async function receivedServerquery(buf, ip, port) {
+  const d = new streams(buf)
+  if (d.readShort() != 1 || d.readByte() != 251 || d.readByte() != 1) {
+    console.error(`Invalid server query header received from ${ip}:${port}`)
+  }
+  const data = serverQuery(d)
   if (!data) return
 
   let i = servers.findIndex(obj => obj.ip === ip && obj.port === port)
   if (i === -1) {
     const geoip = { name: 'Unknown', code: 'ZZ', flag: '🏴' }
-    const debug = {
-      sent: 1, recv: 0,
-      sentBytes: 8, recvBytes: 0,
-      lastRequest: Date.now(), ping: 0
-    }
-    i = servers.push({ ip, port, geoip, debug }) - 1
-    ipdata.lookup(ip, null, fields).then(function(data) {
+    i = servers.push({ ip, port, geoip }) - 1
+    ipdata.lookup(ip, null, fields).then(function(d) {
       servers[i].geoip = {
-        name: data.country_name || 'Unknown',
-        code: data.country_code || 'ZZ',
-        flag: data.emoji_flag || '🏴󠁧󠁤󠀰󠀵󠁿'
+        name: d.country_name || 'Unknown',
+        code: d.country_code || 'ZZ',
+        flag: d.emoji_flag || '🏴󠁧󠁤󠀰󠀵󠁿'
       }
     })
   }
 
   const serverData = servers[i]
-  serverData.debug.recv += 1
-  serverData.debug.recvBytes += stream.getSize()
-  serverData.debug.ping = Date.now() - serverData.debug.lastRequest
   servers[i] = {
     ...serverData,
     ts: Math.floor(Date.now() / 1000),
@@ -106,12 +117,10 @@ function validateIPPortFormat(input) {
 server.on('message', (buf, rinfo) => {
   stats.bytes.recv += rinfo.size
   stats.packets.recv += 1
-  const stream = new streams(buf)
-  if (stream.readShort() !== 1) return
   if (rinfo.port == usgnPort && rinfo.address == usgnIp) {
-    receivedServerlist(stream)
+    receivedServerlist(buf)
   } else {
-    receivedServerquery(stream, rinfo.address, rinfo.port)
+    receivedServerquery(buf, rinfo.address, rinfo.port)
   }
 })
 
@@ -130,21 +139,18 @@ server.on('error', (err) => {
 
 server.bind(process.env.UDP_PORT || 36963, process.env.UDP_HOST || '0.0.0.0')
 
-function serverlistRequest() {
+async function serverlistRequest() {
   stats.packets.sent += 1
   stats.bytes.sent += 4
   server.send(bufServerList, usgnPort, usgnIp)
   setTimeout(serverlistRequest, 60000)
 }
 
-function serverqueryRequest() {
+async function serverqueryRequest() {
   for (const e of servers) {
     stats.packets.sent += 1
     stats.bytes.sent += 8
     server.send(bufServerQuery, e.port, e.ip)
-    e.debug.sent += 1
-    e.debug.sentBytes += 8
-    e.debug.lastRequest = Date.now()
   }
   setTimeout(serverqueryRequest, 10000)
 }

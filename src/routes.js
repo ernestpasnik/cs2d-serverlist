@@ -1,12 +1,10 @@
 const path = require('path')
 const servers = require(path.join(__dirname, 'servers.js'))
-const common = require(path.join(__dirname, 'common.js'))
-
-let requestCount = 0
+let requests = 0
 
 function routes(fastify) {
   fastify.addHook('onRequest', (request, reply, done) => {
-    requestCount++
+    requests++
     done()
   })
 
@@ -44,23 +42,16 @@ function routes(fastify) {
   })
 
   fastify.get('/stats', async (req, reply) => {
-    const result = servers.getServers().servers
-    const stats = servers.getStats()
     return reply.view('stats', {
       title: 'Statistics',
-      uptime: common.secondsToUptime(process.uptime()),
-      recv: common.bytesToSize(stats.recvSize),
-      sent: common.bytesToSize(stats.sentSize),
-      requestCount: requestCount,
-      locations: common.sortedCountries(result),
-      maps: common.mostPopularMaps(result),
-      memory: common.getMemoryUsage()
+      stats: servers.getStats(),
+      requests: requests
     })
   })
 
-  fastify.get('/api/:addresses', async (req, reply) => {
-    const addresses = req.params.addresses.split(',').map(address => address.trim())
-    const results = addresses.map(address => servers.getServer(address))
+  fastify.get('/api/:addr', async (req, reply) => {
+    const addr = req.params.addr.split(',').map(addr => addr.trim())
+    const results = addr.map(addr => servers.getServer(addr))
     const successfulResults = results.filter(result => !result.error)
     if (successfulResults.length === 0) {
       return reply.status(404).send({ error: 'No valid servers found' })

@@ -8,65 +8,64 @@
   <div>&nbsp;</div>
 </div>
 <p>Statistics on uptime, memory usage, network traffic, and player distribution.</p>
+
 <div class="stats">
   <div class="stats-container">
     <h2><i class="bi bi-server"></i>Service Details</h2>
     <div class="stat-item">
+      <strong>Version</strong>
+      <span><%= version %></span>
+    </div>
+    <div class="stat-item">
       <strong>Uptime</strong>
-      <span>
-        <%= uptime %>
-      </span>
+      <span><%= stats.uptime %></span>
     </div>
     <div class="stat-item">
       <strong>Requests</strong>
-      <span>
-        <%= requestCount %>
-      </span>
+      <span><%= requests %></span>
     </div>
     <div class="stat-item">
       <strong>Memory</strong>
-      <span>
-        <%= memory %>
-      </span>
+      <span><%= stats.memory %></span>
+    </div>
+  </div>
+
+  <div class="stats-container">
+    <h2><i class="bi bi-wifi"></i>Network Usage</h2>
+    <div class="stat-item">
+      <strong>Sent Bytes</strong>
+      <span><%= stats.bytes.sent %></span>
     </div>
     <div class="stat-item">
-      <strong>UDP Sent</strong>
-      <span>
-        <%= sent %>
-      </span>
+      <strong>Sent Packets</strong>
+      <span><%= stats.packets.sent %></span>
     </div>
     <div class="stat-item">
-      <strong>UDP Recv</strong>
-      <span>
-        <%= recv %>
-      </span>
+      <strong>Recv Bytes</strong>
+      <span><%= stats.bytes.recv %></span>
+    </div>
+    <div class="stat-item">
+      <strong>Recv Packets</strong>
+      <span><%= stats.packets.recv %></span>
     </div>
   </div>
 
   <div class="stats-container">
     <h2><i class="bi bi-geo-alt-fill"></i>Popular Locations</h2>
-    <% locations.slice(0, 5).forEach(country=> { %>
+    <% stats.locations.slice(0, 4).forEach(country=> { %>
       <div class="stat-item">
-        <strong>
-          <%= country.country %>
-        </strong>
-        <span>
-          <%= country.count %>
-        </span>
+        <strong><%= country.country %></strong>
+        <span><%= country.count %></span>
       </div>
       <% }) %>
   </div>
 
   <div class="stats-container">
     <h2><i class="bi bi-map-fill"></i>Popular Maps</h2>
-    <% maps.slice(0, 5).forEach(map=> { %>
+    <% stats.maps.slice(0, 4).forEach(map=> { %>
       <div class="stat-item">
-        <strong>
-          <%= map.map %>
-        </strong>
-        <span>
-          <%= map.count %>
-        </span>
+        <strong><%= map.map %></strong>
+        <span><%= map.count %></span>
       </div>
       <% }) %>
   </div>

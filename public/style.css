@@ -86,10 +86,12 @@ h1 {
 
 h2 {
   font-weight: 500;
-  color: #e1e5e9;
   margin: 0;
-  font-size: 1em;
   margin-bottom: .5em;
+  color: #e1e5e9;
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 1.05em;
 }
 
 h2>i {
@@ -509,12 +511,22 @@ td:nth-child(5) {
 
 .stat-item {
   display: flex;
-  margin-bottom: .25em;
+  margin-bottom: .3em;
+  border-bottom: 1px dashed rgba(255,255,255,.04);
+  padding: .2em 0;
+}
+
+.stat-item>strong {
+	width: 65%;
+}
+
+.stat-item>span {
+	width: 45%;
+  text-align: right;
 }
 
 .stat-item>strong,
 .stat-item>span {
-  width: 100%;
   overflow: hidden;
   text-wrap: nowrap;
   text-overflow: ellipsis;

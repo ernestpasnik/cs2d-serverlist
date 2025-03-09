@@ -4,58 +4,52 @@ const ipdata = new IPData(process.env.IPDATA_APIKEY)
 const fields = ['country_name', 'country_code', 'emoji_flag']
 const server = dgram.createSocket('udp4')
 const streams = require(__dirname + '/streams')
+const common = require(__dirname + '/common.js')
 const usgnIp = '81.169.236.243'
 const usgnPort = 36963
-let servers = []
-let recvSize = 0
-let sentSize = 0
-
-function readFlag(flags, offset) {
-  return !!(flags & (1 << offset))
+const bufServerList = Buffer.from([1, 0, 20, 1])
+// Bytes 246 and 3 as a SHORT (UInt16LE) represent version 1014
+const bufServerQuery = Buffer.from([1, 0, 251, 1, 246, 3, 251, 5])
+const servers = []
+const stats = {
+  bytes: { sent: 0, recv: 0 },
+  packets: { sent: 0, recv: 0 }
 }
 
 function serverQuery(stream) {
   const res = {}
   let flags = stream.readByte()
-  res.password = readFlag(flags, 0)
-  res.usgnonly = readFlag(flags, 1)
-  res.fow = readFlag(flags, 2)
-  res.friendlyfire = readFlag(flags, 3)
-  res.lua = readFlag(flags, 6)
-  res.forcelight = readFlag(flags, 7)
+  // Skip parsing if versions don't match
+  if (Boolean(flags & 16) === false) return
+
+  res.password = Boolean(flags & 1)
+  res.usgnonly = Boolean(flags & 2)
+  res.fow = Boolean(flags & 4)
+  res.friendlyfire = Boolean(flags & 8)
+  res.lua = Boolean(flags & 64)
+  res.forcelight = Boolean(flags & 128)
   res.name = stream.readString(stream.readByte())
   res.map = stream.readString(stream.readByte())
   res.players = stream.readByte()
   res.maxplayers = stream.readByte()
-  if (res.maxplayers == 0) return
-  if (flags & 32) {
-    res.gamemode = stream.readByte()
-  } else {
-    res.gamemode = 0
-  }
+  res.gamemode = (flags & 32) ? stream.readByte() : 0
   res.bots = stream.readByte()
   flags = stream.readByte()
-  res.recoil = readFlag(flags, 0)
-  res.offscreendamage = readFlag(flags, 1)
-  res.hasdownloads = readFlag(flags, 2)
-  res.playerlist = []
-  const playerNum = stream.readByte(2)
-  for (let i = 0; i < playerNum; i++) {
-    res.playerlist.push({
-      id: stream.readByte(),
-      name: stream.readString(stream.readByte()),
-      team: stream.readByte(),
-      score: stream.readInt(),
-      deaths: stream.readInt()
-    })
-  }
+  res.recoil = Boolean(flags & 1)
+  res.offscreendamage = Boolean(flags & 2)
+  res.hasdownloads = Boolean(flags & 4)
+  res.playerlist = Array.from({ length: stream.readByte(2) }, () => ({
+    id: stream.readByte(),
+    name: stream.readString(stream.readByte()),
+    team: stream.readByte(),
+    score: stream.readInt(),
+    deaths: stream.readInt()
+  }))
   return res
 }
 
-async function receivedServerlist(stream) {
-  if (stream.readByte() != 20) {
-    return
-  }
+function receivedServerlist(stream) {
+  if (stream.readByte() !== 20) return
   const serverNum = stream.readShort()
   for (let i = 0; i < serverNum; i++) {
     const oct4 = stream.readByte()
@@ -64,44 +58,41 @@ async function receivedServerlist(stream) {
     const oct1 = stream.readByte()
     const port = stream.readShort()
     const ip = [oct1, oct2, oct3, oct4].join('.')
-    const exists = servers.find(obj => obj.port === port && obj.ip === ip)
-    if (exists) {
-      continue
-    }
-    sentSize += 8
-    server.send(Buffer.from([1, 0, 251, 1, 245, 3, 251, 5]), port, ip)
-    ipdata.lookup(ip, null, fields).then(function(data) {
-      const name = data.country_name || 'Unknown'
-      const code = data.country_code || 'ZZ'
-      const flag = data.emoji_flag || '🏴󠁧󠁤󠀰󠀵󠁿'
-      const geoip = { name, code, flag }
-      const debug = {
-        sent: 1, recv: 0,
-        sentBytes: 8, recvBytes: 0,
-        lastRequest: Date.now(), ping: 0
-      }
-      servers.push({ ip, port, geoip, debug })
-    })
+    stats.bytes.sent += 8
+    stats.packets.sent += 1
+    server.send(bufServerQuery, port, ip)
   }
 }
 
 function receivedServerquery(stream, ip, port) {
-  if (stream.readByte() != 251 || stream.readByte() != 1) {
-    return
-  }
+  if (stream.readByte() !== 251 || stream.readByte() !== 1) return
   const data = serverQuery(stream)
-  if (typeof data !== 'object') {
-    return
+  if (!data) return
+
+  let i = servers.findIndex(obj => obj.ip === ip && obj.port === port)
+  if (i === -1) {
+    const geoip = { name: 'Unknown', code: 'ZZ', flag: '🏴' }
+    const debug = {
+      sent: 1, recv: 0,
+      sentBytes: 8, recvBytes: 0,
+      lastRequest: Date.now(), ping: 0
+    }
+    i = servers.push({ ip, port, geoip, debug }) - 1
+    ipdata.lookup(ip, null, fields).then(function(data) {
+      servers[i].geoip = {
+        name: data.country_name || 'Unknown',
+        code: data.country_code || 'ZZ',
+        flag: data.emoji_flag || '🏴󠁧󠁤󠀰󠀵󠁿'
+      }
+    })
   }
-  const index = servers.findIndex(obj => obj.ip === ip && obj.port === port)
-  if (index === -1) {
-    return
-  }
-  servers[index].debug.recv += 1
-  servers[index].debug.recvBytes += stream.getSize()
-  servers[index].debug.ping = Date.now() - servers[index].debug.lastRequest
-  servers[index] = {
-    ...servers[index],
+
+  const serverData = servers[i]
+  serverData.debug.recv += 1
+  serverData.debug.recvBytes += stream.getSize()
+  serverData.debug.ping = Date.now() - serverData.debug.lastRequest
+  servers[i] = {
+    ...serverData,
     ts: Math.floor(Date.now() / 1000),
     ...data
   }
@@ -113,11 +104,10 @@ function validateIPPortFormat(input) {
 }
 
 server.on('message', (buf, rinfo) => {
-  recvSize += rinfo.size
+  stats.bytes.recv += rinfo.size
+  stats.packets.recv += 1
   const stream = new streams(buf)
-  if (stream.readShort() != 1) {
-    return
-  }
+  if (stream.readShort() !== 1) return
   if (rinfo.port == usgnPort && rinfo.address == usgnIp) {
     receivedServerlist(stream)
   } else {
@@ -141,17 +131,17 @@ server.on('error', (err) => {
 server.bind(process.env.UDP_PORT || 36963, process.env.UDP_HOST || '0.0.0.0')
 
 function serverlistRequest() {
-  const ts = Math.floor(Date.now() / 1000)
-  servers = servers.filter((e) => e.ts === undefined || (ts - e.ts) < 60)
-  sentSize += 4
-  server.send(Buffer.from([1, 0, 20, 1]), usgnPort, usgnIp)
+  stats.packets.sent += 1
+  stats.bytes.sent += 4
+  server.send(bufServerList, usgnPort, usgnIp)
   setTimeout(serverlistRequest, 60000)
 }
 
 function serverqueryRequest() {
   for (const e of servers) {
-    sentSize += 8
-    server.send(Buffer.from([1, 0, 251, 1, 245, 3, 251, 5]), e.port, e.ip)
+    stats.packets.sent += 1
+    stats.bytes.sent += 8
+    server.send(bufServerQuery, e.port, e.ip)
     e.debug.sent += 1
     e.debug.sentBytes += 8
     e.debug.lastRequest = Date.now()
@@ -183,9 +173,20 @@ module.exports = {
     return s
   },
   getStats: function () {
+    const result = this.getServers().servers
     return {
-      recvSize: recvSize,
-      sentSize: sentSize
+      uptime: common.secondsToUptime(process.uptime()),
+      bytes: {
+        recv: common.bytesToSize(stats.bytes.recv),
+        sent: common.bytesToSize(stats.bytes.sent)
+      },
+      packets: {
+        recv: stats.packets.recv,
+        sent: stats.packets.sent
+      },
+      locations: common.sortedCountries(result),
+      maps: common.mostPopularMaps(result),
+      memory: common.getMemoryUsage()
     }
   }
 }

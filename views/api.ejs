@@ -1,7 +1,7 @@
 <div class="flex">
   <div>
-    <h1><i class="bi bi-file-earmark-code-fill"></i><%= title %></h1>
-    <div class="subh"><i class="bi bi-info-lg"></i>JSON data from HTTP APIs</div>
+    <h1><%= title %></h1>
+    <div class="subh">JSON data from HTTP APIs</div>
   </div>
   <div>&nbsp;</div>
 </div>
@@ -18,9 +18,10 @@
         <li><span class="attr">"port"</span>: <span class="number">30001</span>,</li>
         <li><span class="attr">"geoip"</span>: {</li>
         <ul>
-          <li><span class="attr">"name"</span>: <span class="string">"United States"</span>,</li>
+          <li><span class="attr">"flag"</span>: <span class="string">"🇺🇸"</span>,</li>
           <li><span class="attr">"code"</span>: <span class="string">"US"</span>,</li>
-          <li><span class="attr">"flag"</span>: <span class="string">"🇺🇸"</span></li>
+          <li><span class="attr">"name"</span>: <span class="string">"United States"</span>,</li>
+          <li><span class="attr">"city"</span>: <span class="string">"Miami"</span></li>
         </ul>
         <li>},</li>
         <li><span class="attr">"debug"</span>: {</li>
@@ -73,9 +74,10 @@
         <li><span class="attr">port:</span> <span class="number">The server's port number</span></li>
         <li><span class="attr">geoip:</span>
           <ul>
-            <li><span class="attr">name:</span> <span class="string">Country name</span></li>
-            <li><span class="attr">code:</span> <span class="string">Country code</span></li>
             <li><span class="attr">flag:</span> <span class="string">Emoji flag representation</span></li>
+            <li><span class="attr">code:</span> <span class="string">Country code</span></li>
+            <li><span class="attr">name:</span> <span class="string">Country name</span></li>
+            <li><span class="attr">city:</span> <span class="string">City name</span></li>
           </ul>
         </li>
         <li>&nbsp;</li>

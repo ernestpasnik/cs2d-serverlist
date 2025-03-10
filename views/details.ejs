@@ -1,7 +1,7 @@
 <div class="flex">
   <div>
-    <span id="gm" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span><h1 id="name"><%= s.name %></h1>
-    <div class="subh"><i class="bi bi-info-lg"></i><span id="map"><%= s.map %></span></div>
+    <h1 id="name"><%= s.name %></h1>
+    <div class="subh"><span id="gm" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span> <span id="map"><%= s.map %></span></div>
   </div>
   <div>&nbsp;</div>
 </div>
@@ -22,7 +22,7 @@
   <div><span>Lighting</span><span id="forcelight"><% if (s.forcelight) { %>Enabled<% } else { %>Disabled<% } %></span></div>
   <div><span>Recoil</span><span id="recoil"><% if (s.recoil) { %>Enabled<% } else { %>Disabled<% } %></span></div>
   <div><span>Off-Screen</span><span id="offscreendamage"><% if (s.offscreendamage) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><span>Location</span><span id="country"><span class="flag"><%= s.geoip.flag %></span><%= s.geoip.code %></span></div>
+  <div><span>Location</span><abbr title="<%= s.geoip.name %><%= s.geoip.city ? ', ' + s.geoip.city : '' %>" id="country"><span class="flag"><%= s.geoip.flag %></span><%= s.geoip.code %></span></div>
 </div>
 
 <div class="details">

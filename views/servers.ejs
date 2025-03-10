@@ -1,7 +1,7 @@
 <div class="flex">
   <div>
-    <h1><i class="bi bi-hdd-rack-fill"></i>CS2D Server List</h1>
-    <div class="subh"><i class="bi bi-info-lg"></i>Browse active servers</div>
+    <h1>CS2D Server List</h1>
+    <div class="subh">Browse active servers</div>
   </div>
   <div>
     <div><%= res.serversNum %><i class="ml-2 bi bi-hdd"></i></div>
@@ -33,7 +33,9 @@
               <span class="bots"><%= s.bots %></span>
             <% } %>
           </td>
-          <td><span class="flag"><%= s.geoip.flag %></span><%= s.geoip.name %></td>
+          <td>
+            <span class="flag"><%= s.geoip.flag %></span><%= s.geoip.name %><%= s.geoip.city ? ', ' + s.geoip.city : '' %>
+          </td>
         </tr>
       <% } %>      
     </tbody>

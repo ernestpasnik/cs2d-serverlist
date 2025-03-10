@@ -1,7 +1,7 @@
 const dgram = require('dgram')
 const IPData = require('ipdata').default
 const ipdata = new IPData(process.env.IPDATA_APIKEY)
-const fields = ['country_name', 'country_code', 'emoji_flag']
+const fields = ['country_name', 'country_code', 'emoji_flag', 'city']
 const received = require('./received.js')
 const common = require('./common.js')
 const servers = {}
@@ -22,9 +22,10 @@ async function addServer(ipPort) {
     ip,
     port: parseInt(port),
     geoip: {
-      name: 'Unknown',
+      flag: '🚩',
       code: 'ZZ',
-      flag: '🏁'
+      name: '',
+      city: ''
     },
     debug: {
       addedAt: Math.floor(Date.now() / 1000),
@@ -37,9 +38,10 @@ async function addServer(ipPort) {
 
   ipdata.lookup(ip, null, fields).then(function(d) {
     servers[ipPort].geoip = {
-      name: d.country_name || 'Unknown',
+      flag: d.emoji_flag || '🚩',
       code: d.country_code || 'ZZ',
-      flag: d.emoji_flag || '🏁'
+      name: d.country_name || '',
+      city: d.city || ''
     }
   })
 

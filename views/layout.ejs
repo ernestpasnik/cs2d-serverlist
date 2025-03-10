@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="/style.css?<%= version %>">
   <link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <script defer="defer" src="/script.js?<%= version %>"></script>
   <% if (typeof redirect !== 'undefined') { %><meta http-equiv="refresh" content="5;url=<%= url %>"><% } %>
 </head>
 <body>
@@ -22,8 +21,9 @@
     <%- body %>
   </main>
   <footer>
-    <small>Code licensed <a href="https://github.com/ernestpasnik/cs2d-serverlist/" target="_blank">MIT</a>.</small>
-    <small>Designed and built by <a href="https://ernest.zapto.org/" target="_blank">Ernest Paśnik</a>.</small>
+    <small>Code licensed <a href="https://github.com/ernestpasnik/cs2d-serverlist/" target="_blank" rel="noopener noreferrer">MIT</a>.</small>
+    <small>Designed and built by <a href="https://ernest.zapto.org/" target="_blank" rel="noopener noreferrer">Ernest Paśnik</a>.</small>
   </footer>
+  <script defer="defer" src="/script.js?<%= version %>"></script>
 </body>
 </html>

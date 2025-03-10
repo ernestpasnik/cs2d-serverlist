@@ -1,5 +1,5 @@
 * {
-  font-family: "Inter", "Twemoji Country Flags", sans-serif;
+  font-family: "Inter", sans-serif;
   color: rgb(187, 198, 206);
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -95,17 +95,15 @@ h2>i {
 
 nav {
   display: flex;
-  justify-content: space-evenly;
-  padding-right: .25em;
-  flex-wrap: wrap;
 }
 
 nav>a {
   padding: 2em 3em;
   color: rgb(148 163 184/1);
-  display: flex;
   font-weight: 500;
-  align-items: center;
+  width: 100%;
+  text-align: center;
+  display: block;
 }
 
 nav>a:hover,
@@ -258,6 +256,7 @@ thead>tr>th {
   border-radius: .375rem;
   margin: 0;
   overflow: auto;
+  font-size: .92em;
 }
 
 ul {
@@ -331,6 +330,7 @@ td:nth-child(4) {
 
 .e>td {
   color: #bbc6ce;
+  font-weight: 500;
 }
 
 .e>td:nth-child(4) {
@@ -386,95 +386,16 @@ td:nth-child(4) {
   font-size: 1.2em;
 }
 
-.hljs {
-  color: #c9d1d9;
-}
-
-.hljs-addition {
-  color: #aff5b4;
-  background-color: #033a16;
-}
-
-.hljs-attr,
-.hljs-attribute,
-.hljs-literal,
-.hljs-meta,
-.hljs-number,
-.hljs-operator,
-.hljs-selector-attr,
-.hljs-selector-class,
-.hljs-selector-id,
-.hljs-variable {
+.attr, .number {
   color: #79c0ff;
 }
 
-.hljs-built_in,
-.hljs-symbol {
-  color: #ffa657;
-}
-
-.hljs-bullet {
-  color: #f2cc60;
-}
-
-.hljs-code,
-.hljs-comment,
-.hljs-formula {
-  color: #8b949e;
-}
-
-.hljs-deletion {
-  color: #ffdcd7;
-  background-color: #67060c;
-}
-
-.hljs-doctag,
-.hljs-keyword,
-.hljs-meta .hljs-keyword,
-.hljs-template-tag,
-.hljs-template-variable,
-.hljs-type,
-.hljs-variable.language_ {
+.keyword {
   color: #ff7b72;
 }
 
-.hljs-emphasis {
-  color: #c9d1d9;
-  font-style: italic;
-}
-
-.hljs-meta .hljs-string,
-.hljs-regexp,
-.hljs-string {
+.string {
   color: #a5d6ff;
-}
-
-.hljs-name,
-.hljs-quote,
-.hljs-selector-pseudo,
-.hljs-selector-tag {
-  color: #7ee787;
-}
-
-.hljs-section {
-  color: #1f6feb;
-  font-weight: 500;
-}
-
-.hljs-strong {
-  color: #c9d1d9;
-  font-weight: 500;
-}
-
-.hljs-subst {
-  color: #c9d1d9;
-}
-
-.hljs-title,
-.hljs-title.class_,
-.hljs-title.class_.inherited__,
-.hljs-title.function_ {
-  color: #d2a8ff;
 }
 
 .s {
@@ -581,7 +502,6 @@ td:nth-child(4) {
 
 .s, .d, .t, .c, .z {
   font-weight: 500;
-  font-size: .9em;
 }
 
 .t {

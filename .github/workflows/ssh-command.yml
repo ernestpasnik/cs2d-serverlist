@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd /var/www/cs2d-serverlist
-            git reset --hard
+            git clean -fd
             git pull origin main
             npm install
             pm2 restart cs2d-serverlist

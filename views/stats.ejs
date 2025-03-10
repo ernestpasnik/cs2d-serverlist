@@ -10,8 +10,12 @@
   <div class="stats-container">
     <h2><i class="bi bi-server"></i>Service Details</h2>
     <div class="stat-item">
-      <span>Application Version</span>
+      <span>App Version</span>
       <span><%= version %></span>
+    </div>
+    <div class="stat-item">
+      <span>Node.js Version</span>
+      <span><%= stats.nodeVersion %></span>
     </div>
     <div class="stat-item">
       <span>Process Uptime</span>
@@ -28,7 +32,7 @@
   </div>
 
   <div class="stats-container">
-    <h2><i class="bi bi-controller"></i>Network Usage</h2>
+    <h2><i class="bi bi-router"></i>Network Usage</h2>
     <div class="stat-item">
       <span>Sent Bytes</span>
       <span><%= stats.sentBytes %></span>
@@ -44,6 +48,10 @@
     <div class="stat-item">
       <span>Received Packets</span>
       <span><%= stats.recvPackets %></span>
+    </div>
+    <div class="stat-item">
+      <span>Total Bandwidth</span>
+      <span><%= stats.totalBandwidth %></span>
     </div>
   </div>
 </div>

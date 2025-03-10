@@ -24,7 +24,7 @@ async function addServer(ipPort) {
     geoip: {
       name: 'Unknown',
       code: 'ZZ',
-      flag: '🏴'
+      flag: '🏁'
     },
     debug: {
       addedAt: Math.floor(Date.now() / 1000),
@@ -39,7 +39,7 @@ async function addServer(ipPort) {
     servers[ipPort].geoip = {
       name: d.country_name || 'Unknown',
       code: d.country_code || 'ZZ',
-      flag: d.emoji_flag || '🏴󠁧󠁤󠀰󠀵󠁿'
+      flag: d.emoji_flag || '🏁'
     }
   })
 
@@ -141,7 +141,9 @@ function getStats(result) {
     gamemodes: common.mostPopularGamemode(result),
     highestResponseRatio: common.highestResponseRatio(result),
     maps: common.mostPopularMaps(result),
-    mem: common.getMemoryUsage()
+    mem: common.getMemoryUsage(),
+    nodeVersion: common.getNodeVersion(),
+    totalBandwidth: common.bytesToSize(stats.sentBytes + stats.recvBytes)
   }
 }
 

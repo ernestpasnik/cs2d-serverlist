@@ -4,8 +4,8 @@
     <div class="subh"><i class="bi bi-info-lg"></i>Browse active servers</div>
   </div>
   <div>
-    <div><%= res.serversNum %> <i class="bi bi-hdd"></i></div>
-    <div><%= res.playersNum %> <i class="bi bi-person"></i></div>
+    <div><%= res.serversNum %><i class="ml-2 bi bi-hdd"></i></div>
+    <div><%= res.playersNum %><i class="ml-2 bi bi-person"></i></div>
   </div>
 </div>
 
@@ -33,7 +33,7 @@
               <span class="bots"><%= s.bots %></span>
             <% } %>
           </td>
-          <td><%= s.geoip.flag %> <%= s.geoip.name %></td>
+          <td><span class="flag"><%= s.geoip.flag %></span><%= s.geoip.name %></td>
         </tr>
       <% } %>      
     </tbody>

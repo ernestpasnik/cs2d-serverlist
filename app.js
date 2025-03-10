@@ -4,17 +4,14 @@ const package = require('./package.json')
 const routes = require('./src/routes.js')
 const host = process.env.HOST || '0.0.0.0'
 const port = process.env.PORT || 3000
+console.log(`NODE_ENV=${process.env.NODE_ENV}`)
 
-let minify = true
-let version = package.version
-if (process.env.NODE_ENV === 'development') {
-  minify = false
-  version = Math.floor(Date.now() / 1000)
+if (process.env.NODE_ENV !== 'production') {
+  // In production, use Nginx or another web server to serve static files
+  fastify.register(require('@fastify/static'), {
+    root: `${__dirname}/public`
+  })
 }
-
-fastify.register(require('@fastify/static'), {
-  root: `${__dirname}/public`
-})
 
 fastify.register(require('@fastify/view'), {
   engine: {
@@ -23,13 +20,13 @@ fastify.register(require('@fastify/view'), {
   root: 'views',
   layout: 'layout.ejs',
   defaultContext: {
-    version: version,
+    version: package.version,
     env: process.env.NODE_ENV
   }
 })
 
 fastify.register(require('fastify-minify'), {
-  global: minify
+  global: true
 })
 
 routes(fastify)

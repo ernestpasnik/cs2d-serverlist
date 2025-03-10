@@ -24,5 +24,8 @@ jobs:
             cd /var/www/cs2d-serverlist
             git clean -fd
             git pull origin main
+            npm install -g uglify-js uglifycss
+            uglifyjs public/script.js -o public/script.js
+            uglifycss public/style.css --output public/style.css
             npm install
             pm2 restart cs2d-serverlist

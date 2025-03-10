@@ -62,6 +62,8 @@ const highestResponseRatio = (servers) => {
   }))
 }
 
+const getNodeVersion = () => process.version
+
 module.exports = {
   bytesToSize,
   secondsToUptime,
@@ -69,5 +71,6 @@ module.exports = {
   mostPopularMaps,
   getMemoryUsage,
   mostPopularGamemode,
-  highestResponseRatio
+  highestResponseRatio,
+  getNodeVersion
 }

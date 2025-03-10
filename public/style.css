@@ -12,6 +12,10 @@ a {
   color: #fff;
 }
 
+.ml-2 {
+  margin-left: .2em;
+}
+
 b,
 strong {
   font-weight: 500;
@@ -53,13 +57,12 @@ footer {
 
 footer>small {
   line-height: 1.5em;
-  color: rgba(222, 226, 230, 0.3);
+  color: rgba(255, 255, 255, 0.3);
   text-align: center;
 }
 
 footer>small>a {
-  font-weight: 500;
-  color: rgba(222, 226, 230, 0.6);
+  color: rgba(222, 226, 230, 0.5);
 }
 
 footer>small>a:hover {
@@ -79,6 +82,10 @@ h1 {
   display: inline;
 }
 
+.subh {
+  font-size: .93em;
+}
+
 h2 {
   font-weight: 500;
   margin: 0;
@@ -86,7 +93,7 @@ h2 {
   color: #e1e5e9;
   text-align: center;
   margin-bottom: 1.2em;
-  font-size: 1em;
+  font-size: 1.1em;
 }
 
 h2>i {
@@ -104,6 +111,7 @@ nav>a {
   width: 100%;
   text-align: center;
   display: block;
+  font-size: 1.05em;
 }
 
 nav>a:hover,
@@ -120,7 +128,6 @@ p {
 }
 
 main {
-  position: relative;
   margin: 0;
   background-color: rgba(14, 21, 26, 0.6);
   border-radius: .375rem;
@@ -130,7 +137,7 @@ main {
 }
 
 small {
-  font-size: .92em;
+  font-size: .93em;
 }
 
 table {
@@ -214,8 +221,9 @@ thead>tr>th {
 }
 
 #address {
-  width: 100%;
-  font-size: .96em;
+  width: 50%;
+  font-size: .84em;
+  text-align: center;
 }
 
 #pro {
@@ -228,14 +236,14 @@ thead>tr>th {
   align-content: center;
   margin-bottom: .5rem;
   padding: .5em;
-  width: 100%;
+  width: 50%;
+  font-size: .84em;
 }
 
 #pro span {
   position: relative;
   z-index: 4;
   color: #d8dbdf;
-  font-size: .96em;
 }
 
 #progress {
@@ -256,7 +264,7 @@ thead>tr>th {
   border-radius: .375rem;
   margin: 0;
   overflow: auto;
-  font-size: .92em;
+  font-size: .93em;
 }
 
 ul {
@@ -265,6 +273,12 @@ ul {
 
 ul {
   padding-left: 1em;
+}
+
+span.flag {
+  opacity: .6;
+  margin-right: .3em;
+  font-size: 1.135em;
 }
 
 .bar {
@@ -318,6 +332,7 @@ ul {
   display: flex;
   gap: 1em;
   margin-bottom: 1rem;
+  min-height: 29.5vw;
 }
 
 .details>div {
@@ -383,7 +398,7 @@ td:nth-child(4) {
 }
 
 .flex>div>div>i {
-  font-size: 1.2em;
+  font-size: 1.05em;
 }
 
 .attr, .number {
@@ -409,22 +424,22 @@ td:nth-child(4) {
 
 .serverlist>thead>tr>th:nth-child(2),
 .serverlist>tbody>tr>td:nth-child(2) {
-  width: 30%;
+  width: 31%;
 }
 
 .serverlist>thead>tr>th:nth-child(3),
 .serverlist>tbody>tr>td:nth-child(3) {
-  width: 29%;
+  width: 28%;
 }
 
 .serverlist>thead>tr>th:nth-child(4),
 .serverlist>tbody>tr>td:nth-child(4) {
-  width: 20%;
+  width: 15%;
 }
 
-.serverlist>thead>tr>th:nth-child(4),
-.serverlist>tbody>tr>td:nth-child(4) {
-  width: 20%;
+.serverlist>thead>tr>th:nth-child(5),
+.serverlist>tbody>tr>td:nth-child(5) {
+  width: 23%;
 }
 
 .serverlist>tr:hover>td {
@@ -443,17 +458,14 @@ td:nth-child(4) {
 }
 
 .spec {
-  padding: .5em;
   font-size: .96rem;
   color: rgba(187, 198, 206, .6);
-  position: absolute;
-  bottom: 1.5em;
 }
 
 .stat-item {
   display: flex;
   margin-bottom: .6em;
-  border-bottom: 1px solid rgba(115,130,140,.1);
+  border-bottom: 1px solid rgba(115,130,140,.15);
   padding-bottom: .4em;
 }
 
@@ -489,7 +501,7 @@ td:nth-child(4) {
 .stats-container {
   display: flex;
   flex-direction: column;
-  font-size: .92em;
+  font-size: .9em;
 }
 
 .stats>div {
@@ -525,17 +537,28 @@ td:nth-child(4) {
   body {
     width: auto;
     padding: 0 0 1.5em 0;
-    background-size: contain;
   }
 
   nav,
-  footer,
-  .stat-item {
+  nav > a,
+  footer {
     font-size: .93em;
+  }
+
+  .stat-item {
+    font-size: .84em;
   }
 
   nav > a {
     padding: 1.5em 0;
+  }
+  
+  #gm {
+    font-size: 1em;
+  }
+
+  h1, h2 {
+    font-size: .98em;
   }
 
   pre,
@@ -557,8 +580,16 @@ td:nth-child(4) {
     font-size: .84em;
   }
 
-  .flex {
-    font-size: 1rem;
+  .flex:first-child {
+    margin-top: .25em;
+  }
+
+  .flex > div:last-child {
+    font-size: .84em;
+  }
+
+  .subh, .copy, code, p, #address, #pro, .api {
+    font-size: .84em;
   }
 
   .bar {
@@ -566,7 +597,7 @@ td:nth-child(4) {
   }
 
   .bar>div {
-    width: calc(33% - .3em);
+    width: calc(50% - .3em);
     font-size: .84em;
   }
 
@@ -574,14 +605,6 @@ td:nth-child(4) {
   .stats {
     flex-direction: column;
     min-height: auto;
-  }
-
-  code {
-    font-size: .84em;
-  }
-
-  p, #address, #pro, .api {
-    font-size: .92em;
   }
 
   .details>div,

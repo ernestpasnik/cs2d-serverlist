@@ -129,9 +129,6 @@ if (copyElement) {
   })
 }
 
-
-
-
 document.addEventListener('click', function (e) {
   try {
     function findElementRecursive(element, tag) {

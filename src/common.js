@@ -1,26 +1,22 @@
-const countCountries = (servers) => {
-  return servers.reduce((acc, server) => {
-    const countryName = server.geoip?.name
-    if (countryName) {
-      acc[countryName] = (acc[countryName] || 0) + 1
-    }
-    return acc
-  }, {})
-}
+const countCountries = (servers) => Object.values(servers).reduce((acc, server) => {
+  const country = server.geoip?.name
+  if (country) acc[country] = (acc[country] || 0) + 1
+  return acc
+}, {})
 
-const countMaps = (servers) => {
-  return servers.reduce((acc, server) => {
-    const mapName = server.map
-    if (mapName) {
-      acc[mapName] = (acc[mapName] || 0) + 1
-    }
-    return acc
-  }, {})
-}
+const countMaps = (servers) => Object.values(servers).reduce((acc, server) => {
+  const map = server.map
+  if (map) acc[map] = (acc[map] || 0) + 1
+  return acc
+}, {})
 
-const getMemoryUsage = () => {
-  return bytesToSize(process.memoryUsage().rss)
-}
+const gamemodeCounts = (servers) => Object.values(servers).reduce((acc, server) => {
+  const gamemode = server.gamemode
+  if (gamemode !== undefined) acc[gamemode] = (acc[gamemode] || 0) + 1
+  return acc
+}, {})
+
+const getMemoryUsage = () => bytesToSize(process.memoryUsage().rss)
 
 const bytesToSize = (b) => {
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
@@ -31,29 +27,39 @@ const bytesToSize = (b) => {
 
 const secondsToUptime = (s) => {
   const secs = Math.round(s)
-  const days = Math.floor(secs / (3600 * 24))
-  const hours = Math.floor((secs % (3600 * 24)) / 3600)
-  const minutes = Math.floor((secs % 3600) / 60)
-  const seconds = secs % 60
-  const d = days > 0 ? `${days} day${days !== 1 ? 's' : ''}, ` : ''
-  const hh = hours.toString().padStart(2, '0')
-  const mm = minutes.toString().padStart(2, '0')
-  const ss = seconds.toString().padStart(2, '0')
-  return `${d}${hh}:${mm}:${ss}`
+  const d = Math.floor(secs / (3600 * 24))
+  const h = Math.floor((secs % (3600 * 24)) / 3600).toString().padStart(2, '0')
+  const m = Math.floor((secs % 3600) / 60).toString().padStart(2, '0')
+  const ss = (secs % 60).toString().padStart(2, '0')
+  return `${d > 0 ? `${d}d, ` : ''}${h}:${m}:${ss}`
 }
 
-const sortedCountries = (servers) => {
-  const countryCount = countCountries(servers)
-  return Object.entries(countryCount)
-    .map(([country, count]) => ({ country, count }))
-    .sort((a, b) => b.count - a.count)
+const sortedCountries = (servers) => Object.entries(countCountries(servers))
+  .map(([country, count]) => ({ country, count }))
+  .sort((a, b) => b.count - a.count)
+
+const mostPopularMaps = (servers) => Object.entries(countMaps(servers))
+  .map(([map, count]) => ({ map, count }))
+  .sort((a, b) => b.count - a.count)
+
+const mostPopularGamemode = (servers) => {
+  const gamemodes = ['0', '1', '2', '3', '4', '5']
+  return gamemodes.map(gm => ({
+    gm,
+    count: (gamemodeCounts(servers)[gm] || 0)
+  })).sort((a, b) => b.count - a.count)
 }
 
-const mostPopularMaps = (servers) => {
-  const mapCount = countMaps(servers)
-  return Object.entries(mapCount)
-    .map(([map, count]) => ({ map, count }))
-    .sort((a, b) => b.count - a.count)
+const highestResponseRatio = (servers) => {
+  const serverRatios = Object.values(servers).map(server => {
+    const { sentPackets, recvPackets } = server.debug || {}
+    const ratio = sentPackets && recvPackets ? Math.floor((recvPackets / sentPackets) * 100) : 0
+    return { server, ratio }
+  })
+  return serverRatios.sort((a, b) => b.ratio - a.ratio).map(({ server, ratio }) => ({
+    server,
+    ratio: `${ratio}%`
+  }))
 }
 
 module.exports = {
@@ -61,5 +67,7 @@ module.exports = {
   secondsToUptime,
   sortedCountries,
   mostPopularMaps,
-  getMemoryUsage
+  getMemoryUsage,
+  mostPopularGamemode,
+  highestResponseRatio
 }

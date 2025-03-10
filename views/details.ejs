@@ -1,11 +1,9 @@
-
 <div class="flex">
   <div>
-    <a href="/">
-      <span id="gm" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span><h1 id="name"><%= s.name %></h1>
-      <div><i class="bi bi-arrow-left"></i>Return</div>
-    </a>
+    <span id="gm" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span><h1 id="name"><%= s.name %></h1>
+    <div class="subh"><i class="bi bi-info"></i><span id="map"><%= s.map %></span></div>
   </div>
+  <div>&nbsp;</div>
 </div>
 
 <div class="flex flex-details">
@@ -17,15 +15,14 @@
 </div>
 
 <div class="bar">
-  <div><b>Players</b><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
-  <div><b>Password</b><span id="password"><% if (s.password) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><b>USGN Only</b><span id="usgnonly"><% if (s.usgnonly) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><b>Fog of War</b><span id="fow"><% if (s.fow) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><b>Lighting</b><span id="forcelight"><% if (s.forcelight) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><b>Recoil</b><span id="recoil"><% if (s.recoil) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><b>Off-Screen</b><span id="offscreendamage"><% if (s.offscreendamage) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><b>Location</b><span id="country"><%= s.geoip.name %></span></div>
-  <div><b>Map</b><span id="map"><%= s.map %></span></div>
+  <div><span>Players</span><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
+  <div><span>Password</span><span id="password"><% if (s.password) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><span>USGN Only</span><span id="usgnonly"><% if (s.usgnonly) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><span>Fog of War</span><span id="fow"><% if (s.fow) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><span>Lighting</span><span id="forcelight"><% if (s.forcelight) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><span>Recoil</span><span id="recoil"><% if (s.recoil) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><span>Off-Screen</span><span id="offscreendamage"><% if (s.offscreendamage) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><span>Location</span><span id="country"><%= s.geoip.name %></span></div>
 </div>
 
 <div class="details">
@@ -54,7 +51,7 @@
     </table>
   </div>
   <div class="table-responsive">
-    <table class="t sortable asc">
+    <table class="tt sortable asc">
       <thead>
         <tr>
           <th>ID</th>

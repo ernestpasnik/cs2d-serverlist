@@ -1,72 +1,91 @@
 <div class="flex">
   <div>
-    <a href="/">
-      <h1><i class="bi bi-bar-chart-fill"></i><%= title %></h1>
-      <div><i class="bi bi-arrow-left"></i>Return</div>
-    </a>
+    <h1><i class="bi bi-file-earmark-bar-graph-fill"></i><%= title %></h1>
+    <div class="subh"><i class="bi bi-info"></i>Servers stats</div>
   </div>
   <div>&nbsp;</div>
 </div>
-<p>Statistics on uptime, memory usage, network traffic, and player distribution.</p>
 
 <div class="stats">
   <div class="stats-container">
     <h2><i class="bi bi-server"></i>Service Details</h2>
     <div class="stat-item">
-      <strong>Version</strong>
+      <span>Version</span>
       <span><%= version %></span>
     </div>
     <div class="stat-item">
-      <strong>Uptime</strong>
+      <span>Uptime</span>
       <span><%= stats.uptime %></span>
     </div>
     <div class="stat-item">
-      <strong>Requests</strong>
+      <span>Requests</span>
       <span><%= requests %></span>
     </div>
     <div class="stat-item">
-      <strong>Memory</strong>
-      <span><%= stats.memory %></span>
+      <span>Memory</span>
+      <span><%= stats.mem %></span>
     </div>
   </div>
 
   <div class="stats-container">
     <h2><i class="bi bi-wifi"></i>Network Usage</h2>
     <div class="stat-item">
-      <strong>Sent Bytes</strong>
-      <span><%= stats.bytes.sent %></span>
+      <span>Sent Bytes</span>
+      <span><%= stats.sentBytes %></span>
     </div>
     <div class="stat-item">
-      <strong>Sent Packets</strong>
-      <span><%= stats.packets.sent %></span>
+      <span>Sent Packets</span>
+      <span><%= stats.sentPackets %></span>
     </div>
     <div class="stat-item">
-      <strong>Recv Bytes</strong>
-      <span><%= stats.bytes.recv %></span>
+      <span>Recv Bytes</span>
+      <span><%= stats.recvBytes %></span>
     </div>
     <div class="stat-item">
-      <strong>Recv Packets</strong>
-      <span><%= stats.packets.recv %></span>
+      <span>Recv Packets</span>
+      <span><%= stats.recvPackets %></span>
     </div>
   </div>
+</div>
 
+<div class="stats">
   <div class="stats-container">
     <h2><i class="bi bi-geo-alt-fill"></i>Popular Locations</h2>
-    <% stats.locations.slice(0, 4).forEach(country=> { %>
+    <% stats.locations.slice(0, 5).forEach(country => { %>
       <div class="stat-item">
-        <strong><%= country.country %></strong>
+        <span><%= country.country %></span>
         <span><%= country.count %></span>
       </div>
-      <% }) %>
+    <% }) %>
   </div>
-
   <div class="stats-container">
     <h2><i class="bi bi-map-fill"></i>Popular Maps</h2>
-    <% stats.maps.slice(0, 4).forEach(map=> { %>
+    <% stats.maps.slice(0, 5).forEach(map => { %>
       <div class="stat-item">
-        <strong><%= map.map %></strong>
+        <span><%= map.map %></span>
         <span><%= map.count %></span>
       </div>
-      <% }) %>
+    <% }) %>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stats-container">
+    <h2><i class="bi bi-dice-2-fill"></i>Popular Game Modes</h2>
+    <% stats.gamemodes.slice(0, 5).forEach(gm => { %>
+      <div class="stat-item">
+        <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][gm.gm] || '' %></span>
+        <span><%= gm.count %></span>
+      </div>
+    <% }) %>
+  </div>
+  <div class="stats-container">
+    <h2><i class="bi bi-arrow-left-right"></i>Highest Response Ratio</h2>
+    <% stats.highestResponseRatio.slice(0, 5).forEach(rr => { %>
+      <div class="stat-item">
+        <span><%= rr.server.name %></span>
+        <span><%= rr.ratio %></span>
+      </div>
+    <% }) %>
   </div>
 </div>

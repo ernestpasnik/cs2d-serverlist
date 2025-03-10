@@ -1,11 +1,9 @@
 require('dotenv').config()
 const fastify = require('fastify')({ trustProxy: true })
-const package = require(`${__dirname}/package.json`)
-const routes = require(`${__dirname}/src/routes.js`)
-const opt = {
-  host: process.env.HOST || '0.0.0.0',
-  port: process.env.PORT || 3000
-}
+const package = require('./package.json')
+const routes = require('./src/routes.js')
+const host = process.env.HOST || '0.0.0.0'
+const port = process.env.PORT || 3000
 
 let minify = true
 let version = package.version
@@ -36,7 +34,7 @@ fastify.register(require('fastify-minify'), {
 
 routes(fastify)
 
-fastify.listen({ host: opt.host, port: opt.port }, (err, address) => {
+fastify.listen({ host, port }, (err, address) => {
   if (err) {
     fastify.log.error(err)
     process.exit(1)

@@ -1,6 +1,7 @@
-const path = require('path')
-const servers = require(path.join(__dirname, 'servers.js'))
+const sockets = require('./sockets.js')
+
 let requests = 0
+sockets.initialize()
 
 function routes(fastify) {
   fastify.addHook('onRequest', (request, reply, done) => {
@@ -9,11 +10,8 @@ function routes(fastify) {
   })
 
   fastify.get('/', async (req, reply) => {
-    const result = servers.getServers()
-    return reply.view('serverlist.ejs', {
-      serversNum: result.servers.length,
-      playersNum: result.players,
-      servers: result.servers
+    return reply.view('servers.ejs', {
+      res: sockets.getRecentServers()
     })
   })
 
@@ -22,49 +20,50 @@ function routes(fastify) {
   })
 
   fastify.get('/details/:address', async (req, reply) => {
-    const result = servers.getServer(req.params.address)
-    if (result.error) {
+    const result = sockets.getServer(req.params.address)
+    if (!result) {
       return reply.redirect('/')
     }
-    const spectators = result.playerlist.filter(p => p.team === 0)
     return reply.view('details', {
       title: result.name,
       s: result,
-      spectators: spectators
-    })
-  })
-
-  fastify.get('/api', async (req, reply) => {
-    return reply.view('api', {
-      title: 'API Docs',
-      url: `${req.protocol}://${req.host}`
+      spectators: result.playerlist.filter(p => p.team === 0)
     })
   })
 
   fastify.get('/stats', async (req, reply) => {
     return reply.view('stats', {
-      title: 'Statistics',
-      stats: servers.getStats(),
+      title: 'Statistics ',
+      stats: sockets.getStats(sockets.getRecentServers().servers),
       requests: requests
+    })
+  })
+
+  fastify.get('/api', async (req, reply) => {
+    return reply.view('api', {
+      title: 'API Documentation',
+      url: `${req.protocol}://${req.host}`
     })
   })
 
   fastify.get('/api/:addr', async (req, reply) => {
     const addr = req.params.addr.split(',').map(addr => addr.trim())
-    const results = addr.map(addr => servers.getServer(addr))
-    const successfulResults = results.filter(result => !result.error)
+    const results = addr.map(addr => sockets.getServer(addr))
+    const successfulResults = results.filter(result => result !== false)
     if (successfulResults.length === 0) {
       return reply.status(404).send({ error: 'No valid servers found' })
     }
     if (successfulResults.length === 1) {
-      return reply.send(successfulResults[0])
+      return reply.send(results[0])
     }
     return reply.send(successfulResults)
   })
 
   fastify.setNotFoundHandler(async (req, reply) => {
     return reply.status(404).view('404', {
-      title: 'Error 404'
+      title: 'Error 404',
+      redirect: true,
+      url: `${req.protocol}://${req.host}`
     })
   })
 }

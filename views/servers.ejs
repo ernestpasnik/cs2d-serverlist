@@ -1,0 +1,41 @@
+<div class="flex">
+  <div>
+    <h1><i class="bi bi-hdd-rack-fill"></i>CS2D Server List</h1>
+    <div class="subh"><i class="bi bi-info"></i>Browse active servers</div>
+  </div>
+  <div>
+    <div><%= res.serversNum %> <i class="bi bi-hdd"></i></div>
+    <div><%= res.playersNum %> <i class="bi bi-person"></i></div>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="sortable asc serverlist">
+    <thead>
+      <tr>
+        <th><abbr title="Game Mode">G</abbr></th>
+        <th>Name</th>
+        <th>Map</th>
+        <th>Players</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody class="serverlist">
+      <% for (const ipPort in res.servers) { %>
+        <% const s = res.servers[ipPort]; %>
+        <tr onclick="window.location.href='/details/<%= s.ip %>:<%= s.port %>'" <% if ((s.players - s.bots) > 0) { %> class="e" <% } %>>
+          <td><span class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span></td>
+          <td><%= s.name %></td>
+          <td><%= s.map %></td>
+          <td data-sort="<%= ((s.players - s.bots) * 100) + s.bots %>">
+            <%= s.players %>/<%= s.maxplayers %>
+            <% if (s.bots > 0) { %> 
+              <span class="bots"><%= s.bots %></span>
+            <% } %>
+          </td>
+          <td><%= s.geoip.flag %> <%= s.geoip.name %></td>
+        </tr>
+      <% } %>      
+    </tbody>
+  </table>
+</div>

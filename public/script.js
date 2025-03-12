@@ -56,7 +56,7 @@ function updateUI(data) {
   document.querySelector('#name').textContent = data.name
   document.querySelector('#map').textContent = data.map
   updatePlayers(data)
-  document.title = `${data.players}/${data.maxplayers} ${data.name} · CS2D Serverlist`
+  document.title = `${data.players}/${data.maxplayers} ${data.name} - CS2D Serverlist`
   updateGameMode(data)
   updateSettings(data)
   updatePlayerLists(data)
@@ -70,12 +70,11 @@ function updatePlayers(data) {
 
 function updateGameMode(data) {
   const gm = document.querySelector('#gm')
-  gm.textContent = ['S', 'D', 'T', 'C', 'Z'][data.gamemode] || ''
-  gm.className = ['s', 'd', 't', 'c', 'z'][data.gamemode] || ''
+  gm.textContent = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][data.gamemode] || ''
 }
 
 function updateSettings(data) {
-  const settings = ['password', 'usgnonly', 'fow', 'forcelight', 'recoil', 'offscreendamage']
+  const settings = ['password', 'usgnonly', 'fow', 'friendlyfire', 'lua', 'forcelight', 'recoil', 'offscreendamage']
   settings.forEach(setting => {
     document.querySelector(`#${setting}`).textContent = data[setting] ? 'Enabled' : 'Disabled'
   })
@@ -96,10 +95,24 @@ function updateTeamList(playerlist, team, tbodyId) {
   })
 }
 
+function updateTeamList(playerlist, team, tbodyId) {
+  const tbody = document.getElementById(tbodyId)
+  tbody.innerHTML = ''
+  playerlist.filter(player => player.team === team).forEach(player => {
+    const row = document.createElement('tr')
+    row.innerHTML = `<td>${player.id}</td><td></td><td>${player.score}</td><td>${player.deaths}</td>`
+    row.cells[1].textContent = player.name
+    tbody.appendChild(row)
+  })
+}
+
 function updateSpectators(playerlist) {
   const spectators = playerlist.filter(player => player.team === 0)
   const div = document.getElementsByClassName('spec')[0]
-  div.textContent = spectators.length > 0 ? `Spectators: ${spectators.map(player => player.name).join(', ')}` : ''
+  const spectatorNames = spectators.length > 0
+    ? `Spectators: ${spectators.map(player => player.name).join(', ')}`
+    : ''
+  div.textContent = spectatorNames
 }
 
 const addressElement = document.querySelector('#address')
@@ -116,12 +129,12 @@ if (copyElement) {
     navigator.clipboard.writeText(text)
       .then(() => {
         const originalText = this.textContent
-        this.textContent = 'Copied!'
+        this.textContent = 'Copied to clipboard'
         clicked = true
         setTimeout(() => {
           this.textContent = originalText
           clicked = false
-        }, 1000)
+        }, 2000)
       })
       .catch(err => {
         console.error('Failed to copy: ', err)
@@ -143,7 +156,7 @@ document.addEventListener('click', function (e) {
     var alt_sort_1 = e.shiftKey || e.altKey
     var element = findElementRecursive(e.target, 'TH')
 
-    if (!element) return // Exit if no <TH> element was found
+    if (!element) return
 
     var tr = element.parentNode
     var thead = tr.parentNode

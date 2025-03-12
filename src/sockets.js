@@ -1,9 +1,8 @@
 const dgram = require('dgram')
 const IPData = require('ipdata').default
-const ipdata = new IPData(process.env.IPDATA_APIKEY)
-const fields = ['country_name', 'country_code', 'emoji_flag', 'city']
 const received = require('./received.js')
 const common = require('./common.js')
+const ipdata = new IPData(process.env.IPDATA_APIKEY)
 const servers = {}
 const stats = {
   sentPackets: 0,
@@ -21,12 +20,7 @@ async function addServer(ipPort) {
   servers[ipPort] = {
     ip,
     port: parseInt(port),
-    geoip: {
-      flag: '🚩',
-      code: 'ZZ',
-      name: '',
-      city: ''
-    },
+    geoip: { code: 'ZZ', name: 'Unknown' },
     debug: {
       addedAt: Math.floor(Date.now() / 1000),
       sentPackets: 0,
@@ -36,12 +30,13 @@ async function addServer(ipPort) {
     }
   }
 
-  ipdata.lookup(ip, null, fields).then(function(d) {
+  ipdata.lookup(ip, null, ['country_name', 'country_code']).then(d => {
+    if (!servers[ipPort]) {
+      return
+    }
     servers[ipPort].geoip = {
-      flag: d.emoji_flag || '🚩',
       code: d.country_code || 'ZZ',
-      name: d.country_name || '',
-      city: d.city || ''
+      name: d.country_name || 'Unknown'
     }
   })
 
@@ -49,30 +44,31 @@ async function addServer(ipPort) {
 
   client.on('message', (buf) => {
     const recv = received.serverquery(buf)
-    if (recv == null) {
-      return
-    }
+    if (recv == null) return
     servers[ipPort].ts = Math.floor(Date.now() / 1000)
-    servers[ipPort].debug.recvPackets += 1
+    servers[ipPort].debug.recvPackets++
     servers[ipPort].debug.recvBytes += buf.length
     servers[ipPort] = { ...servers[ipPort], ...received.serverquery(buf) }
-    stats.recvPackets += 1
+    stats.recvPackets++
     stats.recvBytes += 8
   })
 
   client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)
-  servers[ipPort].debug.sentPackets += 1
+  servers[ipPort].debug.sentPackets++
   servers[ipPort].debug.sentBytes += 8
-  stats.sentPackets += 1
+  stats.sentPackets++
   stats.sentBytes += 8
 
-  setInterval(() => {
+  const interval = setInterval(() => {
     client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)
-    servers[ipPort].debug.sentPackets += 1
+    servers[ipPort].debug.sentPackets++
     servers[ipPort].debug.sentBytes += 8
-    stats.sentPackets += 1
+    stats.sentPackets++
     stats.sentBytes += 8
   }, 10000)
+
+  servers[ipPort].client = client
+  servers[ipPort].interval = interval
 }
 
 async function initialize() {
@@ -88,17 +84,19 @@ async function initialize() {
 
   usgn.send(req.serverlist, 36963, '81.169.236.243')
 
+  // Request CS2D server list every 15 minutes  
   setInterval(() => {
     usgn.send(req.serverlist, 36963, '81.169.236.243')
-  }, 60000)
+  }, 900000)
+
+  // Remove servers with no response or inactive for over a minute
+  setInterval(cleanupServers, 60000)
 }
 
 function getServer(ipPort) {
-  return servers[ipPort] || false
-}
-
-function getServers() {
-  return servers
+  if (!servers[ipPort]) return false
+  const { client, interval, ...filteredServer } = servers[ipPort]
+  return filteredServer
 }
 
 function getRecentServers() {
@@ -109,7 +107,8 @@ function getRecentServers() {
 
   for (const ipPort in servers) {
     if (servers[ipPort].ts && servers[ipPort].ts >= oneMinuteAgo) {
-      recentServers.push(servers[ipPort])
+      const { client, interval, ...filteredServer } = servers[ipPort]
+      recentServers.push(filteredServer)
       totalServers++
       totalPlayers += (servers[ipPort].players - servers[ipPort].bots)
     }
@@ -129,6 +128,19 @@ function getRecentServers() {
     servers: sortedServers,
     serversNum: totalServers,
     playersNum: totalPlayers
+  }
+}
+
+function cleanupServers() {
+  const oneMinuteAgo = Math.floor(Date.now() / 1000) - 60
+  for (const ipPort in servers) {
+    if (!servers[ipPort].ts || servers[ipPort].ts < oneMinuteAgo) {
+      if (servers[ipPort].client) {
+        servers[ipPort].client.close()
+        clearInterval(servers[ipPort].interval)
+      }
+      delete servers[ipPort]
+    }
   }
 }
 
@@ -152,7 +164,6 @@ function getStats(result) {
 module.exports = {
   initialize,
   getServer,
-  getServers,
   getRecentServers,
   getStats
 }

@@ -8,8 +8,7 @@ A Node.js application that serves an HTTP page with an integrated API for queryi
 ```env
 HOST=0.0.0.0
 PORT=3000
-UDP_HOST=0.0.0.0
-UDP_PORT=36963
+NODE_ENV=production
 IPDATA_APIKEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 Note: You can get the IPDATA_APIKEY value by creating a free account at [ipdata.co](https://ipdata.co)

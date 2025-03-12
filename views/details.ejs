@@ -1,28 +1,32 @@
 <div class="flex">
   <div>
     <h1 id="name"><%= s.name %></h1>
-    <div class="subh"><span id="gm" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span> <span id="map"><%= s.map %></span></div>
   </div>
-  <div>&nbsp;</div>
-</div>
-
-<div class="flex flex-details">
-  <code id="address" class="language-bash copy"><%= s.ip %>:<%= s.port %></code>
-  <div id="pro">
-    <span><i class="bi bi-arrow-clockwise"></i>Refresh in 10 s</span></span>
-    <div id="progress"></div>
+  <div>
+    <span id="map"><%= s.map %></span>
   </div>
 </div>
 
 <div class="bar">
   <div><span>Players</span><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
+  <div><span>Game Mode</span><span id="gm"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] || '' %></span></div>
+  <div><span>Location</span><span id="country"><%= s.geoip.name %></span></div>
+  <div><span>Address</span><span id="address" class="copy"><%= s.ip %>:<%= s.port %></span></div>
+  <div id="pro">
+    <span><i class="bi bi-arrow-clockwise"></i> Refresh in 10 s</span></span>
+    <div id="progress"></div>
+  </div>
+</div>
+
+<div class="bar">
   <div><span>Password</span><span id="password"><% if (s.password) { %>Enabled<% } else { %>Disabled<% } %></span></div>
   <div><span>USGN Only</span><span id="usgnonly"><% if (s.usgnonly) { %>Enabled<% } else { %>Disabled<% } %></span></div>
   <div><span>Fog of War</span><span id="fow"><% if (s.fow) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><span>Friend Fire</span><span id="friendlyfire"><% if (s.friendlyfire) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><span>Lua Scripts</span><span id="lua"><% if (s.lua) { %>Enabled<% } else { %>Disabled<% } %></span></div>
   <div><span>Lighting</span><span id="forcelight"><% if (s.forcelight) { %>Enabled<% } else { %>Disabled<% } %></span></div>
   <div><span>Recoil</span><span id="recoil"><% if (s.recoil) { %>Enabled<% } else { %>Disabled<% } %></span></div>
   <div><span>Off-Screen</span><span id="offscreendamage"><% if (s.offscreendamage) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><span>Location</span><abbr title="<%= s.geoip.name %><%= s.geoip.city ? ', ' + s.geoip.city : '' %>" id="country"><span class="flag"><%= s.geoip.flag %></span><%= s.geoip.code %></span></div>
 </div>
 
 <div class="details">

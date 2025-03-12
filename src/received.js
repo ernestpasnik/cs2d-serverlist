@@ -15,7 +15,7 @@ function serverlist(buf) {
     const ip = [oct1, oct2, oct3, oct4].join('.')
     servers.push(`${ip}:${port}`)
   }
-  console.log(`U.S.G.N.: Received serverlist (servers: ${serverNum})`)
+  console.log(`Received ${serverNum} servers from Unreal Software`)
 
   return servers
 }

@@ -1,17 +1,15 @@
 <div class="flex">
   <div>
     <h1><%= title %></h1>
-    <div class="subh">Servers stats</div>
   </div>
-  <div>&nbsp;</div>
 </div>
 
 <div class="stats">
   <div class="stats-container">
-    <h2><i class="bi bi-server"></i>Service Details</h2>
+    <h2><i class="bi bi-server mr-2"></i>Service Details</h2>
     <div class="stat-item">
       <span>App Version</span>
-      <span><%= version %></span>
+      <span><%= v %></span>
     </div>
     <div class="stat-item">
       <span>Node.js Version</span>
@@ -30,9 +28,8 @@
       <span><%= stats.mem %></span>
     </div>
   </div>
-
   <div class="stats-container">
-    <h2><i class="bi bi-router"></i>Network Usage</h2>
+    <h2><i class="bi bi-router mr-2"></i>Network Usage</h2>
     <div class="stat-item">
       <span>Sent Bytes</span>
       <span><%= stats.sentBytes %></span>
@@ -54,11 +51,20 @@
       <span><%= stats.totalBandwidth %></span>
     </div>
   </div>
+  <div class="stats-container">
+    <h2><i class="bi bi-arrow-left-right mr-2"></i>Highest Response Ratio</h2>
+    <% stats.highestResponseRatio.slice(0, 5).forEach(rr => { %>
+      <div class="stat-item">
+        <span><%= rr.server.name %></span>
+        <span><%= rr.ratio %></span>
+      </div>
+    <% }) %>
+  </div>
 </div>
 
 <div class="stats">
   <div class="stats-container">
-    <h2><i class="bi bi-geo-alt-fill"></i>Popular Locations</h2>
+    <h2><i class="bi bi-geo-alt-fill mr-2"></i>Popular Locations</h2>
     <% stats.locations.slice(0, 5).forEach(country => { %>
       <div class="stat-item">
         <span><%= country.country %></span>
@@ -67,7 +73,7 @@
     <% }) %>
   </div>
   <div class="stats-container">
-    <h2><i class="bi bi-controller"></i>Popular Game Modes</h2>
+    <h2><i class="bi bi-controller mr-2"></i>Popular Game Modes</h2>
     <% stats.gamemodes.slice(0, 5).forEach(gm => { %>
       <div class="stat-item">
         <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][gm.gm] || '' %></span>
@@ -75,24 +81,12 @@
       </div>
     <% }) %>
   </div>
-</div>
-
-<div class="stats">
   <div class="stats-container">
-    <h2><i class="bi bi-globe-europe-africa"></i>Popular Maps</h2>
+    <h2><i class="bi bi-globe-europe-africa mr-2"></i>Popular Maps</h2>
     <% stats.maps.slice(0, 5).forEach(map => { %>
       <div class="stat-item">
         <span><%= map.map %></span>
         <span><%= map.count %></span>
-      </div>
-    <% }) %>
-  </div>
-  <div class="stats-container">
-    <h2><i class="bi bi-arrow-left-right"></i>Highest Response Ratio</h2>
-    <% stats.highestResponseRatio.slice(0, 5).forEach(rr => { %>
-      <div class="stat-item">
-        <span><%= rr.server.name %></span>
-        <span><%= rr.ratio %></span>
       </div>
     <% }) %>
   </div>

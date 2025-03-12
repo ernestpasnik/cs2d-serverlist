@@ -22,7 +22,6 @@ a {
 b,
 strong {
   font-weight: 500;
-  color: #e1e5e9;
 }
 
 body {
@@ -203,34 +202,6 @@ thead>tr>th {
   text-align: center;
 }
 
-#pro {
-  overflow: hidden;
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  border-radius: .375rem;
-  background-color: rgba(115, 130, 140, .05);
-  font-size: .86em;
-  padding: 1.1em;
-  width: 100%;
-}
-
-#pro span {
-  position: relative;
-  z-index: 4;
-  color: #e1e5e9;
-}
-
-#progress {
-  height: 100%;
-  width: 0;
-  background-color: rgba(115,130,140,.05);
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3;
-}
-
 .api {
   color: #c9d1d9;
   padding: .75em 1em;
@@ -263,7 +234,7 @@ ul {
   padding: .5em;
   background-color: hsla(204, 10%, 50%, .05);
   border-radius: .375rem;
-  font-size: .86em;
+  font-size: .9em;
   overflow: hidden;
   width: 100%;
   text-wrap: nowrap;
@@ -324,11 +295,14 @@ td:nth-child(4) {
 }
 
 .flex {
-  font-size: 1.05em;
   display: flex;
   justify-content: space-between;
   margin-bottom: 1em;
   flex-wrap: wrap;
+}
+
+.flex > div:last-child > div {
+  font-size: .96em;
 }
 
 .flex>div {
@@ -429,6 +403,13 @@ td:nth-child(4) {
   color: #ed5141;
 }
 
+.ct>tbody>tr>td:nth-child(2),
+.ct>tbody>tr>td:nth-child(3),
+.tt>tbody>tr>td:nth-child(2),
+.tt>tbody>tr>td:nth-child(3) {
+  width: 16%;
+}
+
 .table-responsive {
   overflow-x: auto;
 }
@@ -473,11 +454,10 @@ td:nth-child(4) {
     font-size: .93em;
   }
 
-  #pro {
+  #addr {
     display: none;
   }
 
-  #pro,
   .api,
   .stats-container,
   .bar>div {

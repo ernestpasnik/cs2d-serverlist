@@ -3,19 +3,16 @@
     <h1 id="name"><%= s.name %></h1>
   </div>
   <div>
-    <span id="map"><%= s.map %></span>
+    <span id="updateText">Refresh in <b>10 s</b></span>
   </div>
 </div>
 
 <div class="bar">
+  <div><span>Map</span><span id="map"><%= s.map %></span></div>
   <div><span>Players</span><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
   <div><span>Game Mode</span><span id="gm"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] || '' %></span></div>
   <div><span>Location</span><span id="country"><%= s.geoip.name %></span></div>
-  <div><span>Address</span><span id="address" class="copy"><%= s.ip %>:<%= s.port %></span></div>
-  <div id="pro">
-    <span><i class="bi bi-arrow-clockwise"></i> Refresh in 10 s</span></span>
-    <div id="progress"></div>
-  </div>
+  <div id="addr"><span>Address</span><span id="address" class="copy"><%= s.ip %>:<%= s.port %></span></div>
 </div>
 
 <div class="bar">
@@ -34,8 +31,7 @@
     <table class="ct sortable asc">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Counter-Terrorist Forces</th>
+          <th>Player</th>
           <th>Score</th>
           <th>Deaths</th>
         </tr>
@@ -43,8 +39,7 @@
       <tbody id="ct">
         <% s.playerlist.forEach(function(p) { %>
         <% if (p.team == 2 || p.team == 3) { %>
-        <tr>
-          <td><%= p.id %></td>
+        <tr title="ID: <%= p.id %>">
           <td><%= p.name %></td>
           <td><%= p.score %></td>
           <td><%= p.deaths %></td>
@@ -58,8 +53,7 @@
     <table class="tt sortable asc">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Terrorist Forces</th>
+          <th>Player</th>
           <th>Score</th>
           <th>Deaths</th>
         </tr>
@@ -67,8 +61,7 @@
       <tbody id="t">
         <% s.playerlist.forEach(function(p) { %>
         <% if (p.team == 1) { %>
-        <tr>
-          <td><%= p.id %></td>
+        <tr title="ID: <%= p.id %>">
           <td><%= p.name %></td>
           <td><%= p.score %></td>
           <td><%= p.deaths %></td>

@@ -1,39 +1,19 @@
-function fillProgressBar(address) {
-  const progressBar = document.getElementById('progress')
-  const progressText = document.querySelector('#pro span')
-  let width = 0
-  const totalTime = 10000
-  const totalSeconds = totalTime / 1000
-  const increment = 100 / totalSeconds
-  let lastTimestamp = performance.now()
+function detailsUpdate(address) {
+  const txt = document.querySelector('#updateText')
+  let remainingTime = 10
 
-  function updateProgress(timestamp) {
-    const deltaTime = (timestamp - lastTimestamp) / 1000
-    lastTimestamp = timestamp
-
-    if (width >= 100) {
-      update(address)
+  function updateText() {
+    if (remainingTime > 0) {
+      txt.innerHTML = `Refresh in <b>${remainingTime} s</b>`
+      remainingTime--
+      setTimeout(updateText, 1000)
     } else {
-      width += increment * deltaTime
-      width = Math.min(width, 100)
-      progressBar.style.width = width + '%'
-      updateProgressText(progressText, totalSeconds, width)
-      requestAnimationFrame(updateProgress)
+      txt.innerHTML = `Refreshing...`
+      update(address)
     }
   }
 
-  requestAnimationFrame(updateProgress)
-}
-
-function updateProgressText(progressText, totalSeconds, width) {
-  const remainingSeconds = Math.max(0, totalSeconds - (width / 100 * totalSeconds))
-  const icon = '<i class="bi bi-arrow-clockwise"></i>'
-
-  if (remainingSeconds > 0) {
-    progressText.innerHTML = `${icon}Refresh in ${Math.ceil(remainingSeconds)} s`
-  } else {
-    progressText.innerHTML = `${icon}Refreshing...`
-  }
+  updateText()
 }
 
 function update(address) {
@@ -44,11 +24,11 @@ function update(address) {
     })
     .then(data => {
       updateUI(data)
-      fillProgressBar(address)
+      detailsUpdate(address)
     })
     .catch(error => {
       console.error('Fetch error:', error)
-      fillProgressBar(address)
+      detailsUpdate(address)
     })
 }
 
@@ -90,18 +70,9 @@ function updateTeamList(playerlist, team, tbodyId) {
   tbody.innerHTML = ''
   playerlist.filter(player => player.team === team).forEach(player => {
     const row = document.createElement('tr')
-    row.innerHTML = `<td>${player.id}</td><td>${player.name}</td><td>${player.score}</td><td>${player.deaths}</td>`
-    tbody.appendChild(row)
-  })
-}
-
-function updateTeamList(playerlist, team, tbodyId) {
-  const tbody = document.getElementById(tbodyId)
-  tbody.innerHTML = ''
-  playerlist.filter(player => player.team === team).forEach(player => {
-    const row = document.createElement('tr')
-    row.innerHTML = `<td>${player.id}</td><td></td><td>${player.score}</td><td>${player.deaths}</td>`
-    row.cells[1].textContent = player.name
+    row.title = `ID: ${player.id}`
+    row.innerHTML = `<td></td><td>${player.score}</td><td>${player.deaths}</td>`
+    row.cells[0].textContent = player.name
     tbody.appendChild(row)
   })
 }
@@ -117,7 +88,7 @@ function updateSpectators(playerlist) {
 
 const addressElement = document.querySelector('#address')
 if (addressElement) {
-  fillProgressBar(addressElement.textContent)
+  detailsUpdate(addressElement.textContent)
 }
 
 const copyElement = document.querySelector('.copy')

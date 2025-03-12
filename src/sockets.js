@@ -50,7 +50,7 @@ async function addServer(ipPort) {
     servers[ipPort].debug.recvBytes += buf.length
     servers[ipPort] = { ...servers[ipPort], ...received.serverquery(buf) }
     stats.recvPackets++
-    stats.recvBytes += 8
+    stats.recvBytes += buf.length
   })
 
   client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)
@@ -75,6 +75,8 @@ async function initialize() {
   const usgn = dgram.createSocket('udp4')
 
   usgn.on('message', (buf, rinfo) => {
+    stats.recvPackets++
+    stats.recvBytes += buf.length
     received.serverlist(buf).forEach(ipPort => {
       if (!servers[ipPort]) {
         addServer(ipPort)
@@ -82,10 +84,14 @@ async function initialize() {
     })
   })
 
+  stats.sentPackets++
+  stats.sentBytes += 4
   usgn.send(req.serverlist, 36963, '81.169.236.243')
 
   // Request CS2D server list every 15 minutes  
   setInterval(() => {
+    stats.sentPackets++
+    stats.sentBytes += 4
     usgn.send(req.serverlist, 36963, '81.169.236.243')
   }, 900000)
 

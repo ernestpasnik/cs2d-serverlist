@@ -87,7 +87,7 @@ h2 {
   color: #e1e5e9;
   text-align: center;
   margin-bottom: 1em;
-  font-size: 1.02em;
+  font-size: 1em;
 }
 
 h2>i {
@@ -129,7 +129,7 @@ main {
   margin: 0;
   background-color: rgba(14,21,26,.69);
   border-radius:.5rem;
-  padding: 2em 1.75em;
+  padding: 1.5em;
   box-shadow: 0 26px 58px 0 rgba(0, 0, 0, .22), 0 5px 14px 0 rgba(0, 0, 0, .18);
   min-height: 40vw;
 }
@@ -239,6 +239,7 @@ thead>tr>th {
   border-radius: .375rem;
   margin: 0;
   overflow: auto;
+  font-size: .96em;
 }
 
 ul {
@@ -376,6 +377,7 @@ td:nth-child(4) {
   display: flex;
   margin-bottom: .5em;
   gap: .5em;
+  font-size: .96em;
 }
 
 .stat-item:last-child {
@@ -467,8 +469,8 @@ td:nth-child(4) {
     font-size: .98em;
   }
 
-  h1, h2 {
-    font-size: 1em;
+  h2 {
+    font-size: .93em;
   }
 
   #pro {
@@ -479,7 +481,7 @@ td:nth-child(4) {
   .api,
   .stats-container,
   .bar>div {
-    border-radius: 4px;
+    border-radius: .375rem;
   }
 
   main {

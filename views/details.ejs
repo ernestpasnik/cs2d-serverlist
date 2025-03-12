@@ -79,4 +79,9 @@
     </table>
   </div>
 </div>
-<div class="spec"><% if (spectators.length > 0) {%>Spectators: <%= spectators.map(p => p.name).join(', ') %> <% } %></div>
+
+<div class="spec">
+  <% if (s.playerlist && s.playerlist.filter(p => p.team == 0).length > 0) { %>
+    Spectators: <%= s.playerlist.filter(p => p.team == 0).map(p => p.name).join(', ') %>
+  <% } %>
+</div>

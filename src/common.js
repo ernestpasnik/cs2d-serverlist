@@ -34,15 +34,15 @@ const secondsToUptime = (s) => {
   return `${d > 0 ? `${d}d, ` : ''}${h}:${m}:${ss}`
 }
 
-const sortedCountries = (servers) => Object.entries(countCountries(servers))
+const topLocations = (servers) => Object.entries(countCountries(servers))
   .map(([country, count]) => ({ country, count }))
   .sort((a, b) => b.count - a.count)
 
-const mostPopularMaps = (servers) => Object.entries(countMaps(servers))
+const topMaps = (servers) => Object.entries(countMaps(servers))
   .map(([map, count]) => ({ map, count }))
   .sort((a, b) => b.count - a.count)
 
-const mostPopularGamemode = (servers) => {
+const topGamemodes = (servers) => {
   const gamemodes = ['0', '1', '2', '3', '4', '5']
   return gamemodes.map(gm => ({
     gm,
@@ -50,7 +50,7 @@ const mostPopularGamemode = (servers) => {
   })).sort((a, b) => b.count - a.count)
 }
 
-const highestResponseRatio = (servers) => {
+const responseRatio = (servers) => {
   const serverRatios = Object.values(servers).map(server => {
     const { sentPackets, recvPackets } = server.debug || {}
     const ratio = sentPackets && recvPackets ? Math.floor((recvPackets / sentPackets) * 100) : 0
@@ -62,15 +62,12 @@ const highestResponseRatio = (servers) => {
   }))
 }
 
-const getNodeVersion = () => process.version
-
 module.exports = {
+  topLocations,
+  topGamemodes,
+  topMaps,
   bytesToSize,
   secondsToUptime,
-  sortedCountries,
-  mostPopularMaps,
   getMemoryUsage,
-  mostPopularGamemode,
-  highestResponseRatio,
-  getNodeVersion
+  responseRatio
 }

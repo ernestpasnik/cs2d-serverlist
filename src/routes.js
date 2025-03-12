@@ -15,10 +15,6 @@ function routes(fastify) {
     })
   })
 
-  fastify.get('/details', async (req, reply) => {
-    return reply.redirect('/')
-  })
-
   fastify.get('/details/:address', async (req, reply) => {
     const result = sockets.getServer(req.params.address)
     if (!result) {
@@ -26,8 +22,7 @@ function routes(fastify) {
     }
     return reply.view('details', {
       title: result.name,
-      s: result,
-      spectators: result.playerlist.filter(p => p.team === 0)
+      s: result
     })
   })
 

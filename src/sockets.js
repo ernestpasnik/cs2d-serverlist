@@ -95,8 +95,16 @@ async function initialize() {
 
 function getServer(ipPort) {
   if (!servers[ipPort]) return false
-  const { client, interval, ...filteredServer } = servers[ipPort]
-  return filteredServer
+  const { client, interval, playerlist, ...filteredServer } = servers[ipPort]
+
+  if (playerlist) {
+    playerlist.sort((playerA, playerB) => playerB.score - playerA.score)
+  }
+
+  return {
+    ...filteredServer,
+    playerlist
+  }
 }
 
 function getRecentServers() {
@@ -151,13 +159,11 @@ function getStats(result) {
     recvPackets: stats.recvPackets,
     sentBytes: common.bytesToSize(stats.sentBytes),
     recvBytes: common.bytesToSize(stats.recvBytes),
-    locations: common.sortedCountries(result),
-    gamemodes: common.mostPopularGamemode(result),
-    highestResponseRatio: common.highestResponseRatio(result),
-    maps: common.mostPopularMaps(result),
-    mem: common.getMemoryUsage(),
-    nodeVersion: common.getNodeVersion(),
-    totalBandwidth: common.bytesToSize(stats.sentBytes + stats.recvBytes)
+    locations: common.topLocations(result),
+    gamemodes: common.topGamemodes(result),
+    maps: common.topMaps(result),
+    highestResponseRatio: common.responseRatio(result),
+    mem: common.getMemoryUsage()
   }
 }
 

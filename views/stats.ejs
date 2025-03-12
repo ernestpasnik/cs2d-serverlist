@@ -6,15 +6,37 @@
 
 <div class="stats">
   <div class="stats-container">
+    <h2><i class="bi bi-controller mr-2"></i>Most Popular Gamemodes</h2>
+    <% stats.gamemodes.slice(0, 5).forEach(gm => { %>
+      <div class="stat-item">
+        <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][gm.gm] || '' %></span>
+        <span><%= gm.count %></span>
+      </div>
+    <% }) %>
+  </div>
+  <div class="stats-container">
+    <h2><i class="bi bi-globe-europe-africa mr-2"></i>Most Popular Maps</h2>
+    <% stats.maps.slice(0, 5).forEach(map => { %>
+      <div class="stat-item">
+        <span><%= map.map %></span>
+        <span><%= map.count %></span>
+      </div>
+    <% }) %>
+  </div>
+  <div class="stats-container">
+    <h2><i class="bi bi-geo-alt-fill mr-2"></i>Most Popular Locations</h2>
+    <% stats.locations.slice(0, 5).forEach(country => { %>
+      <div class="stat-item">
+        <span><%= country.country %></span>
+        <span><%= country.count %></span>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stats-container">
     <h2><i class="bi bi-server mr-2"></i>Service Details</h2>
-    <div class="stat-item">
-      <span>App Version</span>
-      <span><%= v %></span>
-    </div>
-    <div class="stat-item">
-      <span>Node.js Version</span>
-      <span><%= stats.nodeVersion %></span>
-    </div>
     <div class="stat-item">
       <span>Process Uptime</span>
       <span><%= stats.uptime %></span>
@@ -27,28 +49,13 @@
       <span>Memory Usage</span>
       <span><%= stats.mem %></span>
     </div>
-  </div>
-  <div class="stats-container">
-    <h2><i class="bi bi-router mr-2"></i>Network Usage</h2>
     <div class="stat-item">
-      <span>Sent Bytes</span>
-      <span><%= stats.sentBytes %></span>
+      <span>Packets Sent</span>
+      <span><%= stats.sentPackets %> (<%= stats.sentBytes %>)</span>
     </div>
     <div class="stat-item">
-      <span>Sent Packets</span>
-      <span><%= stats.sentPackets %></span>
-    </div>
-    <div class="stat-item">
-      <span>Received Bytes</span>
-      <span><%= stats.recvBytes %></span>
-    </div>
-    <div class="stat-item">
-      <span>Received Packets</span>
-      <span><%= stats.recvPackets %></span>
-    </div>
-    <div class="stat-item">
-      <span>Total Bandwidth</span>
-      <span><%= stats.totalBandwidth %></span>
+      <span>Packets Received</span>
+      <span><%= stats.recvPackets %> (<%= stats.recvBytes %>)</span>
     </div>
   </div>
   <div class="stats-container">
@@ -57,36 +64,6 @@
       <div class="stat-item">
         <span><%= rr.server.name %></span>
         <span><%= rr.ratio %></span>
-      </div>
-    <% }) %>
-  </div>
-</div>
-
-<div class="stats">
-  <div class="stats-container">
-    <h2><i class="bi bi-geo-alt-fill mr-2"></i>Popular Locations</h2>
-    <% stats.locations.slice(0, 5).forEach(country => { %>
-      <div class="stat-item">
-        <span><%= country.country %></span>
-        <span><%= country.count %></span>
-      </div>
-    <% }) %>
-  </div>
-  <div class="stats-container">
-    <h2><i class="bi bi-controller mr-2"></i>Popular Game Modes</h2>
-    <% stats.gamemodes.slice(0, 5).forEach(gm => { %>
-      <div class="stat-item">
-        <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][gm.gm] || '' %></span>
-        <span><%= gm.count %></span>
-      </div>
-    <% }) %>
-  </div>
-  <div class="stats-container">
-    <h2><i class="bi bi-globe-europe-africa mr-2"></i>Popular Maps</h2>
-    <% stats.maps.slice(0, 5).forEach(map => { %>
-      <div class="stat-item">
-        <span><%= map.map %></span>
-        <span><%= map.count %></span>
       </div>
     <% }) %>
   </div>

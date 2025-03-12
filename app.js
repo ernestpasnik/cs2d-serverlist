@@ -7,7 +7,9 @@ const port = process.env.PORT || 3000
 
 if (process.env.NODE_ENV === 'production') {
   // Minify HTML content in production
-  fastify.register(require('fastify-minify'))
+  fastify.register(require('fastify-minify'), {
+    global: true
+  })
 } else {
   // Serve static files in non-production
   fastify.register(require('@fastify/static'), {
@@ -27,5 +29,5 @@ fastify.listen({ host, port }, (err, address) => {
     fastify.log.error(err)
     process.exit(1)
   }
-  console.log(`HTTP Server listening on ${address}`)
+  console.log(`Server listening on ${address}`)
 })

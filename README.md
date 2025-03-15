@@ -6,7 +6,6 @@ A Node.js application that serves an HTTP page with an integrated API for queryi
 2. Change into the repository directory `cd cs2d-serverlist`
 3. Configure environment variables `nano .env`
 ```env
-HOST=0.0.0.0
 PORT=3000
 NODE_ENV=production
 IPDATA_APIKEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -31,9 +31,7 @@ async function addServer(ipPort) {
   }
 
   ipdata.lookup(ip, null, ['country_name', 'country_code']).then(d => {
-    if (!servers[ipPort]) {
-      return
-    }
+    if (!servers[ipPort]) return
     servers[ipPort].geoip = {
       code: d.country_code || 'ZZ',
       name: d.country_name || 'Unknown'
@@ -74,7 +72,7 @@ async function addServer(ipPort) {
 async function initialize() {
   const usgn = dgram.createSocket('udp4')
 
-  usgn.on('message', (buf, rinfo) => {
+  usgn.on('message', (buf) => {
     stats.recvPackets++
     stats.recvBytes += buf.length
     received.serverlist(buf).forEach(ipPort => {

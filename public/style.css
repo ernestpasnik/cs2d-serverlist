@@ -1,6 +1,6 @@
 * {
   font-family: "Inter", sans-serif;
-  color: rgb(187, 198, 206);
+  color: #bbc6ce;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -9,6 +9,11 @@
 
 a {
   text-decoration: none;
+  color: #c9d1d9;
+}
+
+a:hover {
+  color: #fff;
 }
 
 .ml-2 {
@@ -165,14 +170,6 @@ th:hover, th:hover>abbr {
   color: #fff;
 }
 
-tbody>tr:hover>td {
-  opacity: 1 !important;
-}
-
-tbody>tr:hover>td>.bots {
-  opacity: 1;
-}
-
 th,
 td {
   padding: .5em;
@@ -253,6 +250,11 @@ ul {
   color: #4ca3ff;
 }
 
+.dm>thead>tr>th,
+.dm>tbody>tr>td {
+  color: #00ff00;
+}
+
 .d {
   color: rgb(224, 53, 53);
 }
@@ -286,7 +288,7 @@ td:nth-child(4) {
 }
 
 .e>td:nth-child(4)>span {
-  color: rgb(255, 255, 0);
+  color: rgb(194, 194, 26);
 }
 
 .flex-details {
@@ -338,8 +340,7 @@ td:nth-child(4) {
 }
 
 .bots {
-  opacity: 0.7;
-  color: #979708;
+  color: rgb(126, 126, 23);
 }
 
 .spec {
@@ -403,10 +404,10 @@ td:nth-child(4) {
   color: #ed5141;
 }
 
-.ct>tbody>tr>td:nth-child(2),
-.ct>tbody>tr>td:nth-child(3),
-.tt>tbody>tr>td:nth-child(2),
-.tt>tbody>tr>td:nth-child(3) {
+.ct>thead>tr>th:nth-child(2),
+.ct>thead>tr>th:nth-child(3),
+.tt>thead>tr>th:nth-child(2),
+.tt>thead>tr>th:nth-child(3) {
   width: 16%;
 }
 
@@ -426,11 +427,9 @@ td:nth-child(4) {
 
   nav,
   nav > a,
-  footer {
-    font-size: .93em;
-  }
-
-  .flex>div,.flex>div>span {
+  footer,
+  .flex>div,.flex>div>span,
+  h2 {
     font-size: .93em;
   }
 
@@ -441,17 +440,9 @@ td:nth-child(4) {
   nav > a {
     padding: 1.5em 0;
   }
-  
-  #gm {
-    font-size: 1em;
-  }
 
   .flex {
     font-size: .98em;
-  }
-
-  h2 {
-    font-size: .93em;
   }
 
   #addr {
@@ -471,11 +462,8 @@ td:nth-child(4) {
 
   .api,
   table,
-  .spec {
-    font-size: .84em;
-  }
-
-  code, p, .api {
+  .spec,
+  code, p {
     font-size: .84em;
   }
 
@@ -484,8 +472,8 @@ td:nth-child(4) {
   }
 
   .bar>div {
-    width: calc(50% - .3em);
-    font-size: .84em;
+    width: calc(50% - .5em);
+    font-size: .8em;
   }
 
   .details,

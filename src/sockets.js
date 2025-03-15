@@ -101,7 +101,7 @@ async function initialize() {
 
 function getServer(ipPort) {
   if (!servers[ipPort]) return false
-  const { client, interval, playerlist, ...filteredServer } = servers[ipPort]
+  const { debug, client, interval, playerlist, ...filteredServer } = servers[ipPort]
 
   if (playerlist) {
     playerlist.sort((playerA, playerB) => playerB.score - playerA.score)

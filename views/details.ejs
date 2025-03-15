@@ -28,7 +28,7 @@
 
 <div class="details">
   <div class="table-responsive">
-    <table class="ct sortable asc">
+    <table class="<% if (s.gamemode == 1) { %>dm<% } else { %>ct<% } %> sortable asc">
       <thead>
         <tr>
           <th>Player</th>
@@ -50,7 +50,7 @@
     </table>
   </div>
   <div class="table-responsive">
-    <table class="tt sortable asc">
+    <table class="<% if (s.gamemode == 1) { %>dm<% } else { %>tt<% } %>  sortable asc">
       <thead>
         <tr>
           <th>Player</th>

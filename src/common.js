@@ -37,29 +37,31 @@ const secondsToUptime = (s) => {
 const topLocations = (servers) => Object.entries(countCountries(servers))
   .map(([country, count]) => ({ country, count }))
   .sort((a, b) => b.count - a.count)
+  .slice(0, 5)
 
 const topMaps = (servers) => Object.entries(countMaps(servers))
   .map(([map, count]) => ({ map, count }))
   .sort((a, b) => b.count - a.count)
+  .slice(0, 5)
 
 const topGamemodes = (servers) => {
-  const gamemodes = ['0', '1', '2', '3', '4', '5']
-  return gamemodes.map(gm => ({
+  return [0, 1, 2, 3, 4].map(gm => ({
     gm,
     count: (gamemodeCounts(servers)[gm] || 0)
   })).sort((a, b) => b.count - a.count)
+  .slice(0, 5)
 }
 
 const responseRatio = (servers) => {
   const serverRatios = Object.values(servers).map(server => {
+    const name = server.name
     const { sentPackets, recvPackets } = server.debug || {}
     const ratio = sentPackets && recvPackets ? Math.floor((recvPackets / sentPackets) * 100) : 0
-    return { server, ratio }
+    return { name, ratio }
   })
-  return serverRatios.sort((a, b) => b.ratio - a.ratio).map(({ server, ratio }) => ({
-    server,
-    ratio: `${ratio}%`
-  }))
+  return serverRatios.sort((a, b) => b.ratio - a.ratio)
+    .map(({ name, ratio }) => ({ name, ratio: `${ratio}%` }))
+    .slice(0, 5)
 }
 
 module.exports = {

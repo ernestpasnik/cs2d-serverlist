@@ -3,8 +3,16 @@ const sockets = require('./sockets.js')
 let requests = 0
 sockets.initialize()
 
+function err404(req, reply) {
+  return reply.status(404).view('404', {
+    title: '404 Not Found',
+    redirect: true,
+    url: `${req.protocol}://${req.host}`
+  })
+}
+
 function routes(fastify) {
-  fastify.addHook('onRequest', (request, reply, done) => {
+  fastify.addHook('onRequest', (req, reply, done) => {
     requests++
     done()
   })
@@ -18,7 +26,7 @@ function routes(fastify) {
   fastify.get('/details/:address', async (req, reply) => {
     const result = sockets.getServer(req.params.address)
     if (!result) {
-      return reply.redirect('/')
+      return err404(req, reply)
     }
     return reply.view('details', {
       title: result.name,
@@ -28,7 +36,7 @@ function routes(fastify) {
 
   fastify.get('/stats', async (req, reply) => {
     return reply.view('stats', {
-      title: 'Statistics ',
+      title: 'Statistics',
       stats: sockets.getStats(sockets.getRecentServers().servers),
       requests: requests
     })
@@ -55,11 +63,7 @@ function routes(fastify) {
   })
 
   fastify.setNotFoundHandler(async (req, reply) => {
-    return reply.status(404).view('404', {
-      title: 'Error 404',
-      redirect: true,
-      url: `${req.protocol}://${req.host}`
-    })
+    return err404(req, reply)
   })
 }
 

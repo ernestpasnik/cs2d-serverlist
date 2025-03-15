@@ -7,7 +7,7 @@
 <div class="stats">
   <div class="stats-container">
     <h2><i class="bi bi-controller mr-2"></i>Most Popular Game Modes</h2>
-    <% stats.gamemodes.slice(0, 5).forEach(gm => { %>
+    <% stats.gamemodes.forEach(gm => { %>
       <div class="stat-item">
         <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][gm.gm] || '' %></span>
         <span><%= gm.count %></span>
@@ -16,7 +16,7 @@
   </div>
   <div class="stats-container">
     <h2><i class="bi bi-globe-europe-africa mr-2"></i>Most Popular Maps</h2>
-    <% stats.maps.slice(0, 5).forEach(map => { %>
+    <% stats.maps.forEach(map => { %>
       <div class="stat-item">
         <span><%= map.map %></span>
         <span><%= map.count %></span>
@@ -25,7 +25,7 @@
   </div>
   <div class="stats-container">
     <h2><i class="bi bi-geo-alt-fill mr-2"></i>Most Popular Locations</h2>
-    <% stats.locations.slice(0, 5).forEach(country => { %>
+    <% stats.locations.forEach(country => { %>
       <div class="stat-item">
         <span><%= country.country %></span>
         <span><%= country.count %></span>
@@ -36,17 +36,17 @@
 
 <div class="stats">
   <div class="stats-container">
-    <h2><i class="bi bi-server mr-2"></i>Service Details</h2>
+    <h2><i class="bi bi-server mr-2"></i>Process and Network</h2>
     <div class="stat-item">
-      <span>Process Uptime</span>
+      <span>Uptime</span>
       <span><%= stats.uptime %></span>
     </div>
     <div class="stat-item">
-      <span>HTTP Requests</span>
+      <span>Requests</span>
       <span><%= requests %></span>
     </div>
     <div class="stat-item">
-      <span>Memory Usage</span>
+      <span>Memory</span>
       <span><%= stats.mem %></span>
     </div>
     <div class="stat-item">
@@ -60,9 +60,9 @@
   </div>
   <div class="stats-container">
     <h2><i class="bi bi-arrow-left-right mr-2"></i>Highest Response Ratio</h2>
-    <% stats.highestResponseRatio.slice(0, 5).forEach(rr => { %>
+    <% stats.highestResponseRatio.forEach(rr => { %>
       <div class="stat-item">
-        <span><%= rr.server.name %></span>
+        <span><%= rr.name %></span>
         <span><%= rr.ratio %></span>
       </div>
     <% }) %>

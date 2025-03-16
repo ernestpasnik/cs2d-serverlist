@@ -4,7 +4,8 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  font-variation-settings: "opsz" 32;
+  font-variation-settings: normal;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
 a {
@@ -78,7 +79,7 @@ footer>small>a:hover {
 }
 
 h1 {
-  color: #e1e5e9;
+  color: #ddd;
   margin: 0;
   font-size: 1.1em;
   font-weight: 500;
@@ -88,14 +89,14 @@ h2 {
   font-weight: 500;
   margin: 0;
   margin-bottom: .5em;
-  color: #e1e5e9;
+  color: #ddd;
   text-align: center;
-  margin-bottom: 1em;
+  margin-bottom: .25em;
   font-size: 1em;
 }
 
-h2>i {
-  color: #e1e5e9;
+h2>i, .bar > div > span:first-child>i {
+  color: #ddd;
 }
 
 nav {
@@ -172,18 +173,23 @@ th:hover, th:hover>abbr {
 
 th,
 td {
-  padding: .5em;
+  padding: .6em .4em;
   max-width: 175px;
   overflow: clip;
   text-overflow: ellipsis;
   color: #999;
 }
 
+.serverlist>thead>tr>th:nth-child(1),
+.serverlist>tbody>tr>td:nth-child(1) {
+  text-align: center;
+}
+
 thead>tr>th {
   border-bottom: 1px solid rgba(115, 130, 140, .1);
-  padding: .7em .5em;
+  padding: .8em .5em;
   font-weight: 500;
-  color: #bbc6ce;
+  color: #ddd;
 }
 
 .copy {
@@ -228,17 +234,20 @@ ul {
   display: flex;
   flex-direction: column;
   text-align: center;
-  padding: .5em;
-  background-color: hsla(204, 10%, 50%, .05);
+  padding: .75em 1em;
+  background-color: hsla(204,10%,50%,.05);
   border-radius: .375rem;
-  font-size: .9em;
+  font-size: .96em;
   overflow: hidden;
   width: 100%;
   text-wrap: nowrap;
+  justify-content: space-around;
+  gap: .25em;
 }
 
 .bar>div>span:first-child {
-  color: #e1e5e9;
+  color: #ddd;
+  font-weight: 500;
 }
 
 .c {
@@ -252,7 +261,7 @@ ul {
 
 .dm>thead>tr>th,
 .dm>tbody>tr>td {
-  color: #00ff00;
+  color: rgb(37, 226, 37);
 }
 
 .d {
@@ -303,10 +312,6 @@ td:nth-child(4) {
   flex-wrap: wrap;
 }
 
-.flex > div:last-child > div {
-  font-size: .96em;
-}
-
 .flex>div {
   overflow: hidden;
   text-wrap: nowrap;
@@ -350,9 +355,6 @@ td:nth-child(4) {
 
 .stat-item {
   display: flex;
-  margin-bottom: .5em;
-  gap: .5em;
-  font-size: .96em;
 }
 
 .stat-item:last-child {
@@ -362,7 +364,7 @@ td:nth-child(4) {
 }
 
 .stat-item>span:first-child {
-  color: #e1e5e9;
+  color: #ddd;
 }
 
 .stat-item>span:last-child {
@@ -385,14 +387,16 @@ td:nth-child(4) {
 .stats-container {
   display: flex;
   flex-direction: column;
+  padding: 1em 1.25em;
+  font-size: .96em;
 }
 
 .stats>div {
   width: 100%;
   background-color: rgba(115,130,140,.05);
   height: min-content;
-  padding: 1.25em;
   border-radius: .375rem;
+  gap: .5em;
 }
 
 .t {
@@ -404,11 +408,13 @@ td:nth-child(4) {
   color: #ed5141;
 }
 
+.dm>thead>tr>th:nth-child(2),
+.dm>thead>tr>th:nth-child(3),
 .ct>thead>tr>th:nth-child(2),
 .ct>thead>tr>th:nth-child(3),
 .tt>thead>tr>th:nth-child(2),
 .tt>thead>tr>th:nth-child(3) {
-  width: 16%;
+  width: 18%;
 }
 
 .table-responsive {
@@ -417,6 +423,67 @@ td:nth-child(4) {
 
 .z {
   color: rgb(37, 226, 37);
+}
+
+.flags {
+  display: flex;
+  justify-content: center;
+  gap: .25em;
+}
+
+.flag {
+  width: 10px;
+  height: 10px;
+  background-image: url("gui_server.bmp");
+  background-color: #14202c;
+  background-blend-mode: screen;
+  display: none;
+  cursor: help;
+}
+
+.flag-gm {
+  font-size: .75em;
+  cursor: help;
+}
+
+.password {
+  background-position: 0 0;
+}
+
+.usgnonly {
+  background-position: -10px 0;
+}
+
+.fow {
+  background-position: -20px 0;
+}
+
+.hasdownloads {
+  background-position: 0 -10px;
+}
+
+.forcelight {
+  background-position: 0 -20px;
+}
+
+.unknown {
+  background-position: -10px -10px;
+}
+
+.gamemode {
+  background-position: -20px -10px;
+}
+
+.recoil {
+  background-position: -10px -20px;
+}
+
+.offscreendamage {
+  background-position: -20px -20px;
+}
+
+.enabled {
+  display: initial;
 }
 
 @media (max-width: 1016px) {
@@ -445,10 +512,6 @@ td:nth-child(4) {
     font-size: .98em;
   }
 
-  #addr {
-    display: none;
-  }
-
   .api,
   .stats-container,
   .bar>div {
@@ -469,10 +532,16 @@ td:nth-child(4) {
 
   .bar {
     flex-wrap: wrap;
+    justify-content: space-between;
   }
 
-  .bar>div {
-    width: calc(50% - .5em);
+  div.bar:nth-child(2) > div {
+    width: calc(50% - .4em);
+    font-size: .8em;
+  }
+
+  div.bar:nth-child(3) > div {
+    width: calc(25% - .5em);
     font-size: .8em;
   }
 

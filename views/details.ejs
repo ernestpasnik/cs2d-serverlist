@@ -2,28 +2,23 @@
   <div>
     <h1 id="name"><%= s.name %></h1>
   </div>
-  <div>
-    <span id="updateText">Refresh in <b>10 s</b></span>
+  <div class="flags">
+    <div title="Password" class="flag password<% if (s.password) { %> enabled<% } %>"></div>
+    <div title="USGN Only" class="flag usgnonly<% if (s.usgnonly) { %> enabled<% } %>"></div>
+    <div title="Fog of War" class="flag fow<% if (s.fow) { %> enabled<% } %>"></div>
+    <div title="Force Light" class="flag forcelight<% if (s.forcelight) { %> enabled<% } %>"></div>
+    <div title="Recoil" class="flag recoil<% if (s.recoil) { %> enabled<% } %>"></div>
+    <div title="Off-Screen Damage" class="flag offscreendamage<% if (s.offscreendamage) { %> enabled<% } %>"></div>
+    <div title="Has Downloads" class="flag hasdownloads<% if (s.hasdownloads) { %> enabled<% } %>"></div>
+    <span title="<%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] %>" class="flag-gm <%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span>
   </div>
 </div>
 
 <div class="bar">
-  <div><span>Map</span><span id="map"><%= s.map %></span></div>
-  <div><span>Players</span><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
-  <div><span>Game Mode</span><span id="gm"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] || '' %></span></div>
-  <div><span>Location</span><span id="country"><%= s.geoip.name %></span></div>
-  <div id="addr"><span>Address</span><span id="address" class="copy"><%= s.ip %>:<%= s.port %></span></div>
-</div>
-
-<div class="bar">
-  <div><span>Password</span><span id="password"><% if (s.password) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><span>USGN Only</span><span id="usgnonly"><% if (s.usgnonly) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><span>Fog of War</span><span id="fow"><% if (s.fow) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><span>Friend Fire</span><span id="friendlyfire"><% if (s.friendlyfire) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><span>Lua Scripts</span><span id="lua"><% if (s.lua) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><span>Lighting</span><span id="forcelight"><% if (s.forcelight) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><span>Recoil</span><span id="recoil"><% if (s.recoil) { %>Enabled<% } else { %>Disabled<% } %></span></div>
-  <div><span>Off-Screen</span><span id="offscreendamage"><% if (s.offscreendamage) { %>Enabled<% } else { %>Disabled<% } %></span></div>
+  <div><span><i class="bi bi-people-fill mr-2"></i>Players</span><span id="players"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
+  <div><span><i class="bi bi-globe-europe-africa mr-2"></i>Map</span><span id="map"><%= s.map %></span></div>
+  <div><span><i class="bi bi-geo-alt-fill mr-2"></i>Location</span><span id="location"><%= s.geoip.name %></span></div>
+  <div><span><i class="bi bi-hdd-fill mr-2"></i>Address</span><span id="address" class="copy"><%= s.ip %>:<%= s.port %></span></div>
 </div>
 
 <div class="details">

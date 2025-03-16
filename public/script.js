@@ -1,14 +1,11 @@
 function detailsUpdate(address) {
-  const txt = document.querySelector('#updateText')
   let remainingTime = 10
 
   function updateText() {
     if (remainingTime > 0) {
-      txt.innerHTML = `Refresh in <b>${remainingTime} s</b>`
       remainingTime--
       setTimeout(updateText, 1000)
     } else {
-      txt.innerHTML = `Refreshing...`
       update(address)
     }
   }
@@ -49,14 +46,35 @@ function updatePlayers(data) {
 }
 
 function updateGameMode(data) {
-  const gm = document.querySelector('#gm')
-  gm.textContent = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][data.gamemode] || ''
+  const gmElement = document.querySelector('.flag-gm')
+  if (!gmElement) return
+
+  const gameModes = ['s', 'd', 't', 'c', 'z']
+  const gameModeNames = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!']
+
+  gmElement.classList.remove(...gameModes)
+
+  if (data.gamemode >= 0 && data.gamemode < gameModes.length) {
+    gmElement.classList.add(gameModes[data.gamemode])
+    gmElement.textContent = gameModes[data.gamemode].toUpperCase()
+    gmElement.title = gameModeNames[data.gamemode]
+  } else {
+    gmElement.textContent = ''
+  }
 }
 
 function updateSettings(data) {
-  const settings = ['password', 'usgnonly', 'fow', 'friendlyfire', 'lua', 'forcelight', 'recoil', 'offscreendamage']
+  const settings = ['password', 'usgnonly', 'fow', 'friendlyfire', 'lua', 'forcelight', 'recoil', 'offscreendamage', 'hasdownloads']
+
   settings.forEach(setting => {
-    document.querySelector(`#${setting}`).textContent = data[setting] ? 'Enabled' : 'Disabled'
+    const element = document.querySelector(`.flag.${setting}`)
+    if (element) {
+      if (data[setting]) {
+        element.classList.add('enabled')
+      } else {
+        element.classList.remove('enabled')
+      }
+    }
   })
 }
 

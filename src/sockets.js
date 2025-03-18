@@ -39,24 +39,6 @@ async function addServer(ipPort) {
   })
 
   const client = dgram.createSocket('udp4')
-  client.connect(servers[ipPort].port, servers[ipPort].ip, () => {
-    client.send(req.serverquery)
-    servers[ipPort].debug.sentPackets++
-    servers[ipPort].debug.sentBytes += 8
-    stats.sentPackets++
-    stats.sentBytes += 8
-  
-    const interval = setInterval(() => {
-      client.send(req.serverquery)
-      servers[ipPort].debug.sentPackets++
-      servers[ipPort].debug.sentBytes += 8
-      stats.sentPackets++
-      stats.sentBytes += 8
-    }, 10000)
-    
-    servers[ipPort].client = client
-    servers[ipPort].interval = interval
-  })
 
   client.on('message', (buf, rinfo) => {
     const recv = received.serverquery(buf, rinfo.size)
@@ -68,16 +50,27 @@ async function addServer(ipPort) {
     stats.recvPackets++
     stats.recvBytes += rinfo.size
   })
+
+  client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)
+  servers[ipPort].debug.sentPackets++
+  servers[ipPort].debug.sentBytes += 8
+  stats.sentPackets++
+  stats.sentBytes += 8
+
+  const interval = setInterval(() => {
+    client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)
+    servers[ipPort].debug.sentPackets++
+    servers[ipPort].debug.sentBytes += 8
+    stats.sentPackets++
+    stats.sentBytes += 8
+  }, 10000)
+
+  servers[ipPort].client = client
+  servers[ipPort].interval = interval
 }
 
 async function initialize() {
   const usgn = dgram.createSocket('udp4')
-
-  usgn.connect(36963, '81.169.236.243', () => {
-    stats.sentPackets++
-    stats.sentBytes += 4
-    usgn.send(req.serverlist)
-  })
 
   usgn.on('message', (buf, rinfo) => {
     stats.recvPackets++
@@ -88,6 +81,10 @@ async function initialize() {
       }
     })
   })
+
+  stats.sentPackets++
+  stats.sentBytes += 4
+  usgn.send(req.serverlist, 36963, '81.169.236.243')
 
   // Request CS2D server list every 15 minutes  
   setInterval(() => {

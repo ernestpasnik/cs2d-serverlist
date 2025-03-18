@@ -1,11 +1,11 @@
 'use strict'
 
 class streams {
-  constructor(buff) {
+  constructor(buff, size) {
     this.offset = 0
     if (buff !== undefined) {
       this.buffer = buff
-      this.length = buff.length
+      this.length = size
     } else {
       this.buffer = Buffer.allocUnsafe(1500)
       this.length = 1500

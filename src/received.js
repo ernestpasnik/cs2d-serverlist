@@ -1,7 +1,7 @@
 const streams = require('./streams.js')
 
-function serverlist(buf) {
-  const d = new streams(buf)
+function serverlist(buf, size) {
+  const d = new streams(buf, size)
   if (d.readShort() != 1 || d.readByte() != 20) return
 
   const servers = []
@@ -20,8 +20,8 @@ function serverlist(buf) {
   return servers
 }
 
-function serverquery(buf) {
-  const d = new streams(buf)
+function serverquery(buf, size) {
+  const d = new streams(buf, size)
   if (d.readShort() != 1 || d.readByte() != 251 || d.readByte() != 1) return
   let flags = d.readByte()
   

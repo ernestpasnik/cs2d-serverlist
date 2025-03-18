@@ -3,7 +3,7 @@
     <h1>CS2D Server List</h1>
   </div>
   <div>
-    <span><b><%= res.playersNum %> Players</b> on <b><%= res.serversNum %> Servers</b></span>
+    <span id="online"><b><%= res.playersNum %> Players</b> on <b><%= res.serversNum %> Servers</b></span>
   </div>
 </div>
 
@@ -18,15 +18,15 @@
         <th>Location</th>
       </tr>
     </thead>
-    <tbody class="serverlist">
+    <tbody>
       <% for (const ipPort in res.servers) { %>
         <% const s = res.servers[ipPort]; %>
-        <tr onclick="window.location.href='/details/<%= s.ip %>:<%= s.port %>'" <% if ((s.players - s.bots) > 0) { %> class="e" <% } %>>
-          <td><span class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span></td>
+        <tr data-s="<%= ipPort %>" <% if ((s.players - s.bots) > 0) { %> class="e" <% } %>>
+          <td class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></td>
           <td><%= s.name %></td>
           <td><%= s.map %></td>
           <td data-sort="<%= ((s.players - s.bots) * 100) + s.bots %>">
-            <%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> <span class="bots"><%= s.bots %></span><% } %>
+            <%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> <span class="b"><%= s.bots %></span><% } %>
           </td>
           <td><%= s.geoip.name %></td>
         </tr>

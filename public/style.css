@@ -28,12 +28,13 @@ a:hover {
 b,
 strong {
   font-weight: 500;
+  color: #ddd;
 }
 
 body {
   padding: 0;
   margin: 0 auto;
-  width: 1000px;
+  width: 900px;
   background-color: rgb(26, 40, 55);
   background-image: url("bg.jpg");
   background-position: top center;
@@ -234,7 +235,7 @@ ul {
   display: flex;
   flex-direction: column;
   text-align: center;
-  padding: .75em 1em;
+  padding: .6em .4em;
   background-color: hsla(204,10%,50%,.05);
   border-radius: .375rem;
   font-size: .96em;
@@ -251,7 +252,7 @@ ul {
 }
 
 .c {
-  color: rgb(66, 141, 255);
+  color: rgb(66, 141, 255) !important;
 }
 
 .ct>thead>tr>th,
@@ -265,7 +266,7 @@ ul {
 }
 
 .d {
-  color: rgb(224, 53, 53);
+  color: rgb(224, 53, 53) !important;
 }
 
 .details {
@@ -331,10 +332,10 @@ td:nth-child(4) {
 }
 
 .s {
-  color: rgb(194, 194, 26);
+  color: rgb(194, 194, 26) !important;
 }
 
-.serverlist>tr:hover>td {
+.serverlist>tbody>tr:hover>td {
   cursor: pointer;
   color: #fff;
 }
@@ -344,7 +345,7 @@ td:nth-child(4) {
   user-select: none;
 }
 
-.bots {
+.b {
   color: rgb(126, 126, 23);
 }
 
@@ -400,7 +401,7 @@ td:nth-child(4) {
 }
 
 .t {
-  color: rgb(236, 155, 5);
+  color: rgb(236, 155, 5) !important;
 }
 
 .tt>thead>tr>th,
@@ -414,7 +415,7 @@ td:nth-child(4) {
 .ct>thead>tr>th:nth-child(3),
 .tt>thead>tr>th:nth-child(2),
 .tt>thead>tr>th:nth-child(3) {
-  width: 18%;
+  width: 20%;
 }
 
 .table-responsive {
@@ -422,7 +423,7 @@ td:nth-child(4) {
 }
 
 .z {
-  color: rgb(37, 226, 37);
+  color: rgb(37, 226, 37) !important;
 }
 
 .flags {
@@ -442,8 +443,11 @@ td:nth-child(4) {
 }
 
 .flag-gm {
-  font-size: .75em;
+  font-size: 10px;
   cursor: help;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .password {
@@ -486,7 +490,7 @@ td:nth-child(4) {
   display: initial;
 }
 
-@media (max-width: 1016px) {
+@media (max-width: 916px) {
   body {
     width: auto;
     padding: 0 0 1.5em 0;
@@ -495,9 +499,12 @@ td:nth-child(4) {
   nav,
   nav > a,
   footer,
-  .flex>div,.flex>div>span,
   h2 {
     font-size: .93em;
+  }
+
+  #online {
+    font-size: .858em;
   }
 
   .stat-item {

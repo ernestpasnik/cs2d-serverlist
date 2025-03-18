@@ -1,18 +1,3 @@
-function detailsUpdate(address) {
-  let remainingTime = 10
-
-  function updateText() {
-    if (remainingTime > 0) {
-      remainingTime--
-      setTimeout(updateText, 1000)
-    } else {
-      update(address)
-    }
-  }
-
-  updateText()
-}
-
 function update(address) {
   fetch(`/api/${address}`)
     .then(response => {
@@ -21,11 +6,9 @@ function update(address) {
     })
     .then(data => {
       updateUI(data)
-      detailsUpdate(address)
     })
     .catch(error => {
       console.error('Fetch error:', error)
-      detailsUpdate(address)
     })
 }
 
@@ -106,7 +89,9 @@ function updateSpectators(playerlist) {
 
 const addressElement = document.querySelector('#address')
 if (addressElement) {
-  detailsUpdate(addressElement.textContent)
+  setInterval(() => {
+    update(addressElement.textContent)
+  }, 10000)
 }
 
 const copyElement = document.querySelector('.copy')
@@ -130,6 +115,18 @@ if (copyElement) {
       })
   })
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rows = document.querySelectorAll('.serverlist tbody > tr')
+  if (!rows) {
+    return
+  }
+  rows.forEach(row => {
+    row.addEventListener('click', () => {
+      window.location.href = '/details/' + row.getAttribute('data-s')
+    })
+  })
+})
 
 document.addEventListener('click', function (e) {
   try {

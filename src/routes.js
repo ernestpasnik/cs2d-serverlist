@@ -49,6 +49,20 @@ function routes(fastify) {
     })
   })
 
+  fastify.get('/api/stats', async (req, reply) => {
+    const recentServers = sockets.getRecentServers()
+    const players = recentServers.playersNum
+    const servers = recentServers.serversNum
+    const request = requests
+    const stats = sockets.getStats(recentServers.servers)
+    return reply.send({
+      players,
+      servers,
+      request,
+      stats
+    })
+  })
+
   fastify.get('/api/:addr', async (req, reply) => {
     const addr = req.params.addr.split(',').map(addr => addr.trim())
     const results = addr.map(addr => sockets.getServer(addr))

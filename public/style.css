@@ -39,7 +39,6 @@ body {
   background-image: url("bg.jpg");
   background-position: top center;
   background-repeat: no-repeat;
-  background-size: 100%;
 }
 
 code {
@@ -96,7 +95,7 @@ h2 {
   font-size: 1em;
 }
 
-h2>i, .bar > div > span:first-child>i {
+.bar > div {
   color: #ddd;
 }
 
@@ -110,25 +109,22 @@ nav>a {
   text-align: center;
   display: grid;
   padding: 1.5em;
+  gap: 0.25rem;
+  justify-content: center;
+  justify-items: center;
+}
+
+nav>a:hover svg {
+  fill: #fff;
 }
 
 nav>a>span {
-  font-size: .9em;
   font-weight: 500;
 }
 
-nav>a>i {
-  font-size: 1.5em;
-}
-
 nav>a:hover,
-nav>a:hover>i,
 nav>a:hover>span {
   color: #fff;
-}
-
-nav>a>i {
-  color: rgb(148 163 184/1);
 }
 
 main {

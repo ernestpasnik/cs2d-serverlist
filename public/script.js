@@ -1,3 +1,8 @@
+const link = document.createElement('link')
+link.rel = 'stylesheet'
+link.href = 'https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..500&display=swap'
+document.head.appendChild(link)
+
 function update(address) {
   fetch(`/api/${address}`)
     .then(response => {

@@ -6,7 +6,6 @@ sockets.initialize()
 function err404(req, reply) {
   return reply.status(404).view('404', {
     title: '404 Not Found',
-    redirect: true,
     url: `${req.protocol}://${req.host}`
   })
 }
@@ -59,7 +58,7 @@ function routes(fastify) {
       players,
       servers,
       request,
-      stats
+      ...stats
     })
   })
 

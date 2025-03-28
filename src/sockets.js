@@ -158,6 +158,7 @@ function cleanupServers() {
 
 function getStats(result) {
   return {
+    mem: common.getMemoryUsage(),
     uptime: common.secondsToUptime(process.uptime()),
     sentPackets: stats.sentPackets,
     recvPackets: stats.recvPackets,
@@ -166,8 +167,7 @@ function getStats(result) {
     locations: common.topLocations(result),
     gamemodes: common.topGamemodes(result),
     maps: common.topMaps(result),
-    highestResponseRatio: common.responseRatio(result),
-    mem: common.getMemoryUsage()
+    responses: common.responseRatio(result)
   }
 }
 

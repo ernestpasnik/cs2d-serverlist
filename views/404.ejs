@@ -5,3 +5,10 @@
 </div>
 
 <p>You will be redirected to the CS2D Server List shortly. <a href="/">Click here</a> if you want to do it now.</p>
+
+<script>
+function redirectToHomepage() {
+  window.location.href = '<%= url %>'
+}
+setTimeout(redirectToHomepage, 5000)
+</script>

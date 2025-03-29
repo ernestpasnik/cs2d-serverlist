@@ -12,7 +12,7 @@ const stats = {
 }
 const req = {
   serverlist: Buffer.from([1, 0, 20, 1]),
-  serverquery: Buffer.from([1, 0, 251, 1, 247, 3, 251, 5])
+  serverquery: Buffer.from([1, 0, 251, 1, 248, 3, 251, 5])
 }
 
 async function addServer(ipPort) {

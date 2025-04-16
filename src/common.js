@@ -16,8 +16,6 @@ const gamemodeCounts = (servers) => Object.values(servers).reduce((acc, server) 
   return acc
 }, {})
 
-const getMemoryUsage = () => bytesToSize(process.memoryUsage().rss)
-
 const bytesToSize = (b) => {
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
   if (b === 0) return '0 B'
@@ -70,6 +68,5 @@ module.exports = {
   topMaps,
   bytesToSize,
   secondsToUptime,
-  getMemoryUsage,
   responseRatio
 }

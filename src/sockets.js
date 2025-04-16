@@ -158,7 +158,6 @@ function cleanupServers() {
 
 function getStats(result) {
   return {
-    mem: common.getMemoryUsage(),
     uptime: common.secondsToUptime(process.uptime()),
     sentPackets: stats.sentPackets,
     recvPackets: stats.recvPackets,

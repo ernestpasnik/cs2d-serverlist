@@ -22,7 +22,11 @@ fastify.register(require('@fastify/view'), {
   defaultContext: { v: version }
 })
 
-fastify.listen({ port: process.env.PORT || 3000 }, (err, address) => {
+const opt = {
+  host: process.env.HOST || '0.0.0.0',
+  port: process.env.PORT || 3000
+}
+fastify.listen(opt, (err, address) => {
   if (err) {
     fastify.log.error(err)
     process.exit(1)

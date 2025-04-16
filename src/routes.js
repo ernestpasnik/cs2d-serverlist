@@ -1,6 +1,4 @@
 const sockets = require('./sockets.js')
-
-let requests = 0
 sockets.initialize()
 
 function err404(req, reply) {
@@ -11,11 +9,6 @@ function err404(req, reply) {
 }
 
 function routes(fastify) {
-  fastify.addHook('onRequest', (req, reply, done) => {
-    requests++
-    done()
-  })
-
   fastify.get('/', async (req, reply) => {
     return reply.view('servers.ejs', {
       res: sockets.getRecentServers()
@@ -36,8 +29,7 @@ function routes(fastify) {
   fastify.get('/stats', async (req, reply) => {
     return reply.view('stats', {
       title: 'Statistics',
-      stats: sockets.getStats(sockets.getRecentServers().servers),
-      requests: requests
+      stats: sockets.getStats(sockets.getRecentServers().servers)
     })
   })
 
@@ -45,20 +37,6 @@ function routes(fastify) {
     return reply.view('api', {
       title: 'API Documentation',
       url: `${req.protocol}://${req.host}`
-    })
-  })
-
-  fastify.get('/api/stats', async (req, reply) => {
-    const recentServers = sockets.getRecentServers()
-    const players = recentServers.playersNum
-    const servers = recentServers.serversNum
-    const request = requests
-    const stats = sockets.getStats(recentServers.servers)
-    return reply.send({
-      players,
-      servers,
-      request,
-      ...stats
     })
   })
 

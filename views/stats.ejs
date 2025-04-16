@@ -42,20 +42,20 @@
       <span><%= stats.uptime %></span>
     </div>
     <div class="stat-item">
-      <span>Requests</span>
-      <span><%= requests %></span>
+      <span>Bytes Sent</span>
+      <span><%= stats.sentBytes %></span>
     </div>
     <div class="stat-item">
-      <span>Memory</span>
-      <span><%= stats.mem %></span>
+      <span>Bytes Received</span>
+      <span><%= stats.recvBytes %></span>
     </div>
     <div class="stat-item">
       <span>Packets Sent</span>
-      <span><%= stats.sentPackets %> (<%= stats.sentBytes %>)</span>
+      <span><%= stats.sentPackets %></span>
     </div>
     <div class="stat-item">
       <span>Packets Received</span>
-      <span><%= stats.recvPackets %> (<%= stats.recvBytes %>)</span>
+      <span><%= stats.recvPackets %></span>
     </div>
   </div>
   <div class="stats-container">

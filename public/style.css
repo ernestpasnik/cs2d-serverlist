@@ -68,6 +68,8 @@ footer {
 footer>small {
   line-height: 1.5em;
   text-align: center;
+  display: block;
+  width: 100%;
 }
 
 footer>small>a {
@@ -112,6 +114,7 @@ nav>a {
   gap: 0.25rem;
   justify-content: center;
   justify-items: center;
+  font-size: 0.9em;
 }
 
 nav>a:hover svg {
@@ -147,7 +150,7 @@ table {
 }
 
 th, td {
-  font-size: .96em;
+  font-size: .9em;
 }
 
 tbody>tr:nth-of-type(odd) {
@@ -169,7 +172,8 @@ th:hover, th:hover>abbr {
 }
 
 th,
-td {
+td,
+td>a {
   padding: .6em .4em;
   max-width: 175px;
   overflow: clip;
@@ -185,12 +189,12 @@ td {
 thead>tr>th {
   border-bottom: 1px solid rgba(115, 130, 140, .1);
   padding: .8em .5em;
-  font-weight: 500;
   color: #ddd;
 }
 
 .copy {
   cursor: pointer;
+  user-select: none;
 }
 
 .copy:hover {
@@ -210,7 +214,7 @@ thead>tr>th {
   border-radius: .375rem;
   margin: 0;
   overflow: auto;
-  font-size: .96em;
+  font-size: .9em;
 }
 
 ul {
@@ -234,7 +238,7 @@ ul {
   padding: .6em .4em;
   background-color: hsla(204,10%,50%,.05);
   border-radius: .375rem;
-  font-size: .96em;
+  font-size: .85em;
   overflow: hidden;
   width: 100%;
   text-wrap: nowrap;
@@ -267,9 +271,9 @@ ul {
 
 .details {
   display: flex;
-  gap: 1em;
+  gap: 0.5em;
   margin-bottom: 1rem;
-  min-height: 29.5vw;
+  min-height: 30.3vw;
   margin-top: 1em;
 }
 
@@ -281,7 +285,7 @@ td:nth-child(4) {
   color: rgba(128, 128, 128, .5);
 }
 
-.e>td {
+.e>td, .e>td>a {
   color: #ddd;
 }
 
@@ -309,6 +313,10 @@ td:nth-child(4) {
   flex-wrap: wrap;
 }
 
+.flex>div:nth-child(2) {
+  font-size: .85em;
+}
+
 .flex>div {
   overflow: hidden;
   text-wrap: nowrap;
@@ -331,7 +339,7 @@ td:nth-child(4) {
   color: rgb(194, 194, 26) !important;
 }
 
-.serverlist>tbody>tr:hover>td {
+.serverlist>tbody>tr:hover>td,.serverlist>tbody>tr:hover>td>a {
   cursor: pointer;
   color: #fff;
 }
@@ -346,7 +354,7 @@ td:nth-child(4) {
 }
 
 .spec {
-  font-size: .96rem;
+  font-size: .9em;
   color: rgba(187, 198, 206, .6);
 }
 
@@ -385,7 +393,7 @@ td:nth-child(4) {
   display: flex;
   flex-direction: column;
   padding: 1em 1.25em;
-  font-size: .96em;
+  font-size: .9em;
 }
 
 .stats>div {
@@ -492,11 +500,15 @@ td:nth-child(4) {
     padding: 0 0 1.5em 0;
   }
 
+  h1 {
+    font-size: .9em;
+  }
+
   nav,
   nav > a,
   footer,
   h2 {
-    font-size: .93em;
+    font-size: .85em;
   }
 
   #online {
@@ -522,8 +534,7 @@ td:nth-child(4) {
   }
 
   main {
-    padding: 1rem .75rem;
-    border-radius: 0;
+    padding: .8rem .6rem;
   }
 
   .api,
@@ -557,5 +568,9 @@ td:nth-child(4) {
   .details>div,
   .stats>div {
     width: auto;
+  }
+
+  th, td {
+    font-size: .85em;
   }
 }

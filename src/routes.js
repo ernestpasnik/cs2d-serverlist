@@ -3,8 +3,7 @@ sockets.initialize()
 
 function err404(req, reply) {
   return reply.status(404).view('404', {
-    title: '404 Not Found',
-    url: `${req.protocol}://${req.host}`
+    title: '404 Not Found'
   })
 }
 
@@ -35,8 +34,7 @@ function routes(fastify) {
 
   fastify.get('/api', async (req, reply) => {
     return reply.view('api', {
-      title: 'API Documentation',
-      url: `${req.protocol}://${req.host}`
+      title: 'API Documentation'
     })
   })
 

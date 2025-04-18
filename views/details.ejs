@@ -22,50 +22,46 @@
 </div>
 
 <div class="details">
-  <div class="table-responsive">
-    <table class="<% if (s.gamemode == 1) { %>dm<% } else { %>ct<% } %> sortable asc">
-      <thead>
-        <tr>
-          <th>Player</th>
-          <th aria-sort="descending">Score</th>
-          <th>Deaths</th>
-        </tr>
-      </thead>
-      <tbody id="ct">
-        <% s.playerlist.forEach(function(p) { %>
-        <% if (p.team == 2 || p.team == 3) { %>
-        <tr title="ID: <%= p.id %>">
-          <td><%= p.name %></td>
-          <td><%= p.score %></td>
-          <td><%= p.deaths %></td>
-        </tr>
-        <% } %>
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
-  <div class="table-responsive">
-    <table class="<% if (s.gamemode == 1) { %>dm<% } else { %>tt<% } %>  sortable asc">
-      <thead>
-        <tr>
-          <th>Player</th>
-          <th aria-sort="descending">Score</th>
-          <th>Deaths</th>
-        </tr>
-      </thead>
-      <tbody id="t">
-        <% s.playerlist.forEach(function(p) { %>
-        <% if (p.team == 1) { %>
-        <tr title="ID: <%= p.id %>">
-          <td><%= p.name %></td>
-          <td><%= p.score %></td>
-          <td><%= p.deaths %></td>
-        </tr>
-        <% } %>
-        <% }) %>
-      </tbody>
-    </table>
-  </div>
+  <table class="<% if (s.gamemode == 1) { %>dm<% } else { %>ct<% } %>">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Score</th>
+        <th>Deaths</th>
+      </tr>
+    </thead>
+    <tbody id="ct">
+      <% s.playerlist.forEach(function(p) { %>
+      <% if (p.team == 2 || p.team == 3) { %>
+      <tr>
+        <td><%= p.name %></td>
+        <td><%= p.score %></td>
+        <td><%= p.deaths %></td>
+      </tr>
+      <% } %>
+      <% }) %>
+    </tbody>
+  </table>
+  <table class="<% if (s.gamemode == 1) { %>dm<% } else { %>tt<% } %>">
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Score</th>
+        <th>Deaths</th>
+      </tr>
+    </thead>
+    <tbody id="t">
+      <% s.playerlist.forEach(function(p) { %>
+      <% if (p.team == 1) { %>
+      <tr>
+        <td><%= p.name %></td>
+        <td><%= p.score %></td>
+        <td><%= p.deaths %></td>
+      </tr>
+      <% } %>
+      <% }) %>
+    </tbody>
+  </table>
 </div>
 
 <div class="spec">

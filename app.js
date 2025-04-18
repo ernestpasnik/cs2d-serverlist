@@ -1,5 +1,6 @@
 require('dotenv').config()
 const fastify = require('fastify')({ trustProxy: true })
+const ejsView = require('ejs')
 const version = require('./package.json').version
 require('./src/routes.js')(fastify)
 
@@ -16,10 +17,14 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 fastify.register(require('@fastify/view'), {
-  engine: { ejs: require('ejs') },
+  engine: {
+    ejs: ejsView
+  },
   root: 'views',
   layout: 'layout.ejs',
-  defaultContext: { v: version }
+  defaultContext: {
+    v: version
+  }
 })
 
 const opt = {

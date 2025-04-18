@@ -21,7 +21,7 @@ function updateUI(data) {
   document.querySelector('#name').textContent = data.name
   document.querySelector('#map').textContent = data.map
   updatePlayers(data)
-  document.title = `${data.players}/${data.maxplayers} ${data.name} - CS2D Serverlist`
+  document.title = `${data.players}/${data.maxplayers} ${data.name} - CS2D Server List`
   updateGameMode(data)
   updateSettings(data)
   updatePlayerLists(data)
@@ -74,11 +74,9 @@ function updatePlayerLists(data) {
 function updateTeamList(playerlist, team, tbodyId) {
   const tbody = document.getElementById(tbodyId)
   tbody.innerHTML = ''
-  playerlist.filter(player => player.team === team).forEach(player => {
+  playerlist.filter(v => v.team === team).forEach(v => {
     const row = document.createElement('tr')
-    row.title = `ID: ${player.id}`
-    row.innerHTML = `<td></td><td>${player.score}</td><td>${player.deaths}</td>`
-    row.cells[0].textContent = player.name
+    row.innerHTML = `<td>${v.name}</td><td>${v.score}</td><td>${v.deaths}</td>`
     tbody.appendChild(row)
   })
 }
@@ -128,7 +126,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   rows.forEach(row => {
     row.addEventListener('click', () => {
-      window.location.href = '/details/' + row.getAttribute('data-s')
+      const link = row.querySelector('a')
+      if (link && link.href) {
+        window.location.href = link.href
+      }
     })
   })
 })

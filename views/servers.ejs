@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<div class="table-responsive">
+<div class="responsive">
   <table class="sortable asc serverlist">
     <thead>
       <tr>
@@ -21,7 +21,7 @@
     <tbody>
       <% for (const ipPort in res.servers) { %>
         <% const s = res.servers[ipPort]; %>
-        <tr data-s="<%= ipPort %>" <% if ((s.players - s.bots) > 0) { %> class="e" <% } %>>
+        <tr <% if ((s.players - s.bots) > 0) { %> class="e" <% } %>>
           <td class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></td>
           <td><a href="/details/<%= ipPort %>"><%= s.name %></a></td>
           <td><%= s.map %></td>

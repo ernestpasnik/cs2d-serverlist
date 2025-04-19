@@ -10,6 +10,7 @@ function err404(req, reply) {
 function routes(fastify) {
   fastify.get('/', async (req, reply) => {
     return reply.view('servers.ejs', {
+      title: '',
       res: sockets.getRecentServers()
     })
   })

@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Find the best CS2D servers with our multiplayer server list. Explore detailed information for each server.">
   <meta name="keywords" content="cs2d servers, best cs2d servers, cs2d server list, top cs2d servers, cs2d server details, cs2d server ranking">
-  <title><% if (typeof title !== 'undefined') { %><%= title %> - <% } %>CS2D Server List</title>
+  <title><% if (title != '') { %><%= title %> - <% } %>CS2D Server List</title>
   <link rel="icon" href="/favicon.ico">
   <link rel="stylesheet" href="/style.css?<%= v %>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,9 +36,12 @@
     <%- body %>
   </main>
   <footer>
-    <small>Project is open-source.</small>
-    <small><a href="https://github.com/ernestpasnik/cs2d-serverlist/" target="_blank">View the code on GitHub</a>.</small>
+    <span>Project is open-source.</span>
+    <span><a href="https://github.com/ernestpasnik/cs2d-serverlist/" target="_blank">View the code on GitHub</a>.</span>
   </footer>
   <script defer src="/script.js?<%= v %>"></script>
+  <% if (title == '') { %>
+  <script defer src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@latest/dist/sortable.min.js"></script>
+  <% } %>
 </body>
 </html>

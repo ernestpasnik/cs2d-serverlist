@@ -6,7 +6,7 @@
 
 <div class="stats">
   <div class="stats-container">
-    <h2><i class="bi bi-controller mr-2"></i>Popular Game Modes</h2>
+    <h2>Popular Game Modes</h2>
     <% stats.gamemodes.forEach(gm => { %>
       <div class="stat-item">
         <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][gm.gm] || '' %></span>
@@ -15,7 +15,7 @@
     <% }) %>
   </div>
   <div class="stats-container">
-    <h2><i class="bi bi-globe-europe-africa mr-2"></i>Popular Maps</h2>
+    <h2>Popular Maps</h2>
     <% stats.maps.forEach(map => { %>
       <div class="stat-item">
         <span><%= map.map %></span>
@@ -24,7 +24,7 @@
     <% }) %>
   </div>
   <div class="stats-container">
-    <h2><i class="bi bi-geo-alt-fill mr-2"></i>Popular Locations</h2>
+    <h2>Popular Locations</h2>
     <% stats.locations.forEach(country => { %>
       <div class="stat-item">
         <span><%= country.country %></span>
@@ -36,7 +36,7 @@
 
 <div class="stats">
   <div class="stats-container">
-    <h2><i class="bi bi-server mr-2"></i>Process and Network</h2>
+    <h2>Uptime & Network Overview</h2>
     <div class="stat-item">
       <span>Uptime</span>
       <span><%= stats.uptime %></span>
@@ -59,7 +59,7 @@
     </div>
   </div>
   <div class="stats-container">
-    <h2><i class="bi bi-arrow-left-right mr-2"></i>Highest Response Ratio</h2>
+    <h2>Highest Response Ratio</h2>
     <% stats.responses.forEach(rr => { %>
       <div class="stat-item">
         <span><%= rr.name %></span>

@@ -68,7 +68,7 @@ if (copyEl) {
   })
 }
 
-document.querySelectorAll('.serverlist tbody > tr').forEach(row =>
+document.querySelectorAll('.sortable tbody > tr').forEach(row =>
   row.addEventListener('click', () => {
     const link = row.querySelector('a')?.href
     if (link) window.location.href = link

@@ -2,9 +2,24 @@
   <div>
     <h1><%= r.name %></h1>
   </div>
+</div>
+
+<% const total = r.usgnUsers + r.steamUsers %>
+<div class="bar">
+  <div><span>Updated</span><span><%= timeAgo(r.ts) %></span></div>
   <div>
-    <b>Leaderboard</b>
+    <span>USGN Users</span>
+    <span><%= r.usgnUsers %> (<%= total ? ((r.usgnUsers / total) * 100).toFixed(1) : 0 %>%)</span>
   </div>
+  <div>
+    <span>Steam Users</span>
+    <span><%= r.steamUsers %> (<%= total ? ((r.steamUsers / total) * 100).toFixed(1) : 0 %>%)</span>
+  </div>
+  <div>
+    <span>Ranked Users</span>
+    <span><%= total %></span>
+  </div>
+  <div><span>Server Details</span><a href="/details/<%= addr %>">Visit Page</a></div>
 </div>
 
 <div class="responsive">
@@ -32,7 +47,7 @@
           : (p.kills).toFixed(2) %>
 
         <tr>
-          <td><%= i + 1 %></td>
+          <td><% if (i === 0) { %>🥇<% } else if (i === 1) { %>🥈<% } else if (i === 2) { %>🥉<% } else { %><%= i + 1 %><% } %></td>
           <td><a href="<%= profileUrl %>" target="_blank"><%= p.name %></a></td>
           <td><%= kdRatio %></td>
           <td><%= p.kills %></td>

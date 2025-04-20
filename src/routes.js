@@ -1,6 +1,6 @@
 const sockets = require('./sockets.js')
 const leaderboard = require('./leaderboard.js')
-const { formatTime } = require('./utils.js')
+const { formatTime, timeAgo } = require('./utils.js')
 sockets.initialize()
 
 function err404(req, reply) {
@@ -37,7 +37,9 @@ function routes(fastify) {
     return reply.view('leaderboard', {
       title: `${result.name} - Leaderboard`,
       r: result,
-      formatTime
+      addr: req.params.address,
+      formatTime,
+      timeAgo
     })
   })
 
@@ -74,7 +76,8 @@ function routes(fastify) {
     if (!port) {
       return reply.code(500).send({ error: 'Port is required' })
     }
-    const addr = `${req.ip}:${port}`
+    //const addr = `${req.ip}:${port}`
+    const addr = `80.78.132.21:10619`
     const result = sockets.getServer(addr)
     if (!result) {
       return reply.code(500).send({ error: 'No valid servers found' })

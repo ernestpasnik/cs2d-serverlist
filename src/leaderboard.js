@@ -8,12 +8,15 @@ function parse(serverName, addr, sort, buf) {
     throw new Error("Invalid header: expected 'userstats steam'")
   }
 
+  let usgnUsers = 0
+  let steamUsers = 0
   const players = []
   while (true) {
     const name = d.readLine()
     if (!name.trim()) break
 
     const usertype = d.readByte()
+    usertype === 0 ? usgnUsers++ : steamUsers++
     const userid = d.readLong()
     const score = d.readInt()
     const kills = d.readInt()
@@ -64,7 +67,9 @@ function parse(serverName, addr, sort, buf) {
   leaderboards[addr] = {
     ts: Math.floor(Date.now() / 1000),
     name: serverName,
-    players: players.slice(0, 100)
+    players: players.slice(0, 100),
+    usgnUsers,
+    steamUsers
   }
 }
 

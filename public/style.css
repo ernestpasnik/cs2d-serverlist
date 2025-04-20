@@ -311,7 +311,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   background-color: rgba(115,130,140,.05);
   height: min-content;
   border-radius: 3px;
-  gap: .5rem;
+  gap: .4rem;
 }
 .t {
   color: rgb(236, 155, 5) !important;
@@ -389,16 +389,13 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
     font-size: .85rem;
   }
   .stat-item {
-    font-size: .85rem;
+    font-size: .8rem;
   }
   nav > a {
     padding: 1.5rem 0;
   }
   .flex {
     font-size: .98rem;
-  }
-  .api, .stats-container, .bar>div {
-    border-radius: 3px;
   }
   main {
     padding: 1rem .75rem;
@@ -412,7 +409,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   }
   div.bar > div {
     flex: 1 0 20%;
-    font-size: .85rem;
+    font-size: .8rem;
   }
   .details, .stats {
     flex-direction: column;
@@ -422,7 +419,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
     width: auto;
   }
   th, td {
-    font-size: .85rem;
+    font-size: .8rem;
   }
   thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
     width: 0;
@@ -447,9 +444,8 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   color: transparent;
 }
 .sortable thead th:not(.no-sort)::after {
-  margin-left: 1px;
+  margin-left: 3px;
   content: "▸";
-  font-size: 90%;
 }
 .sortable thead th:not(.no-sort):hover::after {
   color: inherit;
@@ -466,7 +462,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   content: "";
 }
 .sortable thead th:not(.no-sort).indicator-left::before {
-  margin-right: 1px;
+  margin-right: 3px;
   content: "▸";
 }
 .sortable thead th:not(.no-sort).indicator-left:hover::before {

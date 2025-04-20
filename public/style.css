@@ -60,7 +60,6 @@ h2 {
   font-size: .95rem;
 }
 ul {
-  margin: 0;
   padding-left: 1rem;
 }
 p {
@@ -131,7 +130,7 @@ td, td>a {
   color: #999;
 }
 .endpoint {
-  margin: 2rem 0;
+  margin: 2.5rem 0;
 }
 .svlst > tbody > tr > td:nth-child(3) {
   max-width: 150px;

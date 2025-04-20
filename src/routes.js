@@ -30,18 +30,13 @@ function routes(fastify) {
   })
 
   fastify.get('/leaderboard/:address', async (req, reply) => {
-    const result = sockets.getServer(req.params.address)
+    const result = leaderboard.getLeaderboard(req.params.address)
     if (!result) {
       return err404(req, reply)
     }
-    const result2 = leaderboard.getLeaderboard(req.params.address)
-    if (!result2) {
-      return err404(req, reply)
-    }
     return reply.view('leaderboard', {
-      title: `Leaderboard: ${result.name}`,
-      s: result,
-      l: result2,
+      title: `${result.name} - Leaderboard`,
+      r: result,
       formatTime
     })
   })
@@ -79,14 +74,13 @@ function routes(fastify) {
     if (!port) {
       return reply.code(500).send({ error: 'Port is required' })
     }
-    const ip = req.ip
-    const addr = `${ip}:${port}`
+    const addr = `${req.ip}:${port}`
     const result = sockets.getServer(addr)
     if (!result) {
       return reply.code(500).send({ error: 'No valid servers found' })
     }
     try {
-      leaderboard.parse(addr, sort, fileBuffer)
+      leaderboard.parse(result.name, addr, sort, fileBuffer)
     } catch (err) {
       return reply.code(500).send({ error: err.message })
     }

@@ -151,6 +151,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   border-radius: 3px;
   text-wrap: nowrap;
   cursor: pointer;
+  user-select: none;
 }
 #addr:hover {
   color: #fff;
@@ -223,8 +224,11 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 .e>td, .e>td>a {
   color: #ddd;
 }
-.leaderboard>tbody>tr>td,.leaderboard>tbody>tr>td>a {
+.leaderboard>tbody>tr>td>a {
   color: #ddd;
+}
+.leaderboard>tbody>tr>td>a:hover {
+  color: #fff;
 }
 .e>td:nth-child(4) {
   color: #34d134;
@@ -256,11 +260,12 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 .s {
   color: rgb(194, 194, 26) !important;
 }
-.sortable>tbody>tr:hover>td,.sortable>tbody>tr:hover>td>a {
+.svlst>tbody>tr:hover>td,.svlst>tbody>tr:hover>td>a {
   cursor: pointer;
   color: #fff;
+  user-select: none;
 }
-.sortable thead th:not(.no-sort) {
+.svlst thead th:not(.no-sort) {
   cursor: pointer;
   user-select: none;
 }
@@ -388,7 +393,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   #online {
     font-size: .85rem;
   }
-  .stat-item {
+  .stat-item, .spec {
     font-size: .8rem;
   }
   nav > a {
@@ -400,7 +405,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   main {
     padding: 1rem .75rem;
   }
-  .api, table, .spec, code, p, li {
+  .api, table, code, p, li {
     font-size: .85rem;
   }
   .bar {

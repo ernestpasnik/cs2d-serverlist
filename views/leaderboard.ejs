@@ -1,9 +1,9 @@
 <div class="flex">
   <div>
-    <h1>Leaderboard</h1>
+    <h1><%= r.name %></h1>
   </div>
   <div>
-    <span><%= s.name %></span>
+    <b>Leaderboard</b>
   </div>
 </div>
 
@@ -22,7 +22,7 @@
       </tr>
     </thead>
     <tbody>
-      <% l.forEach((p, i) => { %>
+      <% r.players.forEach((p, i) => { %>
         <% const profileUrl = p.usertype === 1 
           ? `https://steamcommunity.com/profiles/${p.userid}` 
            : `https://unrealsoftware.de/profile.php?userid=${p.userid}` %>
@@ -33,7 +33,7 @@
 
         <tr>
           <td><%= i + 1 %></td>
-          <td><a href="<%= profileUrl %>"><%= p.name %></a></td>
+          <td><a href="<%= profileUrl %>" target="_blank"><%= p.name %></a></td>
           <td><%= kdRatio %></td>
           <td><%= p.kills %></td>
           <td><%= p.assists %></td>

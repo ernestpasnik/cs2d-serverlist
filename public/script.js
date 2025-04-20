@@ -69,7 +69,7 @@ if (addr) {
   })
 }
 
-document.querySelectorAll('.sortable tbody > tr').forEach(row =>
+document.querySelectorAll('.svlst tbody > tr').forEach(row =>
   row.addEventListener('click', () => {
     const link = row.querySelector('a')?.href
     if (link) window.location.href = link

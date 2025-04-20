@@ -1,7 +1,7 @@
 const streams = require('./streams.js')
 const leaderboards = {}
 
-function parse(addr, sort, buf) {
+function parse(serverName, addr, sort, buf) {
   const d = new streams(buf, buf.length)
   const header = d.readLine()
   if (header !== 'userstats steam') {
@@ -61,8 +61,11 @@ function parse(addr, sort, buf) {
       break
   }
 
-  leaderboards[addr] = players.slice(0, 100)
-  return leaderboards[addr]
+  leaderboards[addr] = {
+    ts: Math.floor(Date.now() / 1000),
+    name: serverName,
+    players: players.slice(0, 100)
+  }
 }
 
 function getLeaderboard(addr) {

@@ -4,11 +4,9 @@ fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32
 document.head.appendChild(fontLink)
 
 const $ = s => document.querySelector(s)
-const addr = $('#addr')?.textContent
-addr && setInterval(() => update(addr), 10000)
 
-const update = addr =>
-  fetch(`/api/${addr}`)
+const update = url =>
+  fetch(url)
     .then(r => r.ok ? r.json() : null)
     .then(d => d && updateUI(d))
     .catch(() => {})
@@ -51,17 +49,20 @@ const updateUI = d => {
     : ''
 }
 
-const copyEl = $('.copy')
-if (copyEl) {
+const addr = $('#addr')
+if (addr) {
+  const url = `/api/${addr.textContent}`
+  setInterval(() => update(url), 10000)
+
   let clicked = false
-  copyEl.addEventListener('click', () => {
+  addr.addEventListener('click', () => {
     if (clicked) return
-    const originalText = copyEl.textContent
+    const originalText = addr.textContent
     navigator.clipboard.writeText(originalText).then(() => {
-      copyEl.textContent = 'Copied to clipboard'
+      addr.textContent = 'Copied to clipboard'
       clicked = true
       setTimeout(() => {
-        copyEl.textContent = originalText
+        addr.textContent = originalText
         clicked = false
       }, 2000)
     })

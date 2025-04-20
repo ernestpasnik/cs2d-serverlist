@@ -2,6 +2,7 @@ require('dotenv').config()
 const fastify = require('fastify')({ trustProxy: true })
 const ejsView = require('ejs')
 const version = require('./package.json').version
+fastify.register(require('@fastify/multipart'))
 require('./src/routes.js')(fastify)
 
 if (process.env.NODE_ENV === 'production') {

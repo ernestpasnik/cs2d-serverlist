@@ -1,0 +1,47 @@
+<div class="flex">
+  <div>
+    <h1>Leaderboard</h1>
+  </div>
+  <div>
+    <span><%= s.name %></span>
+  </div>
+</div>
+
+<div class="responsive">
+  <table class="leaderboard sortable">
+    <thead>
+      <tr>
+          <th aria-sort="ascending">#</th>
+          <th>Player</th>
+          <th><abbr title="Kill-death ratio">K/D</abbr></th>
+          <th><abbr title="Kills">K</abbr></th>
+          <th><abbr title="Assists">A</abbr></th>
+          <th><abbr title="Deaths">D</abbr></th>
+          <th><abbr title="MVPs">⭐</abbr></th>
+          <th><abbr title="Time on server">⌚</abbr></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% l.forEach((p, i) => { %>
+        <% const profileUrl = p.usertype === 1 
+          ? `https://steamcommunity.com/profiles/${p.userid}` 
+           : `https://unrealsoftware.de/profile.php?userid=${p.userid}` %>
+        
+        <% const kdRatio = p.deaths > 0 
+          ? (p.kills / p.deaths).toFixed(2) 
+          : (p.kills).toFixed(2) %>
+
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><a href="<%= profileUrl %>"><%= p.name %></a></td>
+          <td><%= kdRatio %></td>
+          <td><%= p.kills %></td>
+          <td><%= p.assists %></td>
+          <td><%= p.deaths %></td>
+          <td><%= p.mvps %></td>
+          <td data-sort="<%= p.time %>"><%= formatTime(p.time) %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

@@ -76,8 +76,7 @@ function routes(fastify) {
     if (!port) {
       return reply.code(500).send({ error: 'Port is required' })
     }
-    //const addr = `${req.ip}:${port}`
-    const addr = `80.78.132.21:10619`
+    const addr = `${req.ip}:${port}`
     const result = sockets.getServer(addr)
     if (!result) {
       return reply.code(500).send({ error: 'No valid servers found' })

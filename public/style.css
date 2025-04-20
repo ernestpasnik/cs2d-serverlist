@@ -117,6 +117,7 @@ th {
   border-bottom: 1px solid rgba(115, 130, 140, .1);
   padding: .6rem .3rem;
   color: #ddd;
+  user-select: none;
 }
 abbr {
   text-decoration: none;

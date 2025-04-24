@@ -1,8 +1,3 @@
-const fontLink = document.createElement('link')
-fontLink.rel = 'stylesheet'
-fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..500&display=swap'
-document.head.appendChild(fontLink)
-
 const $ = s => document.querySelector(s)
 
 const update = url =>

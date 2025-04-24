@@ -1,5 +1,5 @@
 ## Introduction
-A Node.js application that serves an HTTP page with an integrated API for querying and displaying a CS2D server list. The app provides real-time server information, including server status, players, and map details, through a dedicated API endpoint.
+A Node.js app that shows a CS2D server list with real-time info like status, players, and map, available through an API.
 
 ## Installation
 1. Clone the Repository `git clone https://github.com/ernestpasnik/cs2d-serverlist.git`

@@ -166,6 +166,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   overflow: auto;
   font-size: .85rem;
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+  text-wrap: nowrap;
 }
 .curl {
   color: rgb(255, 203, 107);
@@ -405,7 +406,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   main {
     padding: 1rem .75rem;
   }
-  .api, table, code, p, li {
+  table, code, p, li {
     font-size: .85rem;
   }
   .bar {

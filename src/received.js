@@ -3,20 +3,14 @@ const streams = require('./streams.js')
 function serverlist(buf, size) {
   const d = new streams(buf, size)
   if (d.readShort() != 1 || d.readByte() != 20) return
-
-  const servers = []
-  const serverNum = d.readShort()
-  for (let i = 0; i < serverNum; i++) {
+  return Array.from({ length: d.readShort() }, () => {
     const oct4 = d.readByte()
     const oct3 = d.readByte()
     const oct2 = d.readByte()
     const oct1 = d.readByte()
     const port = d.readShort()
-    const ip = [oct1, oct2, oct3, oct4].join('.')
-    servers.push(`${ip}:${port}`)
-  }
-
-  return servers
+    return `${oct1}.${oct2}.${oct3}.${oct4}:${port}`
+  })
 }
 
 function serverquery(buf, size) {

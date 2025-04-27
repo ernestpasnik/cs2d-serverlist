@@ -4,12 +4,7 @@ const received = require('./received.js')
 const common = require('./common.js')
 const ipdata = new IPData(process.env.IPDATA_APIKEY)
 const servers = {}
-const stats = {
-  sentPackets: 0,
-  recvPackets: 0,
-  sentBytes: 0,
-  recvBytes: 0
-}
+const stats = { sentPackets: 0, recvPackets: 0, sentBytes: 0, recvBytes: 0 }
 const req = {
   serverlist: Buffer.from([1, 0, 20, 1]),
   serverquery: Buffer.from([1, 0, 251, 1, 248, 3, 251, 5])
@@ -41,14 +36,15 @@ async function addServer(ipPort) {
   const client = dgram.createSocket('udp4')
 
   client.on('message', (buf, rinfo) => {
+    stats.recvPackets++
+    stats.recvBytes += rinfo.size
+
     const recv = received.serverquery(buf, rinfo.size)
     if (recv == null) return
     servers[ipPort].ts = Math.floor(Date.now() / 1000)
     servers[ipPort].debug.recvPackets++
     servers[ipPort].debug.recvBytes += rinfo.size
-    servers[ipPort] = { ...servers[ipPort], ...received.serverquery(buf, rinfo.size) }
-    stats.recvPackets++
-    stats.recvBytes += rinfo.size
+    servers[ipPort] = { ...servers[ipPort], ...recv }
   })
 
   client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)

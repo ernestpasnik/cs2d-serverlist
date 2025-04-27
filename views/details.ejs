@@ -17,7 +17,7 @@
 <div class="bar">
   <div><span>Players</span><span id="p"><%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> (<%= s.bots %> bots)<% } %></span></div>
   <div><span>Map</span><span id="map"><%= s.map %></span></div>
-  <div><span>Location</span><span id="location"><%= s.geoip.name %></span></div>
+  <div><span>Location</span><a href="https://www.google.com/maps?q=<%= s.dbg.geoip.lat %>,<%= s.dbg.geoip.lon %>" target="_blank"><%= s.dbg.geoip.name %></a></div>
   <div><span>Address</span><span id="addr"><%= s.ip %>:<%= s.port %></span></div>
   <% if (l != false) { %><div><span>Leaderboard</span><a href="/leaderboard/<%= s.ip %>:<%= s.port %>">Visit Page</a></div><% } %>
 </div>

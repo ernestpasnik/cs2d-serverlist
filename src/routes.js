@@ -18,7 +18,7 @@ function routes(fastify) {
   })
 
   fastify.get('/details/:address', async (req, reply) => {
-    const result = sockets.getServer(req.params.address)
+    const result = sockets.getServer(req.params.address, true)
     if (!result) {
       return err404(req, reply)
     }

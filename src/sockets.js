@@ -3,6 +3,7 @@ const IPData = require('ipdata').default
 const received = require('./received.js')
 const common = require('./common.js')
 const ipdata = new IPData(process.env.IPDATA_APIKEY)
+const fields = ['country_name', 'latitude', 'longitude']
 const servers = {}
 const stats = { sentPackets: 0, recvPackets: 0, sentBytes: 0, recvBytes: 0 }
 const req = {
@@ -15,9 +16,8 @@ async function addServer(ipPort) {
   servers[ipPort] = {
     ip,
     port: parseInt(port),
-    geoip: { code: 'ZZ', name: 'Unknown' },
-    debug: {
-      addedAt: Math.floor(Date.now() / 1000),
+    dbg: {
+      geoip: { name: 'Unknown', lat: 0, lon: 0 },
       sentPackets: 0,
       recvPackets: 0,
       sentBytes: 0,
@@ -25,11 +25,12 @@ async function addServer(ipPort) {
     }
   }
 
-  ipdata.lookup(ip, null, ['country_name', 'country_code']).then(d => {
+  ipdata.lookup(ip, null, fields).then(d => {
     if (!servers[ipPort]) return
-    servers[ipPort].geoip = {
-      code: d.country_code || 'ZZ',
-      name: d.country_name || 'Unknown'
+    servers[ipPort].dbg.geoip = {
+      name: d.country_name || 'Unknown',
+      lat: d.latitude || 0,
+      lon: d.longitude || 0
     }
   })
 
@@ -42,21 +43,21 @@ async function addServer(ipPort) {
     const recv = received.serverquery(buf, rinfo.size)
     if (recv == null) return
     servers[ipPort].ts = Math.floor(Date.now() / 1000)
-    servers[ipPort].debug.recvPackets++
-    servers[ipPort].debug.recvBytes += rinfo.size
+    servers[ipPort].dbg.recvPackets++
+    servers[ipPort].dbg.recvBytes += rinfo.size
     servers[ipPort] = { ...servers[ipPort], ...recv }
   })
 
   client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)
-  servers[ipPort].debug.sentPackets++
-  servers[ipPort].debug.sentBytes += 8
+  servers[ipPort].dbg.sentPackets++
+  servers[ipPort].dbg.sentBytes += 8
   stats.sentPackets++
   stats.sentBytes += 8
 
   const interval = setInterval(() => {
     client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)
-    servers[ipPort].debug.sentPackets++
-    servers[ipPort].debug.sentBytes += 8
+    servers[ipPort].dbg.sentPackets++
+    servers[ipPort].dbg.sentBytes += 8
     stats.sentPackets++
     stats.sentBytes += 8
   }, 10000)
@@ -93,9 +94,11 @@ async function initialize() {
   setInterval(cleanupServers, 60000)
 }
 
-function getServer(ipPort) {
+function getServer(ipPort, full = false) {
   if (!servers[ipPort]) return false
-  const { debug, client, interval, playerlist, ...filteredServer } = servers[ipPort]
+  if (full) return servers[ipPort]
+
+  const { dbg, client, interval, playerlist, ...filteredServer } = servers[ipPort]
 
   if (playerlist) {
     playerlist.sort((playerA, playerB) => playerB.score - playerA.score)

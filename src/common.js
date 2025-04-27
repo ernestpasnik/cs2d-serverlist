@@ -1,5 +1,5 @@
 const countCountries = (servers) => Object.values(servers).reduce((acc, server) => {
-  const country = server.geoip?.name
+  const country = server.dbg.geoip.name
   if (country) acc[country] = (acc[country] || 0) + 1
   return acc
 }, {})
@@ -53,7 +53,7 @@ const topGamemodes = (servers) => {
 const responseRatio = (servers) => {
   const serverRatios = Object.values(servers).map(server => {
     const name = server.name
-    const { sentPackets, recvPackets } = server.debug || {}
+    const { sentPackets, recvPackets } = server.dbg || {}
     const ratio = sentPackets && recvPackets ? Math.floor((recvPackets / sentPackets) * 100) : 0
     return { name, ratio }
   })

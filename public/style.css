@@ -115,7 +115,7 @@ th {
   text-align: left;
   font-weight: 500;
   border-bottom: 1px solid rgba(115, 130, 140, .1);
-  padding: .6rem .3rem;
+  padding: .6rem .2rem;
   color: #ddd;
   user-select: none;
 }
@@ -123,8 +123,8 @@ abbr {
   text-decoration: none;
   cursor: help;
 }
-td, td>a {
-  padding: .6rem .3rem;
+td {
+  padding: .6rem .2rem;
   max-width: 165px;
   overflow: clip;
   text-overflow: ellipsis;
@@ -450,7 +450,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   color: transparent;
 }
 .sortable thead th:not(.no-sort)::after {
-  margin-left: 3px;
+  margin-left: 2px;
   content: "▸";
 }
 .sortable thead th:not(.no-sort):hover::after {

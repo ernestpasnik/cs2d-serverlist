@@ -1,19 +1,33 @@
-## Introduction
-A Node.js app that shows a CS2D server list with real-time info like status, players, and map, available through an API.
+# CS2D Server List
+A Node.js app that displays the scoreboard, server details, and other real-time information. Includes an easy-to-use API to access CS2D server data and upload leaderboard stats. The API provides consistent JSON responses, unlimited usage, and public access with CORS enabled.
 
-## Installation
-1. Clone the Repository `git clone https://github.com/ernestpasnik/cs2d-serverlist.git`
-2. Change into the repository directory `cd cs2d-serverlist`
-3. Configure environment variables `nano .env`
+Currently hosted at: [cs2d.pp.ua](https://cs2d.pp.ua)
+
+## ENV Configuration
+Create a `.env` file in the project root with the following content:
 ```env
 PORT=3000
 NODE_ENV=production
 IPDATA_APIKEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
-Note: You can get the IPDATA_APIKEY value by creating a free account at [ipdata.co](https://ipdata.co)
+> You can get the IPDATA_APIKEY by creating a free account at [ipdata.co](https://ipdata.co)
 
-4. Install dependencies `npm install`
-5. Run the application `npm start`
+## NGINX Configuration
+If you are using NGINX as a reverse proxy, you should add the following:
+- Block bots from accessing `/api/` by serving a custom `robots.txt`
+- Enable CORS for API requests
+```conf
+location = /robots.txt {
+    default_type text/plain;
+    return 200 "User-agent: *\nDisallow: /api/\n";
+}
+
+location ~ ^/api/.*$ {
+    proxy_pass http://127.0.0.1:3000;
+    add_header Access-Control-Allow-Origin *;
+    add_header Access-Control-Allow-Methods 'GET';
+}
+```
 
 ## License
 This project is licensed under the [MIT License](LICENSE).

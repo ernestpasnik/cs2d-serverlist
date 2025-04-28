@@ -24,6 +24,4 @@ jobs:
             cd /var/www/cs2d-serverlist
             git reset --hard HEAD
             git pull origin main
-            uglifyjs public/script.js -o public/script.js
-            uglifycss public/style.css --output public/style.css
-            pm2 restart cs2d-serverlist
+            rc-service cs2d-serverlist restart

@@ -14,7 +14,10 @@ fastify.register(require('@fastify/view'), {
   engine: { ejs: require('ejs') },
   root: 'views',
   layout: 'layout.ejs',
-  defaultContext: { v: require('./package.json').version }
+  defaultContext: {
+    env: process.env.NODE_ENV || 'development',
+    v: require('./package.json').version,
+  },
 })
 
 fastify.listen({

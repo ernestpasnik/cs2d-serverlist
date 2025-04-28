@@ -381,6 +381,11 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   color: #bbc6ce;
 }
 @media (max-width: 916px) {
+  .svlst>thead>tr>th:nth-child(2), .svlst>tbody>tr>td:nth-child(2) {
+    width: 0;
+    padding-left: .6rem;
+    padding-right: .6rem;
+  }
   body {
     width: auto;
     padding: 0 0 1.5rem 0;
@@ -426,11 +431,6 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   }
   th, td {
     font-size: .8rem;
-  }
-  thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
-    width: 0;
-    padding-left: .6rem;
-    padding-right: 0;
   }
 }
 @media (max-width: 500px) {

@@ -10,8 +10,8 @@ const updateUI = d => {
   document.title = `${d.players}/${d.maxplayers} ${d.name} - CS2D Server List`
   $('#name').textContent = d.name
   $('#map').textContent = d.map
-  $('#p').textContent = `${d.players}/${d.maxplayers}${d.bots ? ` (${d.bots} bots)` : ''}`
-
+  $('#p').textContent = `${d.players}/${d.maxplayers}${d.bots ? ` (${d.bots} bot${d.bots > 1 ? 's' : ''})` : ''}`;
+  
   const gm = $('.flag-gm')
   const gmCodes = ['s', 'd', 't', 'c', 'z']
   const gmNames = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!']

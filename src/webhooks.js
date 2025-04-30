@@ -106,7 +106,7 @@ async function addWebhook(webhookUrl, servers) {
   }
 }
 
-setInterval(async () => {
+async function processWebhooks() {
   for (let i = 0; i < webhooks.length; i++) {
     const webhook = webhooks[i]
     const data = JSON.stringify({ embeds: generateEmbedsFromServers(webhook.servers) })
@@ -120,10 +120,11 @@ setInterval(async () => {
       await saveWebhooksToFile('webhooks.json', webhooks)
     }
   }
-}, 10000)
+}
 
-;(async () => {
+(async () => {
   webhooks = await loadWebhooksFromFile('webhooks.json')
+  setInterval(processWebhooks, 10000)
 })()
 
 module.exports = { addWebhook }

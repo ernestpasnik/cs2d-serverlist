@@ -5,7 +5,7 @@
   <meta name="description" content="Browse CS2D server stats, leaderboards, and detailed game info. Use our open API to access server data and upload leaderboard stats with JSON and CORS support.">
   <meta name="keywords" content="cs2d servers, cs2d server list, cs2d leaderboard, cs2d API, cs2d server stats, cs2d game data, cs2d map stats, cs2d server info">
   <title><% if (title != '') { %><%= title %> – <% } %>CS2D Server List</title>
-  <link rel="icon" href="<%= env === 'production' ? 'https://cdn.jsdelivr.net/gh/ernestpasnik/cs2d-serverlist@${v}/public/favicon.ico' : '/favicon.ico' %>">
+  <link rel="icon" href="<%= env === 'production' ? `https://cdn.jsdelivr.net/gh/ernestpasnik/cs2d-serverlist@${v}/public/favicon.ico` : '/favicon.ico' %>">
   <link rel="stylesheet" href="<%= env === 'production' ? `https://cdn.jsdelivr.net/gh/ernestpasnik/cs2d-serverlist@${v}/public/style.min.css` : '/style.css' %>">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/inter-ui@4.1.0/inter.min.css">
 </head>

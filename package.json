@@ -1,6 +1,6 @@
 {
   "name": "cs2d-serverlist",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "A Node.js app displaying real-time scoreboard and server info, with an API for CS2D data and leaderboard stats, featuring JSON responses and public access with CORS.",
   "repository": {
     "type": "git",

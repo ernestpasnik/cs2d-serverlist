@@ -6,7 +6,7 @@
 
 <div class="stats">
   <div class="stats-container">
-    <h2>Popular Game Modes</h2>
+    <label>Popular Game Modes</label>
     <% stats.gamemodes.forEach(gm => { %>
       <div class="stat-item">
         <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][gm.gm] || '' %></span>
@@ -15,7 +15,7 @@
     <% }) %>
   </div>
   <div class="stats-container">
-    <h2>Popular Maps</h2>
+    <label>Popular Maps</label>
     <% stats.maps.forEach(map => { %>
       <div class="stat-item">
         <span><%= map.map %></span>
@@ -24,7 +24,7 @@
     <% }) %>
   </div>
   <div class="stats-container">
-    <h2>Popular Locations</h2>
+    <label>Popular Locations</label>
     <% stats.locations.forEach(country => { %>
       <div class="stat-item">
         <span><%= country.country %></span>
@@ -36,7 +36,7 @@
 
 <div class="stats">
   <div class="stats-container">
-    <h2>Uptime & Network Overview</h2>
+    <label>Uptime & Network Overview</label>
     <div class="stat-item">
       <span>Uptime</span>
       <span><%= stats.uptime %></span>
@@ -59,7 +59,7 @@
     </div>
   </div>
   <div class="stats-container">
-    <h2>Highest Response Ratio</h2>
+    <label>Highest Response Ratio</label>
     <% stats.responses.forEach(rr => { %>
       <div class="stat-item">
         <span><%= rr.name %></span>

@@ -1,6 +1,7 @@
 require('dotenv').config()
 const fastify = require('fastify')({ trustProxy: true })
 fastify.register(require('@fastify/multipart'))
+fastify.register(require('@fastify/formbody'))
 require('./src/routes.js')(fastify)
 
 // Minify HTML content in production and serve static files in non-production

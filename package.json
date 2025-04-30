@@ -1,7 +1,7 @@
 {
   "name": "cs2d-serverlist",
-  "version": "5.1.3",
-  "description": "Node.js app serving an HTTP page with an API for querying and displaying a CS2D server list.",
+  "version": "5.2",
+  "description": "A Node.js app displaying real-time scoreboard and server info, with an API for CS2D data and leaderboard stats, featuring JSON responses and public access with CORS.",
   "repository": {
     "type": "git",
     "url": "https://github.com/ernestpasnik/cs2d-serverlist.git"
@@ -20,7 +20,8 @@
     "cs2d"
   ],
   "dependencies": {
-    "@fastify/multipart": "^9.0.3",
+    "@fastify/formbody": "*",
+    "@fastify/multipart": "*",
     "@fastify/static": "*",
     "@fastify/view": "*",
     "dotenv": "*",

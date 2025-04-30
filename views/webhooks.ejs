@@ -1,0 +1,32 @@
+<div class="flex">
+  <div>
+    <h1><%= title %></h1>
+  </div>
+</div>
+
+<p>Monitor CS2D servers on Discord with updates every 10 seconds. Just select servers and add webhook URL.</p>
+
+<div class="endpoint">
+<% if (typeof msg !== 'undefined' && msg) { %>
+  <div class="alert alert-danger">
+    <%= msg %>
+  </div>
+<% } %>
+
+<form method="POST">
+  <label for="search">Select servers</label>
+  <div class="checkbox-container" id="checkboxes">
+    <% const sortedServers = Object.entries(res.servers).sort((a, b) => a[1].name.localeCompare(b[1].name)); %>
+    <% sortedServers.forEach(([ipPort, s], index) => { %>
+      <% const id = `s${index + 1}`; %>
+      <div>
+        <input type="checkbox" name="servers" value="<%= ipPort %>" id="s<%= id %>">
+        <label for="s<%= id %>"><%= s.name %></label>
+      </div>
+    <% }) %>  
+  </div>
+  <label for="url">Webhook URL</label>
+  <input type="text" id="url" name="url" placeholder="https://discord.com/api/webhooks/1367210382288224379/G0nvWGZrAnE8C7Hsg2iqGrOSxU4wHRufybwZxLbxMeMdIO1_COY_3NPSTZkBWeHZVcpL">
+  <button type="submit">Submit</button>
+</form>
+</div>

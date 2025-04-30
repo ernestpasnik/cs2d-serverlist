@@ -7,7 +7,7 @@ const update = url =>
     .catch(() => {})
 
 const updateUI = d => {
-  document.title = `${d.players}/${d.maxplayers} ${d.name} - CS2D Server List`
+  document.title = `${d.players}/${d.maxplayers} ${d.name} – CS2D Server List`
   $('#name').textContent = d.name
   $('#map').textContent = d.map
   $('#p').textContent = `${d.players}/${d.maxplayers}${d.bots ? ` (${d.bots} bot${d.bots > 1 ? 's' : ''})` : ''}`;

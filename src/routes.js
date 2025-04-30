@@ -1,5 +1,6 @@
 const sockets = require('./sockets.js')
 const leaderboard = require('./leaderboard.js')
+const webhooks = require('./webhooks.js')
 const { formatTime, timeAgo } = require('./utils.js')
 sockets.initialize()
 
@@ -40,6 +41,60 @@ function routes(fastify) {
       addr: req.params.address,
       formatTime,
       timeAgo
+    })
+  })
+
+  fastify.get('/webhooks', async (req, reply) => {
+      return reply.view('webhooks.ejs', {
+        title: 'Webhooks',
+        res: sockets.getRecentServers()
+      })
+    }
+  )
+
+  fastify.post('/webhooks', async (req, reply) => {
+    const url = req.body.url || ''
+    let servers = req.body.servers || []
+    if (!Array.isArray(servers)) {
+      if (typeof servers === 'string') {
+        servers = [servers]
+      } else {
+        servers = []
+      }
+    }
+    
+    if (servers.length < 1) {
+      return reply.view('webhooks.ejs', {
+        title: 'Webhooks',
+        res: sockets.getRecentServers(),
+        msg: 'You didn\'t provide any servers.'
+      })
+    }
+  
+    const ipPortRegex = /^(\d{1,3}\.){3}\d{1,3}:\d{1,5}$/
+    for (const server of servers) {
+      if (typeof server !== 'string' || !ipPortRegex.test(server)) {
+        return reply.view('webhooks.ejs', {
+          title: 'Webhooks',
+          res: sockets.getRecentServers(),
+          msg: 'You provided an invalid server address.'
+        })
+      }
+    }
+  
+    const discordWebhookRegex = /^https:\/\/discord\.com\/api\/webhooks\/\d{18,20}\/[A-Za-z0-9_-]{68}$/
+    if (typeof url !== 'string' || !discordWebhookRegex.test(url)) {
+      return reply.view('webhooks.ejs', {
+        title: 'Webhooks',
+        res: sockets.getRecentServers(),
+        msg: 'You provided an invalid webhook URL.'
+      })
+    }
+
+    webhooks.addWebhook(url, servers)
+    return reply.view('webhooks.ejs', {
+      title: 'Webhooks',
+      res: sockets.getRecentServers()
     })
   })
 

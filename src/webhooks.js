@@ -47,7 +47,7 @@ function generateEmbedsFromServers(servers) {
   return embeds
 }
 
-function sendWebhookRequest(method, url, data, callback) {
+async function sendWebhookRequest(method, url, data) {
   const { hostname, pathname, search } = new URL(url)
   const path = pathname + (search || '')
 
@@ -61,33 +61,31 @@ function sendWebhookRequest(method, url, data, callback) {
     }
   }
 
-  const req = https.request(options, (res) => {
-    let body = ''
-    res.on('data', chunk => body += chunk)
-    res.on('end', () => {
-      try {
-        const parsed = JSON.parse(body)
-        callback(null, parsed)
-      } catch (e) {
-        callback(new Error('Invalid JSON response'))
-      }
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+      let body = ''
+      res.on('data', chunk => body += chunk)
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(body)
+          resolve(parsed)
+        } catch (e) {
+          reject(new Error('Invalid JSON response'))
+        }
+      })
     })
-  })
 
-  req.on('error', callback)
-  req.write(data)
-  req.end()
+    req.on('error', reject)
+    req.write(data)
+    req.end()
+  })
 }
 
 async function addWebhook(webhookUrl, servers) {
   const data = JSON.stringify({ embeds: generateEmbedsFromServers(servers) })
 
-  sendWebhookRequest('POST', webhookUrl + '?wait=true', data, async (err, resData) => {
-    if (err) {
-      console.error('Error sending message:', err.message)
-      return
-    }
-
+  try {
+    const resData = await sendWebhookRequest('POST', webhookUrl + '?wait=true', data)
     if (resData && resData.id) {
       const existing = webhooks.find(w => w.webhookUrl === webhookUrl)
       if (existing) {
@@ -103,7 +101,9 @@ async function addWebhook(webhookUrl, servers) {
 
       await saveWebhooksToFile('webhooks.json', webhooks)
     }
-  })
+  } catch (err) {
+    console.error('Error sending message:', err.message)
+  }
 }
 
 setInterval(async () => {
@@ -112,13 +112,13 @@ setInterval(async () => {
     const data = JSON.stringify({ embeds: generateEmbedsFromServers(webhook.servers) })
     const updateUrl = `${webhook.webhookUrl}/messages/${webhook.messageId}`
 
-    sendWebhookRequest('PATCH', updateUrl, data, async (err) => {
-      if (err) {
-        console.error('Error updating message:', err.message)
-        webhooks.splice(i, 1)
-        await saveWebhooksToFile('webhooks.json', webhooks)
-      }
-    })
+    try {
+      await sendWebhookRequest('PATCH', updateUrl, data)
+    } catch (err) {
+      console.error('Error updating message:', err.message)
+      webhooks.splice(i, 1)
+      await saveWebhooksToFile('webhooks.json', webhooks)
+    }
   }
 }, 10000)
 

@@ -1,4 +1,4 @@
-const axios = require('axios')
+const https = require('https')
 const fs = require('fs')
 const sockets = require('./sockets.js')
 let webhooks = loadWebhooksFromFile('webhooks.json')
@@ -39,16 +39,8 @@ function generateEmbedsFromServers(servers) {
       url: `https://cs2d.pp.ua/details/${ipPort}`,
       color: 0x3498db,
       fields: [
-        {
-          name: 'Players',
-          value: players,
-          inline: true
-        },
-        {
-          name: 'Map',
-          value: server.map,
-          inline: true
-        }
+        { name: 'Players', value: players, inline: true },
+        { name: 'Map', value: server.map, inline: true }
       ]
     })
   }
@@ -56,42 +48,73 @@ function generateEmbedsFromServers(servers) {
   return embeds
 }
 
-function addWebhook(webhookUrl, servers) {
-  axios.post(webhookUrl + '?wait=true', {
-    embeds: generateEmbedsFromServers(servers)
-  })
-    .then(function (response) {
-      if (response.data && response.data.id) {
-        const existing = webhooks.find(w => w.webhookUrl === webhookUrl)
-        if (existing) {
-          existing.messageId = response.data.id
-          existing.servers = servers
-        } else {
-          webhooks.push({
-            webhookUrl,
-            messageId: response.data.id,
-            servers
-          })
-        }
-        saveWebhooksToFile('webhooks.json', webhooks)
+function sendWebhookRequest(method, url, data, callback) {
+  const { hostname, pathname, search } = new URL(url)
+  const path = pathname + (search || '')
+
+  const options = {
+    hostname,
+    path,
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(data)
+    }
+  }
+
+  const req = https.request(options, (res) => {
+    let body = ''
+    res.on('data', chunk => body += chunk)
+    res.on('end', () => {
+      try {
+        const parsed = JSON.parse(body)
+        callback(null, parsed)
+      } catch (e) {
+        callback(new Error('Invalid JSON response'))
       }
     })
-    .catch(function (error) {
-      console.error('Error sending message:', error.response ? error.response.data : error.message)
-    })
+  })
+
+  req.on('error', callback)
+  req.write(data)
+  req.end()
+}
+
+function addWebhook(webhookUrl, servers) {
+  const data = JSON.stringify({ embeds: generateEmbedsFromServers(servers) })
+  sendWebhookRequest('POST', webhookUrl + '?wait=true', data, (err, resData) => {
+    if (err) {
+      console.error('Error sending message:', err.message)
+      return
+    }
+    if (resData && resData.id) {
+      const existing = webhooks.find(w => w.webhookUrl === webhookUrl)
+      if (existing) {
+        existing.messageId = resData.id
+        existing.servers = servers
+      } else {
+        webhooks.push({
+          webhookUrl,
+          messageId: resData.id,
+          servers
+        })
+      }
+      saveWebhooksToFile('webhooks.json', webhooks)
+    }
+  })
 }
 
 setInterval(() => {
   webhooks.forEach((webhook, index) => {
-    const embeds = generateEmbedsFromServers(webhook.servers)
-    axios.patch(`${webhook.webhookUrl}/messages/${webhook.messageId}`, { embeds })
-      .catch(error => {
-        if (error.response) {
-          console.error('Error updating message:', error.response.data)
-          webhooks.splice(index, 1)
-          saveWebhooksToFile('webhooks.json', webhooks)
-        }
-      })
+    const data = JSON.stringify({ embeds: generateEmbedsFromServers(webhook.servers) })
+    const updateUrl = `${webhook.webhookUrl}/messages/${webhook.messageId}`
+    sendWebhookRequest('PATCH', updateUrl, data, (err, resData) => {
+      if (err) {
+        console.error('Error updating message:', err.message)
+        webhooks.splice(index, 1)
+        saveWebhooksToFile('webhooks.json', webhooks)
+      }
+    })
   })
 }, 10000)
 

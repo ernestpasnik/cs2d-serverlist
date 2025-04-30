@@ -17,7 +17,7 @@ fastify.register(require('@fastify/view'), {
   layout: 'layout.ejs',
   defaultContext: {
     env: process.env.NODE_ENV || 'development',
-    v: require('./package.json').version,
+    v: require('./package.json').version
   },
 })
 

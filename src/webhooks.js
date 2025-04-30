@@ -1,24 +1,23 @@
-const https = require('https')
-const fs = require('fs')
+const https = require('node:https')
+const fs = require('node:fs/promises')
 const sockets = require('./sockets.js')
-let webhooks = loadWebhooksFromFile('webhooks.json')
 
-function saveWebhooksToFile(filename, webhooks) {
-  fs.writeFile(filename, JSON.stringify(webhooks, null, 2), (err) => {
-    if (err) {
-      console.error('Error saving webhooks:', err)
-    } else {
-      console.log('Webhooks saved to file')
-    }
-  })
+let webhooks = []
+
+async function saveWebhooksToFile(filename, webhooks) {
+  try {
+    await fs.writeFile(filename, JSON.stringify(webhooks, null, 2))
+    console.log('Webhooks saved to file')
+  } catch (err) {
+    console.error('Error saving webhooks:', err)
+  }
 }
 
-function loadWebhooksFromFile(filename) {
-  if (!fs.existsSync(filename)) return []
+async function loadWebhooksFromFile(filename) {
   try {
-    return JSON.parse(fs.readFileSync(filename, 'utf8'))
+    const data = await fs.readFile(filename, 'utf8')
+    return JSON.parse(data)
   } catch (err) {
-    console.error('Error loading webhooks:', err)
     return []
   }
 }
@@ -80,13 +79,15 @@ function sendWebhookRequest(method, url, data, callback) {
   req.end()
 }
 
-function addWebhook(webhookUrl, servers) {
+async function addWebhook(webhookUrl, servers) {
   const data = JSON.stringify({ embeds: generateEmbedsFromServers(servers) })
-  sendWebhookRequest('POST', webhookUrl + '?wait=true', data, (err, resData) => {
+
+  sendWebhookRequest('POST', webhookUrl + '?wait=true', data, async (err, resData) => {
     if (err) {
       console.error('Error sending message:', err.message)
       return
     }
+
     if (resData && resData.id) {
       const existing = webhooks.find(w => w.webhookUrl === webhookUrl)
       if (existing) {
@@ -99,23 +100,30 @@ function addWebhook(webhookUrl, servers) {
           servers
         })
       }
-      saveWebhooksToFile('webhooks.json', webhooks)
+
+      await saveWebhooksToFile('webhooks.json', webhooks)
     }
   })
 }
 
-setInterval(() => {
-  webhooks.forEach((webhook, index) => {
+setInterval(async () => {
+  for (let i = 0; i < webhooks.length; i++) {
+    const webhook = webhooks[i]
     const data = JSON.stringify({ embeds: generateEmbedsFromServers(webhook.servers) })
     const updateUrl = `${webhook.webhookUrl}/messages/${webhook.messageId}`
-    sendWebhookRequest('PATCH', updateUrl, data, (err, resData) => {
+
+    sendWebhookRequest('PATCH', updateUrl, data, async (err) => {
       if (err) {
         console.error('Error updating message:', err.message)
-        webhooks.splice(index, 1)
-        saveWebhooksToFile('webhooks.json', webhooks)
+        webhooks.splice(i, 1)
+        await saveWebhooksToFile('webhooks.json', webhooks)
       }
     })
-  })
+  }
 }, 10000)
+
+;(async () => {
+  webhooks = await loadWebhooksFromFile('webhooks.json')
+})()
 
 module.exports = { addWebhook }

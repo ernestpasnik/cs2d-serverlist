@@ -1,4 +1,4 @@
-const dgram = require('dgram')
+const dgram = require('node:dgram')
 const IPData = require('ipdata').default
 const received = require('./received.js')
 const common = require('./common.js')

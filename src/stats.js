@@ -1,8 +1,46 @@
+const { getUserCountAPI } = require('./stats/usgnUsers.js')
+
 const stats = {
   sentBytes: 0,
   recvBytes: 0,
   sentPackets: 0,
   recvPackets: 0
+}
+
+const countServerStats = (servers) => {
+  if (!Array.isArray(servers)) {
+    return {
+      totalServers: 0,
+      totalPlayers: 0,
+      totalBots: 0,
+      quickServers: 0
+    }
+  }
+
+  let totalServers = 0
+  let totalPlayers = 0
+  let totalBots = 0
+  let quickServers = 0
+
+  for (const server of servers) {
+    totalServers++
+    const bots = server.bots || 0
+    const players = Math.max((server.players || 0) - bots, 0)
+
+    totalPlayers += players
+    totalBots += bots
+
+    if (server.name?.includes('[Q]')) {
+      quickServers++
+    }
+  }
+
+  return {
+    totalServers,
+    totalPlayers,
+    totalBots,
+    quickServers
+  }
 }
 
 const countCountries = (servers) => Object.values(servers).reduce((acc, server) => {
@@ -77,11 +115,13 @@ const responseRatio = (serverList) => {
 const sortedLeaderboardsByTS = (leaderboards) => {
   return Object.entries(leaderboards)
     .sort(([, a], [, b]) => b.ts - a.ts)
-    .map(([addr, data]) => ({ addr, ...data }));
+    .map(([addr, data]) => ({ addr, ...data }))
+    .slice(0, 4);
 }
 
 function getStats(servers, leaderboards) {
   return {
+    ...countServerStats(servers),
     gamemodes: topGamemodes(servers),
     maps: topMaps(servers),
     locations: topLocations(servers),
@@ -91,7 +131,8 @@ function getStats(servers, leaderboards) {
     sentBytes: bytesToSize(stats.sentBytes),
     recvBytes: bytesToSize(stats.recvBytes),
     responses: responseRatio(servers),
-    leaderboards: sortedLeaderboardsByTS(leaderboards)
+    leaderboards: sortedLeaderboardsByTS(leaderboards),
+    usgnUsers: getUserCountAPI()
   }
 }
 

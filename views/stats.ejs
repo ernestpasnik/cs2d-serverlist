@@ -6,19 +6,33 @@
 
 <div class="stats">
   <div class="stats-container">
+    <label>Server & Player Stats</label>
+    <div class="stat-item">
+      <span><abbr title="Quick Play">[Q]</abbr> Servers</span>
+      <span><%= stats.quickServers %></span>
+    </div>
+    <div class="stat-item">
+      <span>Total Servers</span>
+      <span><%= stats.totalServers %></span>
+    </div>
+    <div class="stat-item">
+      <span>Total Bots</span>
+      <span><%= stats.totalBots %></span>
+    </div>
+    <div class="stat-item">
+      <span>Total Players (no bots)</span>
+      <span><%= stats.totalPlayers %></span>
+    </div>
+    <div class="stat-item">
+      <span>USGN Users (online in-game)</span>
+      <span><%= stats.usgnUsers %></span>
+    </div>
+  </div>
+  <div class="stats-container">
     <label>Top Game Modes</label>
     <% stats.gamemodes.forEach(v => { %>
       <div class="stat-item">
         <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][v.gm] || 'Unknown' %></span>
-        <span><%= v.count %></span>
-      </div>
-    <% }) %>
-  </div>
-  <div class="stats-container">
-    <label>Most Played Maps</label>
-    <% stats.maps.forEach(v => { %>
-      <div class="stat-item">
-        <span><%= v.map %></span>
         <span><%= v.count %></span>
       </div>
     <% }) %>
@@ -36,11 +50,28 @@
 
 <div class="stats">
   <div class="stats-container">
-    <label>Uptime & Network Stats</label>
-    <div class="stat-item">
-      <span>Server Uptime</span>
-      <span><%= stats.uptime %></span>
-    </div>
+    <label>Most Played Maps</label>
+    <% stats.maps.forEach(v => { %>
+      <div class="stat-item">
+        <span><%= v.map %></span>
+        <span><%= v.count %></span>
+      </div>
+    <% }) %>
+  </div>
+  <div class="stats-container">
+    <label>Top Responding Servers</label>
+    <% stats.responses.forEach(v => { %>
+      <div class="stat-item">
+        <span><a href="/details/<%= v.addr %>"><%= v.data.name %></a></span>
+        <span><%= v.data.ratio %>%</span>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stats-container">
+    <label>UDP Service Metrics*</label>
     <div class="stat-item">
       <span>Bytes Sent</span>
       <span><%= stats.sentBytes %></span>
@@ -59,15 +90,6 @@
     </div>
   </div>
   <div class="stats-container">
-    <label>Top Responding Servers</label>
-    <% stats.responses.forEach(v => { %>
-      <div class="stat-item">
-        <span><a href="/details/<%= v.addr %>"><%= v.data.name %></a></span>
-        <span><%= v.data.ratio %>%</span>
-      </div>
-    <% }) %>
-  </div>
-  <div class="stats-container">
     <label>Recently Updated Leaderboards</label>
     <% stats.leaderboards.forEach(v => { %>
       <div class="stat-item">
@@ -77,3 +99,5 @@
     <% }) %>
   </div>
 </div>
+
+<small>* Metrics collected since Node.js process started (uptime: <%= stats.uptime %>)</small>

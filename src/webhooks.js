@@ -118,6 +118,13 @@ async function processWebhooks() {
 
     try {
       await sendWebhookRequest('PATCH', updateUrl, data)
+      const resData = await sendWebhookRequest('PATCH', updateUrl, data)
+
+      // Unknown Webhook
+      if (resData && resData.code == 10015) {
+        webhooks.splice(i, 1)
+        saveWebhooksToFile('webhooks.json', webhooks)
+      }
     } catch (err) {
       console.error('Error updating message:', err.message)
       webhooks.splice(i, 1)

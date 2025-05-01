@@ -191,7 +191,6 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   font-size: .85rem;
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
   margin-bottom: .5rem;
-  text-wrap: nowrap;
   overflow: auto;
   border-radius: .25rem;
 }
@@ -305,6 +304,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 }
 .stat-item {
   display: flex;
+  gap: .25rem;
 }
 .stat-item:last-child {
   margin-bottom: 0;

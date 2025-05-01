@@ -32,6 +32,7 @@
       </tr>
     </thead>
     <tbody id="ct">
+      <% s.playerlist.sort((a, b) => b.score - a.score); %>
       <% s.playerlist.forEach(function(p) { %>
       <% if (p.team >= 2) { %>
       <tr>

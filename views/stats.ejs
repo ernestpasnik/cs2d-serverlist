@@ -6,26 +6,26 @@
 
 <div class="stats">
   <div class="stats-container">
-    <label>Server & Player Stats</label>
-    <div class="stat-item">
-      <span><abbr title="Quick Play">[Q]</abbr> Servers</span>
-      <span><%= stats.quickServers %></span>
-    </div>
+    <label>Current Game Activity</label>
     <div class="stat-item">
       <span>Total Servers</span>
       <span><%= stats.totalServers %></span>
     </div>
     <div class="stat-item">
-      <span>Total Bots</span>
+      <span>Bots on Servers</span>
       <span><%= stats.totalBots %></span>
     </div>
     <div class="stat-item">
-      <span>Total Players (no bots)</span>
+      <span>Players on Servers</span>
       <span><%= stats.totalPlayers %></span>
     </div>
     <div class="stat-item">
-      <span>USGN Users (online in-game)</span>
+      <span>USGN Players Online</span>
       <span><%= stats.usgnUsers %></span>
+    </div>
+    <div class="stat-item">
+      <span>Steam Players Online</span>
+      <span><%= stats.steamUsers %></span>
     </div>
   </div>
   <div class="stats-container">
@@ -100,4 +100,4 @@
   </div>
 </div>
 
-<small>* Metrics collected since Node.js process started (uptime: <%= stats.uptime %>)</small>
+<small>* Since Node.js process started (uptime: <%= stats.uptime %>)</small>

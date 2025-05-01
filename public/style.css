@@ -13,11 +13,12 @@ body, input, button {
 }
 small {
   color: #ddd;
-  opacity: .8;
+  opacity: .7;
+  font-size: .8rem;
 }
 a {
   text-decoration: none;
-  color: #c9d1d9;
+  color: #ddd;
 }
 a:hover {
   color: #fff;
@@ -197,6 +198,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   margin-bottom: .5rem;
   overflow: auto;
   border-radius: .25rem;
+  overflow-wrap: anywhere;
 }
 .curl {
   color: rgb(255, 203, 107);

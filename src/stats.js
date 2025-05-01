@@ -1,4 +1,5 @@
-const { getUserCountAPI } = require('./stats/usgnUsers.js')
+const usgn = require('./stats/usgnUsers.js')
+const steam = require('./stats/steamUsers.js')
 
 const stats = {
   sentBytes: 0,
@@ -12,34 +13,26 @@ const countServerStats = (servers) => {
     return {
       totalServers: 0,
       totalPlayers: 0,
-      totalBots: 0,
-      quickServers: 0
+      totalBots: 0
     }
   }
 
   let totalServers = 0
   let totalPlayers = 0
   let totalBots = 0
-  let quickServers = 0
 
   for (const server of servers) {
     totalServers++
     const bots = server.bots || 0
     const players = Math.max((server.players || 0) - bots, 0)
-
     totalPlayers += players
     totalBots += bots
-
-    if (server.name?.includes('[Q]')) {
-      quickServers++
-    }
   }
 
   return {
     totalServers,
     totalPlayers,
-    totalBots,
-    quickServers
+    totalBots
   }
 }
 
@@ -132,7 +125,8 @@ function getStats(servers, leaderboards) {
     recvBytes: bytesToSize(stats.recvBytes),
     responses: responseRatio(servers),
     leaderboards: sortedLeaderboardsByTS(leaderboards),
-    usgnUsers: getUserCountAPI()
+    usgnUsers: usgn.getUserCountAPI(),
+    steamUsers: steam.getUserCountAPI()
   }
 }
 

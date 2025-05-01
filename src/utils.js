@@ -5,13 +5,13 @@ function formatTime(s) {
   const seconds = s % 60
 
   if (days > 0) {
-    return `${days}d`
+    return `${days} d`
   } else if (hours > 0) {
-    return `${hours}h`
+    return `${hours} h`
   } else if (minutes > 0) {
-    return `${minutes}min`
+    return `${minutes} min`
   } else {
-    return `${seconds}s`
+    return `${seconds} s`
   }
 }
 
@@ -21,10 +21,10 @@ function timeAgo(unixTimestamp) {
   const diffSeconds = Math.floor((now - timestamp) / 1000)
 
   if (diffSeconds < 5) return 'just now'
-  if (diffSeconds < 60) return `${diffSeconds}s ago`
-  if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)}min ago`
-  if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)}h ago`
-  return `${Math.floor(diffSeconds / 86400)}d ago`
+  if (diffSeconds < 60) return `${diffSeconds} s ago`
+  if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} min ago`
+  if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)} h ago`
+  return `${Math.floor(diffSeconds / 86400)} d ago`
 }
 
 module.exports = { formatTime, timeAgo }

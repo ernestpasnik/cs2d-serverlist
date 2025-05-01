@@ -44,7 +44,7 @@
     <span>Project is open-source.</span>
     <span><a href="https://github.com/ernestpasnik/cs2d-serverlist/" target="_blank">View the code on GitHub</a>.</span>
   </footer>
-  <script defer src="<%= env === 'production' ? 'https://cdn.jsdelivr.net/gh/ernestpasnik/cs2d-serverlist@${v}/public/script.min.js' : '/script.js' %>"></script>
+  <script defer src="<%= env === 'production' ? `https://cdn.jsdelivr.net/gh/ernestpasnik/cs2d-serverlist@${v}/public/script.min.js` : '/script.js' %>"></script>
   <script defer src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@4.0.1/dist/sortable.min.js"></script>
 </body>
 </html>

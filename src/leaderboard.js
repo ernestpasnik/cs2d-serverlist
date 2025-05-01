@@ -77,7 +77,12 @@ function getLeaderboard(addr) {
   return leaderboards[addr] || false
 }
 
+function getLeaderboards() {
+  return leaderboards
+}
+
 module.exports = {
   parse,
-  getLeaderboard
+  getLeaderboard,
+  getLeaderboards
 }

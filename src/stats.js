@@ -1,3 +1,10 @@
+const stats = {
+  sentBytes: 0,
+  recvBytes: 0,
+  sentPackets: 0,
+  recvPackets: 0
+}
+
 const countCountries = (servers) => Object.values(servers).reduce((acc, server) => {
   const country = server.dbg.geoip.name
   if (country) acc[country] = (acc[country] || 0) + 1
@@ -51,22 +58,50 @@ const topGamemodes = (servers) => {
 }
 
 const responseRatio = (servers) => {
-  const serverRatios = Object.values(servers).map(server => {
+  const serverRatios = Object.entries(servers).map(([addr, server]) => {
     const name = server.name
     const { sentPackets, recvPackets } = server.dbg || {}
     const ratio = sentPackets && recvPackets ? Math.floor((recvPackets / sentPackets) * 100) : 0
-    return { name, ratio }
+    return { addr, data: { name, ratio } }
   })
-  return serverRatios.sort((a, b) => b.ratio - a.ratio)
-    .map(({ name, ratio }) => ({ name, ratio: `${ratio}%` }))
+  return serverRatios
+    .sort((a, b) => b.data.ratio - a.data.ratio)
     .slice(0, 5)
 }
 
+const sortedLeaderboardsByTS = (leaderboards) => {
+  return Object.entries(leaderboards)
+    .sort(([, a], [, b]) => b.ts - a.ts)
+    .map(([addr, data]) => ({ addr, ...data }));
+}
+
+function getStats(servers, leaderboards) {
+  return {
+    gamemodes: topGamemodes(servers),
+    maps: topMaps(servers),
+    locations: topLocations(servers),
+    uptime: secondsToUptime(process.uptime()),
+    sentPackets: stats.sentPackets,
+    recvPackets: stats.recvPackets,
+    sentBytes: bytesToSize(stats.sentBytes),
+    recvBytes: bytesToSize(stats.recvBytes),
+    responses: responseRatio(servers),
+    leaderboards: sortedLeaderboardsByTS(leaderboards)
+  }
+}
+
+function increaseStatsSentBytes(bytes) {
+  stats.sentBytes += bytes
+  stats.sentPackets++
+}
+
+function increaseStatsRecvBytes(bytes) {
+  stats.recvBytes += bytes
+  stats.recvPackets++
+}
+
 module.exports = {
-  topLocations,
-  topGamemodes,
-  topMaps,
-  bytesToSize,
-  secondsToUptime,
-  responseRatio
+  getStats,
+  increaseStatsSentBytes,
+  increaseStatsRecvBytes
 }

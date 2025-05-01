@@ -1,6 +1,7 @@
 const sockets = require('./sockets.js')
 const leaderboard = require('./leaderboard.js')
 const webhooks = require('./webhooks.js')
+const stats = require('./stats.js')
 const { formatTime, timeAgo } = require('./utils.js')
 sockets.initialize()
 
@@ -99,9 +100,12 @@ function routes(fastify) {
   })
 
   fastify.get('/stats', async (req, reply) => {
+    const servers = sockets.getRecentServers().servers
+    const leaderboards = leaderboard.getLeaderboards()
     return reply.view('stats', {
       title: 'Statistics',
-      stats: sockets.getStats(sockets.getRecentServers().servers)
+      stats: stats.getStats(servers, leaderboards),
+      timeAgo
     })
   })
 

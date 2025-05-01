@@ -6,29 +6,29 @@
 
 <div class="stats">
   <div class="stats-container">
-    <label>Popular Game Modes</label>
-    <% stats.gamemodes.forEach(gm => { %>
+    <label>Top Game Modes</label>
+    <% stats.gamemodes.forEach(v => { %>
       <div class="stat-item">
-        <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][gm.gm] || '' %></span>
-        <span><%= gm.count %></span>
+        <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][v.gm] || 'Unknown' %></span>
+        <span><%= v.count %></span>
       </div>
     <% }) %>
   </div>
   <div class="stats-container">
-    <label>Popular Maps</label>
-    <% stats.maps.forEach(map => { %>
+    <label>Most Played Maps</label>
+    <% stats.maps.forEach(v => { %>
       <div class="stat-item">
-        <span><%= map.map %></span>
-        <span><%= map.count %></span>
+        <span><%= v.map %></span>
+        <span><%= v.count %></span>
       </div>
     <% }) %>
   </div>
   <div class="stats-container">
-    <label>Popular Locations</label>
-    <% stats.locations.forEach(country => { %>
+    <label>Top Server Regions</label>
+    <% stats.locations.forEach(v => { %>
       <div class="stat-item">
-        <span><%= country.country %></span>
-        <span><%= country.count %></span>
+        <span><%= v.country %></span>
+        <span><%= v.count %></span>
       </div>
     <% }) %>
   </div>
@@ -36,17 +36,17 @@
 
 <div class="stats">
   <div class="stats-container">
-    <label>Uptime & Network Overview</label>
+    <label>Uptime & Network Stats</label>
     <div class="stat-item">
-      <span>Uptime</span>
+      <span>Server Uptime</span>
       <span><%= stats.uptime %></span>
     </div>
     <div class="stat-item">
-      <span>Bytes Sent</span>
+      <span>Data Sent</span>
       <span><%= stats.sentBytes %></span>
     </div>
     <div class="stat-item">
-      <span>Bytes Received</span>
+      <span>Data Received</span>
       <span><%= stats.recvBytes %></span>
     </div>
     <div class="stat-item">
@@ -59,11 +59,20 @@
     </div>
   </div>
   <div class="stats-container">
-    <label>Highest Response Ratio</label>
-    <% stats.responses.forEach(rr => { %>
+    <label>Top Responding Servers</label>
+    <% stats.responses.forEach(v => { %>
       <div class="stat-item">
-        <span><%= rr.name %></span>
-        <span><%= rr.ratio %></span>
+        <span><a href="/details/<%= v.addr %>"><%= v.data.name %></a></span>
+        <span><%= v.data.ratio %>%</span>
+      </div>
+    <% }) %>
+  </div>
+  <div class="stats-container">
+    <label>Recently Updated Leaderboards</label>
+    <% stats.leaderboards.forEach(v => { %>
+      <div class="stat-item">
+        <span><a href="/leaderboard/<%= v.addr %>"><%= v.name %></a></span>
+        <span><%= timeAgo(v.ts) %></span>
       </div>
     <% }) %>
   </div>

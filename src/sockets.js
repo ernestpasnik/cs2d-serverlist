@@ -1,11 +1,10 @@
 const dgram = require('node:dgram')
 const IPData = require('ipdata').default
 const received = require('./received.js')
-const common = require('./common.js')
+const stats = require('./stats.js')
 const ipdata = new IPData(process.env.IPDATA_APIKEY)
 const fields = ['country_name', 'latitude', 'longitude']
 const servers = {}
-const stats = { sentPackets: 0, recvPackets: 0, sentBytes: 0, recvBytes: 0 }
 const req = {
   serverlist: Buffer.from([1, 0, 20, 1]),
   serverquery: Buffer.from([1, 0, 251, 1, 248, 3, 251, 5])
@@ -37,9 +36,7 @@ async function addServer(ipPort) {
   const client = dgram.createSocket('udp4')
 
   client.on('message', (buf, rinfo) => {
-    stats.recvPackets++
-    stats.recvBytes += rinfo.size
-
+    stats.increaseStatsRecvBytes(rinfo.size)
     const recv = received.serverquery(buf, rinfo.size)
     if (recv == null) return
     servers[ipPort].ts = Math.floor(Date.now() / 1000)
@@ -51,15 +48,13 @@ async function addServer(ipPort) {
   client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)
   servers[ipPort].dbg.sentPackets++
   servers[ipPort].dbg.sentBytes += 8
-  stats.sentPackets++
-  stats.sentBytes += 8
+  stats.increaseStatsSentBytes(8)
 
   const interval = setInterval(() => {
     client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)
     servers[ipPort].dbg.sentPackets++
     servers[ipPort].dbg.sentBytes += 8
-    stats.sentPackets++
-    stats.sentBytes += 8
+    stats.increaseStatsSentBytes(8)
   }, 10000)
 
   servers[ipPort].client = client
@@ -70,8 +65,7 @@ async function initialize() {
   const usgn = dgram.createSocket('udp4')
 
   usgn.on('message', (buf, rinfo) => {
-    stats.recvPackets++
-    stats.recvBytes += rinfo.size
+    stats.increaseStatsRecvBytes(rinfo.size)
     received.serverlist(buf, rinfo.size).forEach(ipPort => {
       if (!servers[ipPort]) {
         addServer(ipPort)
@@ -79,14 +73,12 @@ async function initialize() {
     })
   })
 
-  stats.sentPackets++
-  stats.sentBytes += 4
+  stats.increaseStatsSentBytes(4)
   usgn.send(req.serverlist, 36963, '81.169.236.243')
 
   // Request CS2D server list every 15 minutes  
   setInterval(() => {
-    stats.sentPackets++
-    stats.sentBytes += 4
+    stats.increaseStatsSentBytes(4)
     usgn.send(req.serverlist, 36963, '81.169.236.243')
   }, 900000)
 
@@ -155,23 +147,8 @@ function cleanupServers() {
   }
 }
 
-function getStats(result) {
-  return {
-    uptime: common.secondsToUptime(process.uptime()),
-    sentPackets: stats.sentPackets,
-    recvPackets: stats.recvPackets,
-    sentBytes: common.bytesToSize(stats.sentBytes),
-    recvBytes: common.bytesToSize(stats.recvBytes),
-    locations: common.topLocations(result),
-    gamemodes: common.topGamemodes(result),
-    maps: common.topMaps(result),
-    responses: common.responseRatio(result)
-  }
-}
-
 module.exports = {
   initialize,
   getServer,
-  getRecentServers,
-  getStats
+  getRecentServers
 }

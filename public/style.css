@@ -11,6 +11,10 @@ body, input, button {
   font-variation-settings: normal;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
+small {
+  color: #ddd;
+  opacity: .8;
+}
 a {
   text-decoration: none;
   color: #c9d1d9;

@@ -15,7 +15,6 @@ const getUserCount = () => {
       const match = html.match(userCountRegex);
       if (match) {
         userCount = match[1];
-        console.log(`User count updated: ${userCount}`);
       } else {
         console.log('User count not found');
       }

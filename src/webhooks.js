@@ -23,23 +23,25 @@ async function loadWebhooksFromFile(filename) {
 }
 
 function generateEmbedsFromServers(servers) {
-  const allServers = sockets.getRecentServers().servers
+  const allServers = sockets.getRecentServers()
   const embeds = []
 
   for (const ipPort of servers) {
-    const server = allServers[ipPort]
+    const [ip, port] = ipPort.split(':')
+    const server = allServers.find(s => s.ip === ip && s.port === parseInt(port))
+
     if (!server) continue
 
-    const players = `${server.players}/${server.maxplayers}` +
+    const players = `${server.players || 0}/${server.maxplayers || 0}` +
       (server.bots ? ` (${server.bots} bot${server.bots !== 1 ? 's' : ''})` : '')
 
     embeds.push({
-      title: server.name,
+      title: server.name || 'Unknown Server',
       url: `https://cs2d.pp.ua/details/${ipPort}`,
       color: 0x3498db,
       fields: [
         { name: 'Players', value: players, inline: true },
-        { name: 'Map', value: server.map, inline: true }
+        { name: 'Map', value: server.map || 'Unknown', inline: true }
       ]
     })
   }
@@ -87,7 +89,6 @@ async function addWebhook(webhookUrl, servers) {
   try {
     const resData = await sendWebhookRequest('POST', webhookUrl + '?wait=true', data)
     if (resData && resData.id) {
-      console.log(resData)
       const existing = webhooks.find(w => w.webhookUrl === webhookUrl)
       if (existing) {
         existing.messageId = resData.id

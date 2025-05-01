@@ -104,34 +104,15 @@ function getServer(ipPort, full = false) {
 
 function getRecentServers() {
   const oneMinuteAgo = Math.floor(Date.now() / 1000) - 60
-  let recentServers = []
-  let totalServers = 0
-  let totalPlayers = 0
 
-  for (const ipPort in servers) {
-    if (servers[ipPort].ts && servers[ipPort].ts >= oneMinuteAgo) {
-      const { client, interval, ...filteredServer } = servers[ipPort]
-      recentServers.push(filteredServer)
-      totalServers++
-      totalPlayers += (servers[ipPort].players - servers[ipPort].bots)
-    }
-  }
-
-  recentServers.sort((a, b) => {
-    const aScore = (a.players - a.bots) * 100 + a.bots
-    const bScore = (b.players - b.bots) * 100 + b.bots
-    return bScore - aScore
-  })
-  
-  const sortedServers = Object.fromEntries(
-    recentServers.map(server => [`${server.ip}:${server.port}`, server])
-  )  
-
-  return {
-    servers: sortedServers,
-    serversNum: totalServers,
-    playersNum: totalPlayers
-  }
+  return Object.values(servers)
+    .filter(s => s.ts && s.ts >= oneMinuteAgo)
+    .map(({ client, interval, ...s }) => s)
+    .sort((a, b) => {
+      const aScore = (a.players - a.bots) * 100 + a.bots
+      const bScore = (b.players - b.bots) * 100 + b.bots
+      return bScore - aScore
+    })
 }
 
 function cleanupServers() {

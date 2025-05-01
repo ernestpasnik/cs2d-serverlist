@@ -15,7 +15,7 @@ function routes(fastify) {
   fastify.get('/', async (req, reply) => {
     return reply.view('servers.ejs', {
       title: '',
-      res: sockets.getRecentServers()
+      srv: sockets.getRecentServers()
     })
   })
 
@@ -48,7 +48,7 @@ function routes(fastify) {
   fastify.get('/webhooks', async (req, reply) => {
       return reply.view('webhooks.ejs', {
         title: 'Webhooks',
-        res: sockets.getRecentServers()
+        srv: sockets.getRecentServers()
       })
     }
   )
@@ -67,7 +67,7 @@ function routes(fastify) {
     if (servers.length < 1) {
       return reply.view('webhooks.ejs', {
         title: 'Webhooks',
-        res: sockets.getRecentServers(),
+        srv: sockets.getRecentServers(),
         err: 'You didn\'t select any servers.'
       })
     }
@@ -77,7 +77,7 @@ function routes(fastify) {
       if (typeof server !== 'string' || !ipPortRegex.test(server)) {
         return reply.view('webhooks.ejs', {
           title: 'Webhooks',
-          res: sockets.getRecentServers(),
+          srv: sockets.getRecentServers(),
           err: 'You provided an invalid server address.'
         })
       }
@@ -87,7 +87,7 @@ function routes(fastify) {
     if (typeof url !== 'string' || !discordWebhookRegex.test(url)) {
       return reply.view('webhooks.ejs', {
         title: 'Webhooks',
-        res: sockets.getRecentServers(),
+        srv: sockets.getRecentServers(),
         err: 'You provided an invalid webhook URL.'
       })
     }
@@ -95,13 +95,13 @@ function routes(fastify) {
     const dcRes = await webhooks.addWebhook(url, servers)
     return reply.view('webhooks.ejs', {
       title: 'Webhooks',
-      res: sockets.getRecentServers(),
+      srv: sockets.getRecentServers(),
       ...dcRes
     })
   })
 
   fastify.get('/stats', async (req, reply) => {
-    const servers = sockets.getRecentServers().servers
+    const servers = sockets.getRecentServers()
     const leaderboards = leaderboard.getLeaderboards()
     return reply.view('stats', {
       title: 'Statistics',

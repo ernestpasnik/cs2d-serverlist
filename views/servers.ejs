@@ -2,9 +2,6 @@
   <div>
     <h1>CS2D Server List</h1>
   </div>
-  <div>
-    <span id="online"><b><%= res.playersNum %> Players</b> on <b><%= res.serversNum %> Servers</b></span>
-  </div>
 </div>
 
 <div class="responsive">
@@ -19,11 +16,11 @@
       </tr>
     </thead>
     <tbody>
-      <% for (const ipPort in res.servers) { %>
-        <% const s = res.servers[ipPort]; %>
+      <% for (const ipPort in srv) { %>
+        <% const s = srv[ipPort]; %>
         <tr <% if ((s.players - s.bots) > 0) { %> class="e" <% } %>>
           <td class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></td>
-          <td><a href="/details/<%= ipPort %>"><%= s.name %></a></td>
+          <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a></td>
           <td><%= s.map %></td>
           <td data-sort="<%= ((s.players - s.bots) * 100) + s.bots %>">
             <%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> <span class="b"><%= s.bots %></span><% } %>

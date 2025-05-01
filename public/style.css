@@ -1,10 +1,9 @@
 *, *::before, *::after {
   box-sizing: border-box;
 }
-@media (prefers-reduced-motion: no-preference) {
-  :root {
-    scroll-behavior: smooth;
-  }
+:root {
+  color-scheme: dark;
+  scroll-behavior: smooth;
 }
 body, input, button {
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -57,11 +56,14 @@ footer>span>a {
 footer>span>a:hover {
   color: #fff;
 }
-h1 {
+h1,h2 {
   color: #ddd;
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.075rem;
   font-weight: 500;
+}
+h2 {
+  margin-bottom: .5rem;
 }
 ul {
   padding-left: 1rem;
@@ -115,7 +117,7 @@ nav>a:hover, nav>a:hover>span {
 main {
   margin: 0;
   background-color: rgba(14,21,26,.69);
-  border-radius:.5rem;
+  border-radius: 5px;
   padding: 1.5rem;
   box-shadow: 0 26px 58px 0 rgba(0, 0, 0, .22), 0 5px 14px 0 rgba(0, 0, 0, .18);
   min-height: 50vw;
@@ -154,7 +156,7 @@ td>a {
   color: #999;
 }
 .endpoint {
-  margin: 1.5rem 0;
+  margin-top: 1.5rem;
 }
 .svlst > tbody > tr > td:nth-child(3) {
   max-width: 150px;
@@ -181,15 +183,15 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 }
 .api {
   color: #c9d1d9;
-  padding: .75rem 1rem;
+  padding: .5rem .75rem;
+  line-height: 1.5;
   display: block;
   background-color: rgba(115, 130, 140, .05);
-  border-radius: .25rem;
-  overflow: auto;
   font-size: .85rem;
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
-  text-wrap: nowrap;
   margin-bottom: .5rem;
+  overflow-x: auto;
+  border-radius: .25rem;
 }
 .curl {
   color: rgb(255, 203, 107);
@@ -210,7 +212,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   padding: .5rem;
   background-color: hsla(204,10%,50%,.05);
   border-radius: .25rem;
-  font-size: .85rem;
+  font-size: .9rem;
   width: 100%;
   text-wrap: nowrap;
   justify-content: space-around;
@@ -272,9 +274,6 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   justify-content: space-between;
   margin-bottom: .5rem;
   flex-wrap: wrap;
-}
-.flex>div:nth-child(2) {
-  font-size: .9rem;
 }
 .flex>div {
   overflow: hidden;
@@ -338,8 +337,11 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 .stats>div {
   width: 100%;
   background-color: rgba(115,130,140,.05);
-  border-radius: .25rem;
+  border-radius: 8px;
   gap: .4rem;
+}
+.stats>div>label {
+  margin-bottom: .25rem;
 }
 .t {
   color: rgb(236, 155, 5) !important;
@@ -399,7 +401,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 .enabled {
   display: initial;
 }
-#online, span, p, .stat-item > span, li {
+span, p, .stat-item > span, li {
   color: #bbc6ce;
 }
 .sortable thead th:not(.no-sort) {
@@ -552,26 +554,25 @@ button:hover {
   display: flex;
   align-items: center;
   gap: .5rem;
+  font-weight: 600;
 }
 
 .alert-err {
   background-color: rgb(247, 211, 207);
-  border-bottom: .25rem solid rgb(240, 167, 159);
+  border-bottom: .2rem solid rgb(87, 14, 6);
 }
 
 .alert-err > span, .alert-err > svg {
   color: rgb(87, 14, 6);
-  font-weight: 500;
 }
 
 .alert-msg {
   background-color: rgb(218, 234, 206);
-  border-bottom: .25rem solid rgb(181, 212, 156);
+  border-bottom: .2rem solid rgb(28, 59, 3);
 }
 
 .alert-msg > span, .alert-msg > svg {
   color: rgb(28, 59, 3);
-  font-weight: 500;
 }
 
 
@@ -594,13 +595,13 @@ button:hover {
     width: auto;
     padding: 0 0 1.5rem 0;
   }
-  h1 {
-    font-size: .9rem;
+  h1,h2 {
+    font-size: .95rem;
   }
   nav, nav > a, footer, label, footer>span, .alert {
     font-size: .8rem;
   }
-  #online, .stat-item {
+  .stat-item {
     font-size: .85rem;
   }
   .spec {

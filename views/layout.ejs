@@ -17,7 +17,7 @@
   
     <!-- Open Graph (Facebook, Discord, etc.) -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="CS2D Server List">
+    <meta property="og:title" content="<% if (title != '') { %><%= title %> – <% } %>CS2D Server List">
     <meta property="og:description" content="Browse CS2D server stats, leaderboards, and detailed game info. Use our open API to access server data and upload leaderboard stats with JSON and CORS support.">
     <meta property="og:image" content="https://cs2d.pp.ua/capsule_main_616x353.jpg">
     <meta property="og:image:width" content="616">
@@ -27,7 +27,7 @@
   
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="CS2D Server List">
+    <meta name="twitter:title" content="<% if (title != '') { %><%= title %> – <% } %>CS2D Server List">
     <meta name="twitter:description" content="Browse CS2D server stats, leaderboards, and detailed game info. Use our open API to access server data and upload leaderboard stats with JSON and CORS support.">
     <meta name="twitter:image" content="https://cs2d.pp.ua/capsule_main_616x353.jpg">
   </head>  

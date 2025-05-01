@@ -1,5 +1,6 @@
 *, *::before, *::after {
   box-sizing: border-box;
+  scrollbar-width: thin;
 }
 :root {
   color-scheme: dark;
@@ -190,7 +191,8 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   font-size: .85rem;
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
   margin-bottom: .5rem;
-  overflow-x: auto;
+  text-wrap: nowrap;
+  overflow: auto;
   border-radius: .25rem;
 }
 .curl {
@@ -447,7 +449,7 @@ span, p, .stat-item > span, li {
 }
 
 .checkbox-container {
-  height: 189px;
+  height: 188px;
   overflow-y: scroll;
   overflow-x: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -551,30 +553,21 @@ button:hover {
   margin-top: 1rem;
   margin-bottom: 1rem;
   border-radius: .25rem;
-  display: flex;
   align-items: center;
-  gap: .5rem;
-  font-weight: 600;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .alert-err {
-  background-color: rgb(247, 211, 207);
-  border-bottom: .2rem solid rgb(87, 14, 6);
+  background-color: rgb(248, 212, 213);
+  border: 1px solid rgb(240, 169, 171);
+  color: rgb(87, 16, 18);
 }
-
-.alert-err > span, .alert-err > svg {
-  color: rgb(87, 14, 6);
-}
-
 .alert-msg {
-  background-color: rgb(218, 234, 206);
-  border-bottom: .2rem solid rgb(28, 59, 3);
+  background-color: rgb(213, 240, 230);
+  border: 1px solid rgb(172, 225, 204);
+  color: rgb(19, 72, 51);
 }
-
-.alert-msg > span, .alert-msg > svg {
-  color: rgb(28, 59, 3);
-}
-
 
 
 

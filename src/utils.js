@@ -1,3 +1,14 @@
+const fs = require('fs')
+
+function getMTimeUnix(filepath) {
+  try {
+    return Math.floor(fs.statSync(filepath).mtime.getTime() / 1000)
+  } catch (err) {
+    console.error(`Failed to stat file: ${filepath}`, err)
+    return 0
+  }
+}
+
 function formatTime(s) {
   const days = Math.floor(s / 86400)
   const hours = Math.floor((s % 86400) / 3600)
@@ -27,4 +38,4 @@ function timeAgo(unixTimestamp) {
   return `${Math.floor(diffSeconds / 86400)} d ago`
 }
 
-module.exports = { formatTime, timeAgo }
+module.exports = { getMTimeUnix, formatTime, timeAgo }

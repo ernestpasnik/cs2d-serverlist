@@ -1,4 +1,5 @@
 require('dotenv').config()
+const { getMTimeUnix } = require('./src/utils.js')
 const fastify = require('fastify')({ trustProxy: true })
 fastify.register(require('@fastify/multipart'))
 fastify.register(require('@fastify/formbody'))
@@ -16,8 +17,8 @@ fastify.register(require('@fastify/view'), {
   root: 'views',
   layout: 'layout.ejs',
   defaultContext: {
-    env: process.env.NODE_ENV || 'development',
-    v: require('./package.json').version
+    style: getMTimeUnix('public/style.css'),
+    script: getMTimeUnix('public/script.js')
   },
 })
 

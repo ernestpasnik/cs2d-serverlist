@@ -18,7 +18,7 @@ a {
 a:hover {
   color: #fff;
 }
-b {
+b, p > a {
   font-weight: 500;
   color: #d0d0d0;
 }
@@ -260,7 +260,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 .flex {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: .5rem;
   flex-wrap: wrap;
 }
 .flex>div:nth-child(2) {
@@ -331,7 +331,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   background-color: rgba(115,130,140,.05);
   height: min-content;
   border-radius: 3px;
-  gap: .4rem;
+  gap: .3rem;
 }
 .t {
   color: rgb(236, 155, 5) !important;
@@ -552,6 +552,7 @@ button {
   font-weight: 500;
   color: #d0d0d0;
   border: 1px solid rgba(115, 130, 140, .25);
+  min-width: 150px;
 }
 
 button:hover {
@@ -592,12 +593,31 @@ button:hover {
 }
 
 .alert {
-  color: rgb(96, 26, 14);
-  background-color: rgb(252, 217, 211);
   padding: .75rem 1rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
   border-radius: 3px;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.alert-err {
+  background-color: rgb(247, 211, 207);
+  border-bottom: 3px solid rgb(240, 167, 159);
+}
+
+.alert-err > span, .alert-err > svg {
+  color: rgb(87, 14, 6);
   font-weight: 500;
-  border-bottom: 3px solid #f9b3a7;
+}
+
+.alert-msg {
+  background-color: rgb(218, 234, 206);
+  border-bottom: 3px solid rgb(181, 212, 156);
+}
+
+.alert-msg > span, .alert-msg > svg {
+  color: rgb(28, 59, 3);
+  font-weight: 500;
 }

@@ -87,6 +87,7 @@ async function addWebhook(webhookUrl, servers) {
   try {
     const resData = await sendWebhookRequest('POST', webhookUrl + '?wait=true', data)
     if (resData && resData.id) {
+      console.log(resData)
       const existing = webhooks.find(w => w.webhookUrl === webhookUrl)
       if (existing) {
         existing.messageId = resData.id
@@ -98,8 +99,10 @@ async function addWebhook(webhookUrl, servers) {
           servers
         })
       }
-
-      await saveWebhooksToFile('webhooks.json', webhooks)
+      saveWebhooksToFile('webhooks.json', webhooks)
+      return { msg: 'Webhook added successfully.' }
+    } else {
+      return { err: resData.message || 'Invalid response.' }
     }
   } catch (err) {
     console.error('Error sending message:', err.message)
@@ -117,7 +120,7 @@ async function processWebhooks() {
     } catch (err) {
       console.error('Error updating message:', err.message)
       webhooks.splice(i, 1)
-      await saveWebhooksToFile('webhooks.json', webhooks)
+      saveWebhooksToFile('webhooks.json', webhooks)
     }
   }
 }

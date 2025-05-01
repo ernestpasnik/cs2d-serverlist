@@ -37,7 +37,7 @@ function routes(fastify) {
       return err404(req, reply)
     }
     return reply.view('leaderboard', {
-      title: `${result.name} - Leaderboard`,
+      title: result.name,
       r: result,
       addr: req.params.address,
       formatTime,
@@ -68,7 +68,7 @@ function routes(fastify) {
       return reply.view('webhooks.ejs', {
         title: 'Webhooks',
         res: sockets.getRecentServers(),
-        msg: 'You didn\'t provide any servers.'
+        err: 'You didn\'t select any servers.'
       })
     }
   
@@ -78,7 +78,7 @@ function routes(fastify) {
         return reply.view('webhooks.ejs', {
           title: 'Webhooks',
           res: sockets.getRecentServers(),
-          msg: 'You provided an invalid server address.'
+          err: 'You provided an invalid server address.'
         })
       }
     }
@@ -88,14 +88,15 @@ function routes(fastify) {
       return reply.view('webhooks.ejs', {
         title: 'Webhooks',
         res: sockets.getRecentServers(),
-        msg: 'You provided an invalid webhook URL.'
+        err: 'You provided an invalid webhook URL.'
       })
     }
 
-    webhooks.addWebhook(url, servers)
+    const dcRes = await webhooks.addWebhook(url, servers)
     return reply.view('webhooks.ejs', {
       title: 'Webhooks',
-      res: sockets.getRecentServers()
+      res: sockets.getRecentServers(),
+      ...dcRes
     })
   })
 

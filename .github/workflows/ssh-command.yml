@@ -1,4 +1,4 @@
-name: Deploy with rsync
+name: SSH Command Execution
 
 on:
   push:
@@ -6,27 +6,14 @@ on:
       - main
 
 jobs:
-  deploy:
+  ssh-job:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4.2.2
 
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-
-      - name: Sync files with rsync
-        run: |
-          rsync -avz --delete \
-            -e "ssh -p ${{ secrets.SSH_PORT }}" \
-            ./ \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/var/www/cs2d-serverlist
-
-      - name: Restart service on remote host
+      - name: Execute SSH Commands
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -34,4 +21,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            cd /var/www/cs2d-serverlist
+            git reset --hard HEAD
+            git clean -fd
+            git pull origin main
             rc-service cs2d-serverlist restart

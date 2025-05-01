@@ -57,17 +57,22 @@ const topGamemodes = (servers) => {
   .slice(0, 5)
 }
 
-const responseRatio = (servers) => {
-  const serverRatios = Object.entries(servers).map(([addr, server]) => {
-    const name = server.name
-    const { sentPackets, recvPackets } = server.dbg || {}
-    const ratio = sentPackets && recvPackets ? Math.floor((recvPackets / sentPackets) * 100) : 0
-    return { addr, data: { name, ratio } }
-  })
+const responseRatio = (serverList) => {
+  const serverRatios = serverList.map(server => {
+    const name = server.name;
+    const addr = `${server.ip}:${server.port}`;
+    const { sentPackets, recvPackets } = server.dbg || {};
+    const ratio = sentPackets && recvPackets
+      ? Math.floor((recvPackets / sentPackets) * 100)
+      : 0;
+
+    return { addr, data: { name, ratio } };
+  });
+
   return serverRatios
     .sort((a, b) => b.data.ratio - a.data.ratio)
-    .slice(0, 5)
-}
+    .slice(0, 5);
+};
 
 const sortedLeaderboardsByTS = (leaderboards) => {
   return Object.entries(leaderboards)

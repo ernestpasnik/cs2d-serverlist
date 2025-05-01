@@ -14,7 +14,7 @@ const getUserCount = () => {
     res.on('end', () => {
       const match = html.match(userCountRegex)
       if (match) {
-        userCount = match[1]
+        userCount = parseInt(match[1], 10)
       } else {
         console.log('User count not found')
       }

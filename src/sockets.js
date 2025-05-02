@@ -3,7 +3,7 @@ const IPData = require('ipdata').default
 const received = require('./received.js')
 const stats = require('./stats.js')
 const ipdata = new IPData(process.env.IPDATA_APIKEY)
-const fields = ['country_name', 'latitude', 'longitude']
+const fields = ['country_name', 'city', 'emoji_flag']
 const servers = {}
 const req = {
   serverlist: Buffer.from([1, 0, 20, 1]),
@@ -16,7 +16,6 @@ async function addServer(ipPort) {
     ip,
     port: parseInt(port),
     dbg: {
-      geoip: { name: 'Unknown', lat: 0, lon: 0 },
       sentPackets: 0,
       recvPackets: 0,
       sentBytes: 0,
@@ -27,9 +26,9 @@ async function addServer(ipPort) {
   ipdata.lookup(ip, null, fields).then(d => {
     if (!servers[ipPort]) return
     servers[ipPort].dbg.geoip = {
-      name: d.country_name || 'Unknown',
-      lat: d.latitude || 0,
-      lon: d.longitude || 0
+      country_name: d.country_name || null,
+      city: d.city || null,
+      emoji_flag: d.emoji_flag || null
     }
   })
 

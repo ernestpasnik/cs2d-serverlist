@@ -26,7 +26,7 @@
   <table class="leaderboard sortable">
     <thead>
       <tr>
-          <th aria-sort="ascending">&nbsp;</th>
+          <th aria-sort="ascending">#</th>
           <th>Player</th>
           <th><abbr title="Kill-death ratio">K/D</abbr></th>
           <th><abbr title="Kills">K</abbr></th>
@@ -47,7 +47,7 @@
           : (p.kills).toFixed(2) %>
 
         <tr>
-          <td><% if (i === 0) { %>🥇<% } else if (i === 1) { %>🥈<% } else if (i === 2) { %>🥉<% } else { %><%= i + 1 %><% } %></td>
+          <td><%= i %></td>
           <td><a href="<%= profileUrl %>" target="_blank"><%= p.name %></a></td>
           <td><%= kdRatio %></td>
           <td><%= p.kills %></td>

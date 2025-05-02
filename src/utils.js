@@ -28,15 +28,25 @@ function formatTime(s) {
 
 function timeAgo(ts) {
   const s = Math.floor((Date.now() - (ts < 1e12 ? ts * 1000 : ts)) / 1000)
-  if (s < 5) return 'just now'
-  if (s < 60) return `${s}s ago`
-  if (s < 3600) return `${Math.floor(s / 60)}m ago`
-  if (s < 86400) return `${Math.floor(s / 3600)}h ago`
-  return `${Math.floor(s / 86400)}d ago`
+  const u = [
+    ['year', 31536000],
+    ['month', 2592000],
+    ['day', 86400],
+    ['hour', 3600],
+    ['minute', 60],
+    ['second', 1]
+  ]
+
+  for (const [name, sec] of u) {
+    const v = Math.floor(s / sec)
+    if (v) return `${v} ${name}${v > 1 ? 's' : ''} ago`
+  }
+
+  return 'just now'
 }
 
 function escapeQuotes(str) {
-  return str.replace(/"/g, '\\"');
+  return (str || '').replace(/"/g, '\\"')
 }
 
 module.exports = {

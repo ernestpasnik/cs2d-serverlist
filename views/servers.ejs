@@ -25,7 +25,7 @@
           <td data-sort="<%= ((s.players - s.bots) * 100) + s.bots %>">
             <%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> <span class="b"><%= s.bots %></span><% } %>
           </td>
-          <td><%= s.dbg.geoip.name %></td>
+          <td><%= s.dbg.geoip.country_name || 'Unknown' %></td>
         </tr>
       <% } %>
     </tbody>

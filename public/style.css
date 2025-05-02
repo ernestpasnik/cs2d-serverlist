@@ -167,9 +167,14 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   padding-left: 1rem;
   padding-right: 0;
 }
-.t>thead>tr>th:nth-child(1), .t>tbody>tr>td:nth-child(1),
-.ct>thead>tr>th:nth-child(1), .ct>tbody>tr>td:nth-child(1) {
+.tt>thead>tr>th:nth-child(1), .tt>tbody>tr>td:nth-child(1),
+.ct>thead>tr>th:nth-child(1), .ct>tbody>tr>td:nth-child(1),
+.dm>thead>tr>th:nth-child(1), .dm>tbody>tr>td:nth-child(1) {
   padding-left: .6rem;
+}
+.emoji {
+  font-size: 1.12rem;
+  user-select: none;
 }
 #addr {
   width: 100%;
@@ -383,6 +388,8 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   font-size: 10px;
   cursor: help;
   user-select: none;
+  padding-right: .3rem;
+  color: rgb(227, 229, 230) !important;
 }
 .password {
   background-position: 0 0;
@@ -434,24 +441,7 @@ span, p, .stat-item > span, li {
   color: inherit;
   content: "▴";
 }
-.sortable thead th:not(.no-sort).indicator-left::after {
-  content: "";
-}
-.sortable thead th:not(.no-sort).indicator-left::before {
-  margin-right: .25rem;
-  content: "▸";
-}
-.sortable thead th:not(.no-sort).indicator-left:hover::before {
-  color: inherit;
-}
-.sortable thead th:not(.no-sort).indicator-left[aria-sort="descending"]::before {
-  color: inherit;
-  content: "▾";
-}
-.sortable thead th:not(.no-sort).indicator-left[aria-sort="ascending"]::before {
-  color: inherit;
-  content: "▴";
-}
+
 
 .checkbox-container {
   height: 188px;

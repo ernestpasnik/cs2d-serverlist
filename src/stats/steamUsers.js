@@ -13,10 +13,10 @@ const getUserCount = () => {
     res.on('end', () => {
       try {
         const json = JSON.parse(data)
-        if (json && json.response && typeof json.response.player_count === 'number') {
+        if (json && json.response) {
           userCount = json.response.player_count
         } else {
-          console.log('Player count not found in response')
+          console.log('Steam: Player count not found in response')
         }
       } catch (err) {
         console.log('Error parsing JSON:', err.message)
@@ -33,14 +33,10 @@ getUserCount()
 const getUserCountAPI = () => {
   if (userCount !== null) {
     return userCount
-  } else {
-    console.log('Player count not available yet')
-    return null
   }
+  return 'N/A'
 }
 
 module.exports = {
-  getUserCountAPI,
-  getUserCount,
-  userCount
+  getUserCountAPI
 }

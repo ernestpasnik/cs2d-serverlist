@@ -11,11 +11,6 @@ body, input, button {
   font-variation-settings: normal;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
-small {
-  color: #ddd;
-  opacity: .7;
-  font-size: .8rem;
-}
 a {
   text-decoration: none;
   color: #ddd;
@@ -169,8 +164,8 @@ td>a {
 }
 thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   width: 0;
-  padding-left: .6rem;
-  padding-right: .6rem;
+  padding-left: 1rem;
+  padding-right: 0;
 }
 #addr {
   width: 100%;

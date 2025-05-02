@@ -6,8 +6,18 @@ const update = url =>
     .then(d => d && updateUI(d))
     .catch(() => {})
 
+const timeAgo = ts => {
+  const s = Math.floor((Date.now() - (ts < 1e12 ? ts * 1000 : ts)) / 1000)
+  if (s < 5) return 'just now'
+  if (s < 60) return `${s}s ago`
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`
+  if (s < 86400) return `${Math.floor(s / 3600)}h ago`
+  return `${Math.floor(s / 86400)}d ago`
+}
+
 const updateUI = d => {
   document.title = `${d.players}/${d.maxplayers} ${d.name} – CS2D Server List`
+  $('#ts').textContent = timeAgo(d.ts)
   $('#name').textContent = d.name
   $('#map').textContent = d.map
   $('#p').textContent = `${d.players}/${d.maxplayers}${d.bots ? ` (${d.bots} bot${d.bots > 1 ? 's' : ''})` : ''}`;

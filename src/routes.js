@@ -27,7 +27,8 @@ function routes(fastify) {
     return reply.view('details', {
       title: result.name,
       s: result,
-      l: leaderboard.getLeaderboard(req.params.address)
+      l: leaderboard.getLeaderboard(req.params.address),
+      timeAgo
     })
   })
 

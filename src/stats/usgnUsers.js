@@ -1,7 +1,6 @@
 const https = require('https')
 
 let userCount = null
-const userCountRegex = /(\d+)\s+Users?/
 
 const getUserCount = () => {
   https.get('https://unrealsoftware.de/users.php?p=1', (res) => {
@@ -12,15 +11,15 @@ const getUserCount = () => {
     })
 
     res.on('end', () => {
-      const match = html.match(userCountRegex)
+      const match = html.match(/(\d+)\s+Users?/)
       if (match) {
         userCount = parseInt(match[1], 10)
       } else {
-        console.log('User count not found')
+        console.log('USGN: Player count not found in response')
       }
     })
   }).on('error', (err) => {
-    console.log(`Error fetching user count: ${err.message}`)
+    console.log(`Error fetching player count: ${err.message}`)
   })
 }
 
@@ -30,14 +29,10 @@ getUserCount()
 const getUserCountAPI = () => {
   if (userCount !== null) {
     return userCount
-  } else {
-    console.log('User count not available yet')
-    return null
   }
+  return 'N/A'
 }
 
 module.exports = {
-  getUserCountAPI,
-  getUserCount,
-  userCount
+  getUserCountAPI
 }

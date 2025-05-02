@@ -26,16 +26,13 @@ function formatTime(s) {
   }
 }
 
-function timeAgo(unixTimestamp) {
-  const now = Date.now()
-  const timestamp = unixTimestamp < 1e12 ? unixTimestamp * 1000 : unixTimestamp
-  const diffSeconds = Math.floor((now - timestamp) / 1000)
-
-  if (diffSeconds < 5) return 'just now'
-  if (diffSeconds < 60) return `${diffSeconds} s ago`
-  if (diffSeconds < 3600) return `${Math.floor(diffSeconds / 60)} min ago`
-  if (diffSeconds < 86400) return `${Math.floor(diffSeconds / 3600)} h ago`
-  return `${Math.floor(diffSeconds / 86400)} d ago`
+function timeAgo(ts) {
+  const s = Math.floor((Date.now() - (ts < 1e12 ? ts * 1000 : ts)) / 1000)
+  if (s < 5) return 'just now'
+  if (s < 60) return `${s}s ago`
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`
+  if (s < 86400) return `${Math.floor(s / 3600)}h ago`
+  return `${Math.floor(s / 86400)}d ago`
 }
 
 module.exports = { getMTimeUnix, formatTime, timeAgo }

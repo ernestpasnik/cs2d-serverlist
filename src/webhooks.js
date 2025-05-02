@@ -127,8 +127,6 @@ async function processWebhooks() {
       }
     } catch (err) {
       console.error('Error updating message:', err.message)
-      //webhooks.splice(i, 1)
-      //saveWebhooksToFile('webhooks.json', webhooks)
     }
   }
 }

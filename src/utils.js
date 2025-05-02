@@ -35,4 +35,13 @@ function timeAgo(ts) {
   return `${Math.floor(s / 86400)}d ago`
 }
 
-module.exports = { getMTimeUnix, formatTime, timeAgo }
+function escapeQuotes(str) {
+  return str.replace(/"/g, '\\"');
+}
+
+module.exports = {
+  getMTimeUnix,
+  formatTime,
+  timeAgo,
+  escapeQuotes
+}

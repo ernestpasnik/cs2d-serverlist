@@ -17,7 +17,7 @@ function err404(req, reply) {
 function routes(fastify) {
   fastify.get('/', async (req, reply) => {
     return reply.view('servers.ejs', {
-      title: 'CS2D Server List',
+      title: null,
       description: 'Browse the list of active CS2D servers with detailed stats on map, player count, bots, and region. Access server data with our open API.',
       keywords: `CS2D, server list, active servers, server stats, map, player count, bots, region, API, server data`,
       url: req.url,
@@ -31,7 +31,7 @@ function routes(fastify) {
       return err404(req, reply)
     }
     return reply.view('details', {
-      title: `${escapeQuotes(result.name)} · CS2D Server List`,
+      title: escapeQuotes(result.name),
       description: `View active CS2D server details for ${escapeQuotes(result.name)} including map, player count, bots, and region. Quickly access stats and performance data.`,
       keywords: `CS2D, ${escapeQuotes(result.name)}, server stats, map, player count, bots, region, server performance`,
       url: req.url,
@@ -47,7 +47,7 @@ function routes(fastify) {
       return err404(req, reply)
     }
     return reply.view('leaderboard', {
-      title: `${escapeQuotes(result.name)} · CS2D Server List`,
+      title: escapeQuotes(result.name),
       description: `Browse the top-performing CS2D players for "${escapeQuotes(result.name)}" based on server stats, including rankings, scores, and player achievements.`,
       keywords: `CS2D, ${escapeQuotes(result.name)}, leaderboard, top players, rankings, scores, player achievements`,
       url: req.url,
@@ -60,7 +60,7 @@ function routes(fastify) {
 
   fastify.get('/webhooks', async (req, reply) => {
     return reply.view('webhooks.ejs', {
-      title: 'Webhooks · CS2D Server List',
+      title: 'Webhooks',
       description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
       keywords: 'CS2D, webhooks, Discord, server updates, server notifications, webhook URL',
       url: req.url,
@@ -81,7 +81,7 @@ function routes(fastify) {
     
     if (servers.length < 1) {
       return reply.view('webhooks.ejs', {
-        title: 'Webhooks · CS2D Server List',
+        title: 'Webhooks',
         description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
         keywords: 'CS2D, webhooks, Discord, server updates, server notifications, webhook URL',
         url: req.url,
@@ -94,7 +94,7 @@ function routes(fastify) {
     for (const server of servers) {
       if (typeof server !== 'string' || !ipPortRegex.test(server)) {
         return reply.view('webhooks.ejs', {
-          title: 'Webhooks · CS2D Server List',
+          title: 'Webhooks',
           description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
           keywords: 'CS2D, webhooks, Discord, server updates, server notifications, webhook URL',
           url: req.url,
@@ -107,7 +107,7 @@ function routes(fastify) {
     const discordWebhookRegex = /^https:\/\/discord\.com\/api\/webhooks\/\d{18,20}\/[A-Za-z0-9_-]{68}$/
     if (typeof url !== 'string' || !discordWebhookRegex.test(url)) {
       return reply.view('webhooks.ejs', {
-        title: 'Webhooks · CS2D Server List',
+        title: 'Webhooks',
         description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
         keywords: 'CS2D, webhooks, Discord, server updates, server notifications, webhook URL',
         url: req.url,
@@ -118,7 +118,7 @@ function routes(fastify) {
 
     const dcRes = await webhooks.addWebhook(url, servers)
     return reply.view('webhooks.ejs', {
-      title: 'Webhooks · CS2D Server List',
+      title: 'Webhooks',
       description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
       keywords: 'CS2D, webhooks, Discord, server updates, server notifications, webhook URL',
       url: req.url,
@@ -131,7 +131,7 @@ function routes(fastify) {
     const servers = sockets.getRecentServers()
     const leaderboards = leaderboard.getLeaderboards()
     return reply.view('stats', {
-      title: 'Statistics · CS2D Server List',
+      title: 'Statistics',
       description: 'Explore CS2D statistics: active players, server count, game modes, regions, and the most popular maps in a detailed breakdown.',
       keywords: 'CS2D, statistics, active players, server count, game modes, regions, maps, player stats',
       url: req.url,
@@ -142,7 +142,7 @@ function routes(fastify) {
 
   fastify.get('/api', async (req, reply) => {
     return reply.view('api', {
-      title: 'API Documentation · CS2D Server List',
+      title: 'API Documentation',
       description: 'Access CS2D server and leaderboard data with our open API. Free, unlimited access with CORS support and easy integration.',
       keywords: 'CS2D, API, server data, leaderboard, CORS, free API, server integration',
       url: req.url

@@ -167,6 +167,10 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   padding-left: 1rem;
   padding-right: 0;
 }
+.t>thead>tr>th:nth-child(1), .t>tbody>tr>td:nth-child(1),
+.ct>thead>tr>th:nth-child(1), .ct>tbody>tr>td:nth-child(1) {
+  padding-left: .6rem;
+}
 #addr {
   width: 100%;
   text-align: center;

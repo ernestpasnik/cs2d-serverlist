@@ -37,7 +37,7 @@ const countServerStats = (servers) => {
 }
 
 const countCountries = (servers) => Object.values(servers).reduce((acc, server) => {
-  const country = server.dbg.geoip.name
+  const country = server.dbg.geoip.country_name
   if (country) acc[country] = (acc[country] || 0) + 1
   return acc
 }, {})

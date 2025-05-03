@@ -1,8 +1,8 @@
-const sockets = require('./sockets.js')
-const leaderboard = require('./leaderboard.js')
-const webhooks = require('./webhooks.js')
-const stats = require('./stats.js')
-const { escapeQuotes, formatTime, timeAgo } = require('./utils.js')
+const sockets = require('./sockets')
+const leaderboard = require('./leaderboard')
+const webhooks = require('./webhooks')
+const stats = require('./stats')
+const { escapeQuotes, formatTime, timeAgo } = require('./utils')
 sockets.initialize()
 
 function err404(req, reply) {

@@ -1,6 +1,6 @@
 const https = require('node:https')
 const fs = require('node:fs/promises')
-const sockets = require('./sockets.js')
+const sockets = require('./sockets')
 
 let webhooks = []
 
@@ -111,23 +111,23 @@ async function addWebhook(webhookUrl, servers) {
 }
 
 async function processWebhooks() {
-  for (let i = 0; i < webhooks.length; i++) {
-    const webhook = webhooks[i]
+  for (const webhook of webhooks) {
     const data = JSON.stringify({ embeds: generateEmbedsFromServers(webhook.servers) })
     const updateUrl = `${webhook.webhookUrl}/messages/${webhook.messageId}`
 
-    try {
-      await sendWebhookRequest('PATCH', updateUrl, data)
-      const resData = await sendWebhookRequest('PATCH', updateUrl, data)
-
-      // Unknown Webhook
-      if (resData && resData.code == 10015) {
-        webhooks.splice(i, 1)
-        saveWebhooksToFile('webhooks.json', webhooks)
-      }
-    } catch (err) {
-      console.error('Error updating message:', err.message)
-    }
+    sendWebhookRequest('PATCH', updateUrl, data)
+      .then(async (resData) => {
+        if (resData && resData.code == 10015) {
+          const index = webhooks.indexOf(webhook)
+          if (index > -1) {
+            webhooks.splice(index, 1)
+            saveWebhooksToFile('webhooks.json', webhooks)
+          }
+        }
+      })
+      .catch((err) => {
+        console.error('Error updating message:', err.message)
+      })
   }
 }
 

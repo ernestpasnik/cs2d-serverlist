@@ -17,7 +17,7 @@
     </thead>
     <tbody>
       <% for (const ipPort in srv) { %>
-        <% const s = srv[ipPort]; %>
+        <% const s = srv[ipPort] %>
         <tr <% if ((s.players - s.bots) > 0) { %> class="e" <% } %>>
           <td class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></td>
           <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a></td>

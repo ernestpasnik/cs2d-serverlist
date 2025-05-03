@@ -8,9 +8,9 @@ Create a `.env` file in the project root with the following content:
 ```env
 PORT=3000
 NODE_ENV=production
-IPDATA_APIKEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+IPINFO_APIKEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
-> You can get the IPDATA_APIKEY by creating a free account at [ipdata.co](https://ipdata.co)
+> You can get the IPDATA_APIKEY by creating a free account at [ipinfo.io](https://ipinfo.io)
 
 ## NGINX Configuration
 If you are using NGINX as a reverse proxy, you should add the following:

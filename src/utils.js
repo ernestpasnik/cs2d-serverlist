@@ -42,7 +42,7 @@ function timeAgo(ts) {
   ]
 
   for (const [name, sec] of u) {
-    const v = Math.floor(s / sec);
+    const v = Math.floor(s / sec)
     if (v) return `${v} ${name}${v > 1 ? 's' : ''} ago`
   }
 

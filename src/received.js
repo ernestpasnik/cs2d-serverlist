@@ -1,4 +1,4 @@
-const streams = require('./streams.js')
+const streams = require('./streams')
 
 function serverlist(buf, size) {
   const d = new streams(buf, size)

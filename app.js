@@ -1,9 +1,9 @@
 require('dotenv').config()
-const { getMTimeUnix } = require('./src/utils.js')
+const { getMTimeUnix } = require('./src/utils')
 const fastify = require('fastify')({ trustProxy: true, logger: true })
 fastify.register(require('@fastify/multipart'))
 fastify.register(require('@fastify/formbody'))
-require('./src/routes.js')(fastify)
+require('./src/routes')(fastify)
 
 // Minify HTML content in production and serve static files in non-production
 if (process.env.NODE_ENV === 'production') {

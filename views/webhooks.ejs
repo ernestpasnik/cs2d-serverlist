@@ -16,9 +16,9 @@
   
   <label for="search">Select servers</label>
   <div class="checkbox-container" id="checkboxes">
-    <% const sortedServers = Object.entries(srv).sort((a, b) => a[1].name.localeCompare(b[1].name)); %>
+    <% const sortedServers = Object.entries(srv).sort((a, b) => a[1].name.localeCompare(b[1].name)) %>
     <% sortedServers.forEach(([ipPort, s], index) => { %>
-      <% const id = `s${index + 1}`; %>
+      <% const id = `s${index + 1}` %>
       <div>
         <input type="checkbox" name="servers" value="<%= s.ip %>:<%= s.port %>" id="<%= id %>" <% if (s.selected) { %>checked<% } %> >
         <label for="<%= id %>"><%= s.name %></label>

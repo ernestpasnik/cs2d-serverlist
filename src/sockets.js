@@ -1,10 +1,9 @@
 const dgram = require('node:dgram')
-const IPData = require('ipdata').default
-const received = require('./received.js')
-const stats = require('./stats.js')
-const { getUnixTimestamp } = require('./utils.js')
-const ipdata = new IPData(process.env.IPDATA_APIKEY)
-const fields = ['country_name', 'city', 'emoji_flag']
+const { IPinfoWrapper } = require('node-ipinfo')
+const received = require('./received')
+const stats = require('./stats')
+const { getUnixTimestamp } = require('./utils')
+const ipinfoWrapper = new IPinfoWrapper(process.env.IPINFO_APIKEY)
 const servers = {}
 const req = {
   serverlist: Buffer.from([1, 0, 20, 1]),
@@ -17,6 +16,7 @@ async function addServer(ipPort) {
     ip,
     port: parseInt(port),
     dbg: {
+      geoip: {},
       sentPackets: 0,
       recvPackets: 0,
       sentBytes: 0,
@@ -24,17 +24,23 @@ async function addServer(ipPort) {
     }
   }
 
-  ipdata.lookup(ip, null, fields).then(d => {
-    if (!servers[ipPort]) return
+  try {
+    const ipInfo = await ipinfoWrapper.lookupIp(ip)
     servers[ipPort].dbg.geoip = {
-      country_name: d.country_name || null,
-      city: d.city || null,
-      emoji_flag: d.emoji_flag || null
+      country_name: ipInfo.country || null,
+      city: ipInfo.city || null,
+      emoji_flag: ipInfo.countryFlag.emoji || null
     }
-  })
+  } catch (err) {
+    console.error(`Error fetching geoip for ${ip}:`, err)
+    servers[ipPort].dbg.geoip = {
+      country_name: null,
+      city: null,
+      emoji_flag: null
+    }
+  }
 
   const client = dgram.createSocket('udp4')
-
   client.on('message', (buf, rinfo) => {
     stats.increaseStatsRecvBytes(rinfo.size)
     const recv = received.serverquery(buf, rinfo.size)

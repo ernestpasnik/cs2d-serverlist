@@ -244,6 +244,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 }
 
 #loader {
+  display: none;
   border: 3px solid rgb(21, 35, 44);
   border-top: 3px solid #ddd;
   border-radius: 50%;
@@ -318,6 +319,11 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   justify-content: space-between;
   margin-bottom: .5rem;
   flex-wrap: wrap;
+}
+.flex>div:first-child {
+  display: flex;
+  gap: .25rem;
+  align-items: center;
 }
 .s {
   color: rgb(194, 194, 26) !important;

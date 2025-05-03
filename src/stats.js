@@ -1,5 +1,5 @@
-const usgn = require('./stats/usgnUsers.js')
-const steam = require('./stats/steamUsers.js')
+const usgn = require('./stats/usgnUsers')
+const steam = require('./stats/steamUsers')
 
 const stats = {
   sentBytes: 0,
@@ -90,26 +90,26 @@ const topGamemodes = (servers) => {
 
 const responseRatio = (serverList) => {
   const serverRatios = serverList.map(server => {
-    const name = server.name;
-    const addr = `${server.ip}:${server.port}`;
-    const { sentPackets, recvPackets } = server.dbg || {};
+    const name = server.name
+    const addr = `${server.ip}:${server.port}`
+    const { sentPackets, recvPackets } = server.dbg || {}
     const ratio = sentPackets && recvPackets
       ? Math.floor((recvPackets / sentPackets) * 100)
-      : 0;
+      : 0
 
-    return { addr, data: { name, ratio } };
-  });
+    return { addr, data: { name, ratio } }
+  })
 
   return serverRatios
     .sort((a, b) => b.data.ratio - a.data.ratio)
-    .slice(0, 5);
-};
+    .slice(0, 5)
+}
 
 const sortedLeaderboardsByTS = (leaderboards) => {
   return Object.entries(leaderboards)
     .sort(([, a], [, b]) => b.ts - a.ts)
     .map(([addr, data]) => ({ addr, ...data }))
-    .slice(0, 4);
+    .slice(0, 4)
 }
 
 function getStats(servers, leaderboards) {

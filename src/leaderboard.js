@@ -1,5 +1,5 @@
-const streams = require('./streams.js')
-const { getUnixTimestamp } = require('./utils.js')
+const streams = require('./streams')
+const { getUnixTimestamp } = require('./utils')
 const leaderboards = {}
 
 function parse(serverName, addr, sort, buf) {

@@ -1,6 +1,6 @@
 <div class="flex">
   <div>
-    <h1 id="name"><%= s.name %></h1><div id="loader" style="display:none;"></div>
+    <h1 id="name"><%= s.name %></h1><div id="loader"></div>
   </div>
   <div class="flags">
     <div title="Password" class="flag password<% if (s.password) { %> enabled<% } %>"></div>
@@ -36,7 +36,7 @@
       </tr>
     </thead>
     <tbody id="ct">
-      <% s.playerlist.sort((a, b) => b.score - a.score); %>
+      <% s.playerlist.sort((a, b) => b.score - a.score) %>
       <% s.playerlist.forEach(function(p) { %>
       <% if (p.team >= 2) { %>
       <tr>

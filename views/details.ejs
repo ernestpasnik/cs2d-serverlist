@@ -87,15 +87,13 @@
           <tr><td><b>Region</b></td><td class="vlue"><%= s.dbg.region || 'N/A' %></td></tr>
           <tr><td><b>City</b></td><td class="vlue"><%= s.dbg.city || 'N/A' %></td></tr>
           <tr><td><b>Location</b></td><td class="vlue"><%= s.dbg.loc || 'N/A' %></td></tr>
-          <tr><td><b>Timezone</b></td><td class="vlue"><%= s.dbg.timezone || 'N/A' %></td></tr>
-          <tr><td><b>Game Mode</b></td><td id="gamemode" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] %></td></tr>
-        </tbody>        
+          <tr><td><b>Lua</b></td><td class="<%= s.lua ? 'enbl' : 'dsbl' %>"><%= s.lua ? 'Enabled' : 'Disabled' %></td></tr>
+        </tbody>
       </table>
       <table class="table-sm table-flags">
         <tbody>
           <tr><td><b>Password</b></td><td class="<%= s.password ? 'enbl' : 'dsbl' %>"><%= s.password ? 'Enabled' : 'Disabled' %></td></tr>
           <tr><td><b>USGN Only</b></td><td class="<%= s.usgnonly ? 'enbl' : 'dsbl' %>"><%= s.usgnonly ? 'Enabled' : 'Disabled' %></td></tr>
-          <tr><td><b>Lua</b></td><td class="<%= s.lua ? 'enbl' : 'dsbl' %>"><%= s.lua ? 'Enabled' : 'Disabled' %></td></tr>
           <tr><td><b>Fog of War</b></td><td class="<%= s.fow ? 'enbl' : 'dsbl' %>"><%= s.fow ? 'Enabled' : 'Disabled' %></td></tr>
           <tr><td><b>Friendly Fire</b></td><td class="<%= s.friendlyfire ? 'enbl' : 'dsbl' %>"><%= s.friendlyfire ? 'Enabled' : 'Disabled' %></td></tr>
           <tr><td><b>Force Light</b></td><td class="<%= s.forcelight ? 'enbl' : 'dsbl' %>"><%= s.forcelight ? 'Enabled' : 'Disabled' %></td></tr>

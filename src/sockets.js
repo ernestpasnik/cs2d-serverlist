@@ -29,10 +29,8 @@ async function addServer(ipPort) {
         country_name: ipInfo.country,
         city: ipInfo.city,
         emoji_flag: ipInfo.countryFlag?.emoji,
-        loc: ipInfo.loc,
         org: ipInfo.org,
-        hostname: ipInfo.hostname,
-        region: ipInfo.region
+        hostname: ipInfo.hostname
       }      
     }
   })

@@ -154,7 +154,7 @@ td {
   color: #999;
 }
 .table-sm > tbody > tr > td {
-  padding: .25rem !important;
+  padding: .3rem !important;
 }
 .table-sm > tbody > tr > td:first-child {
   max-width: 100px !important;

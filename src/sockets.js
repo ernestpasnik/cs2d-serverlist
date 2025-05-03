@@ -90,14 +90,10 @@ async function initialize() {
 function getServer(ipPort, full = false) {
   if (!servers[ipPort]) return false
   if (!servers[ipPort].ts) return false
+  servers[ipPort].playerlist.sort((playerA, playerB) => playerB.score - playerA.score)
   if (full) return servers[ipPort]
 
   const { dbg, client, interval, playerlist, ...filteredServer } = servers[ipPort]
-
-  if (playerlist) {
-    playerlist.sort((playerA, playerB) => playerB.score - playerA.score)
-  }
-
   return {
     ...filteredServer,
     playerlist

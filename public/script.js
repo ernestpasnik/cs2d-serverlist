@@ -1,13 +1,30 @@
 const $ = s => document.querySelector(s)
 
-const update = url =>
+const update = (url) => {
+  setTimeout(() => update(url), 10 * 1000)
+  
   fetch(url)
     .then(r => r.ok ? r.json() : null)
-    .then(d => d && updateUI(d))
-    .catch(() => {})
+    .then(d => {
+      if (d) {
+        updateUI(d)
+      }
+    })
+    .catch(err => {
+      console.error(err)
+    })
+}
 
-const timeAgo = ts => {
-  const s = Math.floor((Date.now() - (ts < 1e12 ? ts * 1000 : ts)) / 1000)
+
+const updateTs = el => {
+  const value = parseInt(el.getAttribute('data-ts'), 10)
+  const timeNow = Date.now()
+  const timeElapsed = timeNow - value
+  el.textContent = timeAgo(timeElapsed)
+}
+
+const timeAgo = ms => {
+  const s = Math.floor(ms / 1000)
   const u = [
     ['year', 31536000],
     ['month', 2592000],
@@ -21,15 +38,15 @@ const timeAgo = ts => {
     if (v) return `${v} ${name}${v > 1 ? 's' : ''} ago`
   }
   return 'just now'
-}    
+}
 
 const updateUI = d => {
   document.title = `${d.players}/${d.maxplayers} ${d.name} · CS2D Server List`
-  $('#ts').textContent = timeAgo(d.ts)
+  $('#ts').dataset.ts = d.ts
   $('#name').textContent = d.name
   $('#map').textContent = d.map
-  $('#p').textContent = `${d.players}/${d.maxplayers}${d.bots ? ` (${d.bots} bot${d.bots > 1 ? 's' : ''})` : ''}`;
-  
+  $('#p').textContent = `${d.players}/${d.maxplayers}${d.bots ? ` (${d.bots} bot${d.bots > 1 ? 's' : ''})` : ''}`
+
   const gm = $('.flag-gm')
   const gmCodes = ['s', 'd', 't', 'c', 'z']
   const gmNames = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!']
@@ -64,8 +81,15 @@ const updateUI = d => {
 
 const addr = $('#addr')
 if (addr) {
+  const el = $('#ts')
+  setInterval(() => updateTs(el), 1000)
+  const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10)
+  const timeNow = Date.now()
+  const timeSinceLastUpdate = timeNow - lastTimeUpdatedTs
+  const remainder = timeSinceLastUpdate % 10000
+  const timeToNextUpdate = remainder === 0 ? 0 : 10000 - remainder
   const url = `/api/${addr.textContent}`
-  setInterval(() => update(url), 10000)
+  setTimeout(() => update(url), timeToNextUpdate)
 
   let clicked = false
   addr.addEventListener('click', () => {

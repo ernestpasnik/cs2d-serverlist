@@ -138,7 +138,7 @@ th {
   text-align: left;
   font-weight: 500;
   border-bottom: 1px solid rgba(115, 130, 140, .1);
-  padding: .6rem .2rem;
+  padding: .6rem .3rem;
   color: #ddd;
   user-select: none;
 }
@@ -147,7 +147,7 @@ abbr {
   cursor: help;
 }
 td {
-  padding: .6rem .2rem;
+  padding: .6rem .3rem;
   max-width: 165px;
   overflow: clip;
   text-overflow: ellipsis;
@@ -612,7 +612,7 @@ button:hover {
     justify-content: space-between;
   }
   div.bar > div {
-    flex: 1 0 20%;
+    flex: 1 0 40%;
     font-size: .8rem;
   }
   .details, .stats {

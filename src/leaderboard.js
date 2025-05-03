@@ -65,7 +65,7 @@ function parse(serverName, addr, sort, buf) {
   }
 
   leaderboards[addr] = {
-    ts: Math.floor(Date.now() / 1000),
+    ts: Date.now(),
     name: serverName,
     players: players.slice(0, 100),
     usgnUsers,

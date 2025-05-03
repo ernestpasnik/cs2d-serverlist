@@ -38,7 +38,7 @@ async function addServer(ipPort) {
     stats.increaseStatsRecvBytes(rinfo.size)
     const recv = received.serverquery(buf, rinfo.size)
     if (recv == null) return
-    servers[ipPort].ts = Math.floor(Date.now() / 1000)
+    servers[ipPort].ts = Date.now()
     servers[ipPort].dbg.recvPackets++
     servers[ipPort].dbg.recvBytes += rinfo.size
     servers[ipPort] = { ...servers[ipPort], ...recv }
@@ -102,8 +102,7 @@ function getServer(ipPort, full = false) {
 }
 
 function getRecentServers() {
-  const oneMinuteAgo = Math.floor(Date.now() / 1000) - 60
-
+  const oneMinuteAgo = Date.now() - 60 * 1000
   return Object.values(servers)
     .filter(s => s.ts && s.ts >= oneMinuteAgo)
     .map(({ client, interval, ...s }) => s)
@@ -115,7 +114,7 @@ function getRecentServers() {
 }
 
 function cleanupServers() {
-  const oneMinuteAgo = Math.floor(Date.now() / 1000) - 60
+  const oneMinuteAgo = Date.now() - 60 * 1000
   for (const ipPort in servers) {
     if (!servers[ipPort].ts || servers[ipPort].ts < oneMinuteAgo) {
       if (servers[ipPort].client) {

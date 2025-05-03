@@ -27,7 +27,7 @@ function formatTime(s) {
 }
 
 function timeAgo(ts) {
-  const s = Math.floor((Date.now() - (ts < 1e12 ? ts * 1000 : ts)) / 1000)
+  const s = Math.floor((Date.now() - ts) / 1000)
   const u = [
     ['year', 31536000],
     ['month', 2592000],
@@ -38,7 +38,7 @@ function timeAgo(ts) {
   ]
 
   for (const [name, sec] of u) {
-    const v = Math.floor(s / sec)
+    const v = Math.floor(s / sec);
     if (v) return `${v} ${name}${v > 1 ? 's' : ''} ago`
   }
 

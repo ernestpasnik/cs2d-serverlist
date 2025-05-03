@@ -15,7 +15,7 @@ const getUserCount = () => {
       if (match) {
         userCount = parseInt(match[1], 10)
       } else {
-        console.log('USGN: Player count not found in response')
+        userCount = 0
       }
     })
   }).on('error', (err) => {

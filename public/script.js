@@ -182,3 +182,7 @@ if (serverForm) {
     }
   })
 }
+
+MicroModal.init({
+  disableScroll: true,
+})

@@ -18,16 +18,22 @@
     <tbody>
       <% for (const ipPort in srv) { %>
         <% const s = srv[ipPort] %>
-        <tr <% if ((s.players - s.bots) > 0) { %> class="e" <% } %>>
-          <td class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></td>
+        <% const gamemode = ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %>
+        <% const playerScore = (s.players - s.bots) * 100 + s.bots %>
+        <% const hasBots = s.bots > 0 %>
+    
+        <tr <% if (s.players - s.bots > 0) { %> class="e" <% } %>>
+          <td class="<%= gamemode.toLowerCase() %>"><%= gamemode %></td>
           <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a></td>
           <td><%= s.map %></td>
-          <td data-sort="<%= ((s.players - s.bots) * 100) + s.bots %>">
-            <%= s.players %>/<%= s.maxplayers %><% if (s.bots > 0) { %> <span class="b"><%= s.bots %></span><% } %>
+          <td data-sort="<%= playerScore %>">
+            <%= s.players %>/<%= s.maxplayers %>
+            <% if (hasBots) { %> <span class="b"><%= s.bots %></span><% } %>
           </td>
           <td><%= s.dbg.country_name %></td>
         </tr>
       <% } %>
     </tbody>
+    
   </table>
 </div>

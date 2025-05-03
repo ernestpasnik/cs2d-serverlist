@@ -43,8 +43,8 @@ const getUnrealSoftwarePlayersOnline = async () => {
 const startPolling = () => {
   getSteamPlayersOnline()
   getUnrealSoftwarePlayersOnline()
-  setInterval(getSteamPlayersOnline, 60000)
-  setInterval(getUnrealSoftwarePlayersOnline, 60000)
+  setInterval(getSteamPlayersOnline, 300000) // 5 min
+  setInterval(getUnrealSoftwarePlayersOnline, 300000) // 5 min
 }
 
 const getPlayersOnline = () => {

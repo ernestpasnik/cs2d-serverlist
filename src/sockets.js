@@ -102,9 +102,8 @@ function getServer(ipPort, full = false) {
 }
 
 function getRecentServers() {
-  const oneMinuteAgo = getUnixTimestamp() - 60
   return Object.values(servers)
-    .filter(s => s.ts && s.ts >= oneMinuteAgo)
+    .filter(s => s.ts)
     .map(({ client, interval, ...s }) => s)
     .sort((a, b) => {
       const aScore = (a.players - a.bots) * 100 + a.bots

@@ -51,14 +51,21 @@ const updateUI = d => {
   const code = gmCodes[d.gamemode]
   gm.className = `flag-gm ${code}`
   gm.textContent = code.toUpperCase()
-  gm.title = gmNames[d.gamemode]
 
-  const flags = ['password', 'usgnonly', 'fow', 'friendlyfire', 'lua', 'forcelight', 'recoil', 'offscreendamage', 'hasdownloads']
-  flags.forEach(f => {
-    const el = $(`.flag.${f}`)
-    if (el) el.classList.toggle('enabled', !!d[f])
+  const gmCell = $('#gamemode')
+  gmCell.textContent = gmNames[d.gamemode]
+  gmCell.className = code
+  const flags = ['password', 'usgnonly', 'lua', 'fow', 'friendlyfire', 'forcelight', 'recoil', 'offscreendamage', 'hasdownloads']
+  flags.forEach(key => {
+    const flagEl = $(`.flag.${key}`)
+    if (flagEl) flagEl.classList.toggle('enabled', !!d[key])
+    const detailEl = $(`.vlue.${key}`)
+    if (detailEl) {
+      detailEl.textContent = d[key] ? 'Enabled' : 'Disabled'
+      detailEl.className = `vlue ${key} ${d[key] ? 'enbl' : 'dsbl'}`
+    }
   })
-
+  
   const [t, ct] = [$('#t'), $('#ct')]
   t.innerHTML = ct.innerHTML = ''
 

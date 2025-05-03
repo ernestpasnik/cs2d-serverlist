@@ -69,6 +69,30 @@ const secondsToUptime = (s) => {
   return `${d > 0 ? `${d}d, ` : ''}${h}:${m}:${ss}`
 }
 
+const countOrganizations = (servers) => {
+  const orgMap = {}
+
+  for (const server of servers) {
+    const fullOrg = server.dbg?.org
+    if (!fullOrg || !fullOrg.startsWith('AS')) continue
+
+    const [asn, ...nameParts] = fullOrg.split(' ')
+    const name = nameParts.join(' ')
+    if (!asn || !name) continue
+
+    if (!orgMap[asn]) {
+      orgMap[asn] = { org: name, count: 0 }
+    }
+
+    orgMap[asn].count++
+  }
+
+  return Object.entries(orgMap)
+    .map(([asn, data]) => ({ asn, org: data.org, count: data.count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5)
+}
+
 const topLocations = (servers) => Object.entries(countCountries(servers))
   .map(([country, count]) => ({ country, count }))
   .sort((a, b) => b.count - a.count)
@@ -117,6 +141,7 @@ function getStats(servers, leaderboards) {
     ...countServerStats(servers),
     gamemodes: topGamemodes(servers),
     maps: topMaps(servers),
+    organizations: countOrganizations(servers),
     locations: topLocations(servers),
     uptime: secondsToUptime(process.uptime()),
     sentPackets: stats.sentPackets,

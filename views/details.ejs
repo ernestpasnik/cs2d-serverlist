@@ -83,18 +83,16 @@
           <tr><td><b>IP Address</b></td><td class="vlue"><%= s.ip %></td></tr>
           <tr><td><b>Hostname</b></td><td class="vlue"><%= s.dbg.hostname || 'N/A' %></td></tr>
           <tr><td><b>Organization</b></td><td class="vlue"><%= s.dbg.org || 'N/A' %></td></tr>
-          <tr><td><b>Anycast</b></td><td class="vlue"><%= s.dbg.anycast ? 'Yes' : 'No' %></td></tr>
           <tr><td><b>Country</b></td><td class="vlue"><%= s.dbg.country_name || 'N/A' %></td></tr>
           <tr><td><b>Region</b></td><td class="vlue"><%= s.dbg.region || 'N/A' %></td></tr>
           <tr><td><b>City</b></td><td class="vlue"><%= s.dbg.city || 'N/A' %></td></tr>
-          <tr><td><b>Postal Code</b></td><td class="vlue"><%= s.dbg.postal || 'N/A' %></td></tr>
           <tr><td><b>Location</b></td><td class="vlue"><%= s.dbg.loc || 'N/A' %></td></tr>
           <tr><td><b>Timezone</b></td><td class="vlue"><%= s.dbg.timezone || 'N/A' %></td></tr>
+          <tr><td><b>Game Mode</b></td><td id="gamemode" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] %></td></tr>
         </tbody>        
       </table>
-      <table class="table-sm">
+      <table class="table-sm table-flags">
         <tbody>
-          <tr><td><b>Game Mode</b></td><td class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] %></td></tr>
           <tr><td><b>Password</b></td><td class="<%= s.password ? 'enbl' : 'dsbl' %>"><%= s.password ? 'Enabled' : 'Disabled' %></td></tr>
           <tr><td><b>USGN Only</b></td><td class="<%= s.usgnonly ? 'enbl' : 'dsbl' %>"><%= s.usgnonly ? 'Enabled' : 'Disabled' %></td></tr>
           <tr><td><b>Lua</b></td><td class="<%= s.lua ? 'enbl' : 'dsbl' %>"><%= s.lua ? 'Enabled' : 'Disabled' %></td></tr>

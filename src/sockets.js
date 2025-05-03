@@ -33,9 +33,7 @@ async function addServer(ipPort) {
         org: ipInfo.org,
         hostname: ipInfo.hostname,
         region: ipInfo.region,
-        postal: ipInfo.postal,
-        timezone: ipInfo.timezone,
-        anycast: ipInfo.anycast
+        timezone: ipInfo.timezone
       }      
     }
   })

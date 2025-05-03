@@ -6,30 +6,31 @@
 
 <div class="stats">
   <div class="stats-container">
-    <label>Current Game Activity</label>
+    <label>Live Server Overview</label>
     <div class="stat-item">
-      <span>Total Servers</span>
+      <span>Active Servers</span>
       <span><%= stats.totalServers %></span>
     </div>
     <div class="stat-item">
-      <span>Bots on Servers</span>
+      <span>Active Bots</span>
       <span><%= stats.totalBots %></span>
     </div>
     <div class="stat-item">
-      <span>Players on Servers</span>
+      <span>Online Players</span>
       <span><%= stats.totalPlayers %></span>
     </div>
     <div class="stat-item">
-      <span>USGN Players Online</span>
+      <span>USGN Users Online</span>
       <span><%= stats.unrealSoftware %></span>
     </div>
     <div class="stat-item">
-      <span>Steam Players Online</span>
+      <span>Steam Users Online</span>
       <span><%= stats.steam %></span>
     </div>
   </div>
+
   <div class="stats-container">
-    <label>Top Game Modes</label>
+    <label>Most Popular Game Modes</label>
     <% stats.gamemodes.forEach(v => { %>
       <div class="stat-item">
         <span><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][v.gm] || 'Unknown' %></span>
@@ -37,18 +38,7 @@
       </div>
     <% }) %>
   </div>
-  <div class="stats-container">
-    <label>Top Server Regions</label>
-    <% stats.locations.forEach(v => { %>
-      <div class="stat-item">
-        <span><%= v.country %></span>
-        <span><%= v.count %></span>
-      </div>
-    <% }) %>
-  </div>
-</div>
 
-<div class="stats">
   <div class="stats-container">
     <label>Most Played Maps</label>
     <% stats.maps.forEach(v => { %>
@@ -58,8 +48,31 @@
       </div>
     <% }) %>
   </div>
+</div>
+
+<div class="stats">
   <div class="stats-container">
-    <label>Top Responding Servers</label>
+    <label>Most Popular Server Locations</label>
+    <% stats.locations.forEach(v => { %>
+      <div class="stat-item">
+        <span><%= v.country %></span>
+        <span><%= v.count %></span>
+      </div>
+    <% }) %>
+  </div>
+  
+  <div class="stats-container">
+    <label>Most Popular Hosting Providers</label>
+    <% stats.organizations.forEach(v => { %>
+      <div class="stat-item">
+        <span><%= v.org %></span>
+        <span><%= v.count %></span>
+      </div>
+    <% }) %>
+  </div>  
+
+  <div class="stats-container">
+    <label>Most Reliable Servers</label>
     <% stats.responses.forEach(v => { %>
       <div class="stat-item">
         <span><a href="/details/<%= v.addr %>"><%= v.data.name %></a></span>
@@ -71,17 +84,17 @@
 
 <div class="stats">
   <div class="stats-container">
-    <label>Service Metrics</label>
+    <label>Server Performance Metrics</label>
     <div class="stat-item">
-      <span>Uptime</span>
+      <span>Service Uptime</span>
       <span><%= stats.uptime %></span>
     </div>
     <div class="stat-item">
-      <span>Bytes Sent</span>
+      <span>Outbound Traffic</span>
       <span><%= stats.sentBytes %></span>
     </div>
     <div class="stat-item">
-      <span>Bytes Received</span>
+      <span>Inbound Traffic</span>
       <span><%= stats.recvBytes %></span>
     </div>
     <div class="stat-item">
@@ -93,8 +106,9 @@
       <span><%= stats.recvPackets %></span>
     </div>
   </div>
+
   <div class="stats-container">
-    <label>Recently Updated Leaderboards</label>
+    <label>Latest Leaderboard Updates</label>
     <% stats.leaderboards.forEach(v => { %>
       <div class="stat-item">
         <span><a href="/leaderboard/<%= v.addr %>"><%= v.name %></a></span>

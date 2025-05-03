@@ -5,57 +5,47 @@ let PlayersOnline = {
   unrealSoftware: null
 }
 
-const getSteamPlayersOnline = () => {
-  https.get('https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=666220', (res) => {
-    let data = ''
+const fetch = url => {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      let data = ''
 
-    res.on('data', (chunk) => {
-      data += chunk
-    })
+      res.on('data', chunk => data += chunk)
+      res.on('end', () => resolve(data))
+    }).on('error', reject)
+  })
+}
 
-    res.on('end', () => {
-      try {
-        const json = JSON.parse(data)
-        if (json && json.response) {
-          PlayersOnline.steam = json.response.player_count
-        } else {
-          console.log('Steam: Player count not found in response')
-        }
-      } catch (err) {
-        console.log('Error parsing Steam JSON:', err.message)
-      }
-    })
-  }).on('error', (err) => {
+const getSteamPlayersOnline = async () => {
+  try {
+    const data = await fetch('https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=666220')
+    const json = JSON.parse(data)
+    if (json && json.response) {
+      PlayersOnline.steam = json.response.player_count
+    } else {
+      console.log('Steam: Player count not found in response')
+    }
+  } catch (err) {
     console.log(`Error fetching Steam player count: ${err.message}`)
-  })
+  }
 }
 
-const getUnrealSoftwarePlayersOnline = () => {
-  https.get('https://unrealsoftware.de/users.php?p=1', (res) => {
-    let html = ''
-
-    res.on('data', (chunk) => {
-      html += chunk
-    })
-
-    res.on('end', () => {
-      const match = html.match(/(\d+)\s+Users?/)
-      if (match) {
-        PlayersOnline.unrealSoftware = parseInt(match[1], 10)
-      } else {
-        PlayersOnline.unrealSoftware = 0
-      }
-    })
-  }).on('error', (err) => {
+const getUnrealSoftwarePlayersOnline = async () => {
+  try {
+    const html = await fetch('https://unrealsoftware.de/users.php?p=1')
+    const match = html.match(/(\d+)\s+Users?/)
+    PlayersOnline.unrealSoftware = match ? parseInt(match[1], 10) : 0
+  } catch (err) {
     console.log(`Error fetching Unreal Software player count: ${err.message}`)
-  })
+  }
 }
 
-setInterval(getSteamPlayersOnline, 60000)
-setInterval(getUnrealSoftwarePlayersOnline, 60000)
-
-getSteamPlayersOnline()
-getUnrealSoftwarePlayersOnline()
+const startPolling = () => {
+  getSteamPlayersOnline()
+  getUnrealSoftwarePlayersOnline()
+  setInterval(getSteamPlayersOnline, 60000)
+  setInterval(getUnrealSoftwarePlayersOnline, 60000)
+}
 
 const getPlayersOnline = () => {
   return {
@@ -64,6 +54,8 @@ const getPlayersOnline = () => {
   }
 }
 
+startPolling()
+
 module.exports = {
-    getPlayersOnline
+  getPlayersOnline
 }

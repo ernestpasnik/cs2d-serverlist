@@ -2,17 +2,17 @@
   <div>
     <h1 id="name"><%= s.name %></h1><div id="loader"></div>
   </div>
-  <div class="flags">
-    <div title="Password" class="flag password<% if (s.password) { %> enabled<% } %>"></div>
-    <div title="USGN Only" class="flag usgnonly<% if (s.usgnonly) { %> enabled<% } %>"></div>
-    <div title="Fog of War" class="flag fow<% if (s.fow) { %> enabled<% } %>"></div>
-    <div title="Force Light" class="flag forcelight<% if (s.forcelight) { %> enabled<% } %>"></div>
-    <div title="Recoil" class="flag recoil<% if (s.recoil) { %> enabled<% } %>"></div>
-    <div title="Off-Screen Damage" class="flag offscreendamage<% if (s.offscreendamage) { %> enabled<% } %>"></div>
-    <div title="Has Downloads" class="flag hasdownloads<% if (s.hasdownloads) { %> enabled<% } %>"></div>
-    <span title="<%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] %>" class="flag-gm <%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span>
-    <abbr class="emoji" title="<%= s.dbg.city || 'Unknown'%>, <%= s.dbg.country_name || 'Unknown' %>"><%= s.dbg.emoji_flag || '🏳️' %></abbr>
-    </div>
+  <div onclick="javascript:MicroModal.show('modal-1')" class="flags">
+    <div class="flag password<% if (s.password) { %> enabled<% } %>"></div>
+    <div class="flag usgnonly<% if (s.usgnonly) { %> enabled<% } %>"></div>
+    <div class="flag fow<% if (s.fow) { %> enabled<% } %>"></div>
+    <div class="flag forcelight<% if (s.forcelight) { %> enabled<% } %>"></div>
+    <div class="flag recoil<% if (s.recoil) { %> enabled<% } %>"></div>
+    <div class="flag offscreendamage<% if (s.offscreendamage) { %> enabled<% } %>"></div>
+    <div class="flag hasdownloads<% if (s.hasdownloads) { %> enabled<% } %>"></div>
+    <div class="flag-gm <%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></div>
+    <div class="emoji"><%= s.dbg.emoji_flag || '🏳️' %></div>
+  </div>  
 </div>
 
 <div class="bar">
@@ -73,4 +73,40 @@
   <% if (s.playerlist && s.playerlist.filter(p => p.team == 0).length > 0) { %>
     Spectators: <%= s.playerlist.filter(p => p.team == 0).map(p => p.name).join(', ') %>
   <% } %>
+</div>
+
+<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+  <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+    <div class="modal__container details" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+      <table class="table-sm">
+        <tbody>
+          <tr><td><b>Country</b></td><td class="vlue"><%= s.dbg.country_name || 'N/A' %></td></tr>
+          <tr><td><b>City</b></td><td class="vlue"><%= s.dbg.city || 'N/A' %></td></tr>
+          <tr><td><b>Location</b></td><td class="vlue"><%= s.dbg.loc || 'N/A' %></td></tr>
+          <tr><td><b>IP Address</b></td><td class="vlue"><%= s.ip %></td></tr>
+          <tr><td><b>Organization</b></td><td class="vlue"><%= s.dbg.org || 'N/A' %></td></tr>
+          <tr><td><b>Hostname</b></td><td class="vlue"><%= s.dbg.hostname || 'N/A' %></td></tr>
+          <tr><td><b>Region</b></td><td class="vlue"><%= s.dbg.region || 'N/A' %></td></tr>
+          <tr><td><b>Postal Code</b></td><td class="vlue"><%= s.dbg.postal || 'N/A' %></td></tr>
+          <tr><td><b>Timezone</b></td><td class="vlue"><%= s.dbg.timezone || 'N/A' %></td></tr>
+          <tr><td><b>Anycast</b></td><td class="vlue"><%= s.dbg.anycast ? 'Yes' : 'No' %></td></tr>
+        </tbody>
+              
+      </table>
+      <table class="table-sm">
+        <tbody>
+          <tr><td><b>Game Mode</b></td><td class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] %></td></tr>
+          <tr><td><b>Password</b></td><td class="<%= s.password ? 'enbl' : 'dsbl' %>"><%= s.password ? 'Enabled' : 'Disabled' %></td></tr>
+          <tr><td><b>USGN Only</b></td><td class="<%= s.usgnonly ? 'enbl' : 'dsbl' %>"><%= s.usgnonly ? 'Enabled' : 'Disabled' %></td></tr>
+          <tr><td><b>Lua</b></td><td class="<%= s.lua ? 'enbl' : 'dsbl' %>"><%= s.lua ? 'Enabled' : 'Disabled' %></td></tr>
+          <tr><td><b>Fog of War</b></td><td class="<%= s.fow ? 'enbl' : 'dsbl' %>"><%= s.fow ? 'Enabled' : 'Disabled' %></td></tr>
+          <tr><td><b>Friendly Fire</b></td><td class="<%= s.friendlyfire ? 'enbl' : 'dsbl' %>"><%= s.friendlyfire ? 'Enabled' : 'Disabled' %></td></tr>
+          <tr><td><b>Force Light</b></td><td class="<%= s.forcelight ? 'enbl' : 'dsbl' %>"><%= s.forcelight ? 'Enabled' : 'Disabled' %></td></tr>
+          <tr><td><b>Recoil</b></td><td class="<%= s.recoil ? 'enbl' : 'dsbl' %>"><%= s.recoil ? 'Enabled' : 'Disabled' %></td></tr>
+          <tr><td><b>Off-screen DMG</b></td><td class="<%= s.offscreendamage ? 'enbl' : 'dsbl' %>"><%= s.offscreendamage ? 'Enabled' : 'Disabled' %></td></tr>
+          <tr><td><b>Has Downloads</b></td><td class="<%= s.hasdownloads ? 'enbl' : 'dsbl' %>"><%= s.hasdownloads ? 'Enabled' : 'Disabled' %></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

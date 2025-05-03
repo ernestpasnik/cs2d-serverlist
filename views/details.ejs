@@ -82,7 +82,7 @@
         <tbody>
           <tr><td><b>IP Address</b></td><td class="vlue"><%= s.ip %></td></tr>
           <tr><td><b>Hostname</b></td><td class="vlue"><%= s.dbg.hostname || 'N/A' %></td></tr>
-          <tr><td><b>Organization</b></td><td class="vlue"><%= s.dbg.org || 'N/A' %></td></tr>
+          <tr><td><b>Provider</b></td><td class="vlue"><%= s.dbg.org ? s.dbg.org.split(' ').slice(1).join(' ') : 'N/A' %></td></tr>
           <tr><td><b>Country</b></td><td class="vlue"><%= s.dbg.country_name || 'N/A' %></td></tr>
           <tr><td><b>Region</b></td><td class="vlue"><%= s.dbg.region || 'N/A' %></td></tr>
           <tr><td><b>City</b></td><td class="vlue"><%= s.dbg.city || 'N/A' %></td></tr>
@@ -100,8 +100,8 @@
           <tr><td><b>Friendly Fire</b></td><td class="<%= s.friendlyfire ? 'enbl' : 'dsbl' %>"><%= s.friendlyfire ? 'Enabled' : 'Disabled' %></td></tr>
           <tr><td><b>Force Light</b></td><td class="<%= s.forcelight ? 'enbl' : 'dsbl' %>"><%= s.forcelight ? 'Enabled' : 'Disabled' %></td></tr>
           <tr><td><b>Recoil</b></td><td class="<%= s.recoil ? 'enbl' : 'dsbl' %>"><%= s.recoil ? 'Enabled' : 'Disabled' %></td></tr>
-          <tr><td><b>Off-screen DMG</b></td><td class="<%= s.offscreendamage ? 'enbl' : 'dsbl' %>"><%= s.offscreendamage ? 'Enabled' : 'Disabled' %></td></tr>
-          <tr><td><b>Has Downloads</b></td><td class="<%= s.hasdownloads ? 'enbl' : 'dsbl' %>"><%= s.hasdownloads ? 'Enabled' : 'Disabled' %></td></tr>
+          <tr><td><b>Off-Scn Dmg</b></td><td class="<%= s.offscreendamage ? 'enbl' : 'dsbl' %>"><%= s.offscreendamage ? 'Enabled' : 'Disabled' %></td></tr>
+          <tr><td><b>Downloads</b></td><td class="<%= s.hasdownloads ? 'enbl' : 'dsbl' %>"><%= s.hasdownloads ? 'Enabled' : 'Disabled' %></td></tr>
         </tbody>
       </table>
     </div>

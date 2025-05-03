@@ -12,7 +12,7 @@ const update = url => {
         }
         $('#loader').style.display = 'none'
         $('#ts').style.opacity = 1
-      }, 1500)
+      }, 1000)
     })
     .catch(() => {})
 }
@@ -81,10 +81,6 @@ if (addr) {
   const timeSinceLastUpdate = timeNow - lastTimeUpdatedTs
   const remainder = timeSinceLastUpdate % 10
   const timeToNextUpdate = (remainder === 0 ? 0 : 10 - remainder) + 1
-  
-  console.log(timeToNextUpdate);
-  
-
   const url = `/api/${addr.textContent}`
   setTimeout(() => {
     update(url)

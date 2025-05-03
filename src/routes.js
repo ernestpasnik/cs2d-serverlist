@@ -48,7 +48,7 @@ function routes(fastify) {
     }
     return reply.view('leaderboard', {
       title: escapeQuotes(result.name),
-      description: `Browse the top-performing CS2D players for "${escapeQuotes(result.name)}" based on server stats, including rankings, scores, and player achievements.`,
+      description: `Browse the top-performing CS2D players for ${escapeQuotes(result.name)} based on server stats, including rankings, scores, and player achievements.`,
       keywords: `CS2D, ${escapeQuotes(result.name)}, leaderboard, top players, rankings, scores, player achievements`,
       url: req.url,
       r: result,
@@ -69,63 +69,23 @@ function routes(fastify) {
   })
 
   fastify.post('/webhooks', async (req, reply) => {
-    const url = req.body.url || ''
-    let servers = req.body.servers || []
-    if (!Array.isArray(servers)) {
-      if (typeof servers === 'string') {
-        servers = [servers]
-      } else {
-        servers = []
-      }
-    }
+    const { url = '', servers = [] } = req.body
+    if (!Array.isArray(servers)) servers = typeof servers === 'string' ? [servers] : []
+    if (servers.length === 0) return reply.send({ error: 'No servers selected.' })
     
-    if (servers.length < 1) {
-      return reply.view('webhooks.ejs', {
-        title: 'Webhooks',
-        description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
-        keywords: 'CS2D, webhooks, Discord, server updates, server notifications, webhook URL',
-        url: req.url,
-        srv: sockets.getRecentServers(),
-        err: 'You didn\'t select any servers.'
-      })
-    }
-  
     const ipPortRegex = /^(\d{1,3}\.){3}\d{1,3}:\d{1,5}$/
-    for (const server of servers) {
-      if (typeof server !== 'string' || !ipPortRegex.test(server)) {
-        return reply.view('webhooks.ejs', {
-          title: 'Webhooks',
-          description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
-          keywords: 'CS2D, webhooks, Discord, server updates, server notifications, webhook URL',
-          url: req.url,
-          srv: sockets.getRecentServers(),
-          err: 'You provided an invalid server address.'
-        })
-      }
+    if (servers.some(server => typeof server !== 'string' || !ipPortRegex.test(server))) {
+      return reply.send({ error: 'Invalid server address provided.' })
     }
   
     const discordWebhookRegex = /^https:\/\/discord\.com\/api\/webhooks\/\d{18,20}\/[A-Za-z0-9_-]{68}$/
     if (typeof url !== 'string' || !discordWebhookRegex.test(url)) {
-      return reply.view('webhooks.ejs', {
-        title: 'Webhooks',
-        description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
-        keywords: 'CS2D, webhooks, Discord, server updates, server notifications, webhook URL',
-        url: req.url,
-        srv: sockets.getRecentServers(),
-        err: 'You provided an invalid webhook URL.'
-      })
+      return reply.send({ error: 'Invalid webhook URL.' })
     }
-
+  
     const dcRes = await webhooks.addWebhook(url, servers)
-    return reply.view('webhooks.ejs', {
-      title: 'Webhooks',
-      description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
-      keywords: 'CS2D, webhooks, Discord, server updates, server notifications, webhook URL',
-      url: req.url,
-      srv: sockets.getRecentServers(),
-      ...dcRes
-    })
-  })
+    return reply.send(dcRes)
+  })  
 
   fastify.get('/stats', async (req, reply) => {
     const servers = sockets.getRecentServers()
@@ -141,7 +101,7 @@ function routes(fastify) {
   })
 
   fastify.get('/api', async (req, reply) => {
-    return reply.view('api', {
+    return reply.view('api_docs', {
       title: 'API Documentation',
       description: 'Access CS2D server and leaderboard data with our open API. Free, unlimited access with CORS support and easy integration.',
       keywords: 'CS2D, API, server data, leaderboard, CORS, free API, server integration',
@@ -149,11 +109,28 @@ function routes(fastify) {
     })
   })
 
+  fastify.get('/api/:addr', async (req, reply) => {
+    const addr = req.params.addr.split(',').map(addr => addr.trim())
+    const results = addr.map(addr => sockets.getServer(addr))
+    const successfulResults = results.filter(result => result !== false)
+
+    if (successfulResults.length === 0) {
+      return reply.status(404).send({ error: 'No valid servers found' })
+    }
+
+    if (successfulResults.length === 1) {
+      return reply.send(results[0])
+    }
+
+    return reply.send(successfulResults)
+  })
+
   fastify.post('/api/upload', async (req, reply) => {
     let fileBuffer = null
     let port = null
     let sort = 1
     const parts = req.parts()
+
     for await (const part of parts) {
       if (part.type === 'file' && part.fieldname === 'file') {
         fileBuffer = await part.toBuffer()
@@ -166,33 +143,25 @@ function routes(fastify) {
         }
       }
     }
+
     if (!port) {
       return reply.code(500).send({ error: 'Port is required' })
     }
+
     const addr = `${req.ip}:${port}`
     const result = sockets.getServer(addr)
+
     if (!result) {
       return reply.code(500).send({ error: 'No valid servers found' })
     }
+
     try {
       leaderboard.parse(result.name, addr, sort, fileBuffer)
     } catch (err) {
       return reply.code(500).send({ error: err.message })
     }
-    return reply.send({ error: false })
-  })
 
-  fastify.get('/api/:addr', async (req, reply) => {
-    const addr = req.params.addr.split(',').map(addr => addr.trim())
-    const results = addr.map(addr => sockets.getServer(addr))
-    const successfulResults = results.filter(result => result !== false)
-    if (successfulResults.length === 0) {
-      return reply.status(404).send({ error: 'No valid servers found' })
-    }
-    if (successfulResults.length === 1) {
-      return reply.send(results[0])
-    }
-    return reply.send(successfulResults)
+    return reply.send({ error: false })
   })
 
   fastify.setNotFoundHandler(async (req, reply) => {

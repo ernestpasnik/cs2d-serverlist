@@ -6,14 +6,7 @@
 
 <p>Monitor your CS2D servers on Discord with automatic updates every 10 seconds. Simply select the servers you want to track and provide your webhook URL. Not sure how to add a Discord webhook? <a href="https://www.svix.com/resources/guides/how-to-make-webhook-discord/" target="_blank">Follow this guide</a> to get started.</p>
 
-<form method="POST">
-  <% if (typeof err !== 'undefined' && err) { %>
-    <div class="alert alert-err"><%= err %></div>
-  <% } %>
-  <% if (typeof msg !== 'undefined' && msg) { %>
-    <div class="alert alert-msg"><%= msg %></div>
-  <% } %>
-  
+<form id="server-form">
   <label for="search">Select servers</label>
   <div class="checkbox-container" id="checkboxes">
     <% const sortedServers = Object.entries(srv).sort((a, b) => a[1].name.localeCompare(b[1].name)) %>
@@ -25,9 +18,8 @@
       </div>
     <% }) %>  
   </div>
-  
   <label for="url">Webhook URL</label>
   <input type="text" id="url" name="url">
-  
+  <div class="alert-container"></div>
   <button type="submit">Submit</button>
 </form>

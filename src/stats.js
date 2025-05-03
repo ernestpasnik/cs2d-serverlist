@@ -1,5 +1,4 @@
-const usgn = require('./stats/usgnUsers')
-const steam = require('./stats/steamUsers')
+const { getPlayersOnline } = require('./players_online')
 
 const stats = {
   sentBytes: 0,
@@ -37,7 +36,7 @@ const countServerStats = (servers) => {
 }
 
 const countCountries = (servers) => Object.values(servers).reduce((acc, server) => {
-  const country = server.dbg.geoip.country_name
+  const country = server.dbg.country_name
   if (country) acc[country] = (acc[country] || 0) + 1
   return acc
 }, {})
@@ -109,11 +108,12 @@ const sortedLeaderboardsByTS = (leaderboards) => {
   return Object.entries(leaderboards)
     .sort(([, a], [, b]) => b.ts - a.ts)
     .map(([addr, data]) => ({ addr, ...data }))
-    .slice(0, 4)
+    .slice(0, 5)
 }
 
 function getStats(servers, leaderboards) {
   return {
+    ...getPlayersOnline(),
     ...countServerStats(servers),
     gamemodes: topGamemodes(servers),
     maps: topMaps(servers),
@@ -124,9 +124,7 @@ function getStats(servers, leaderboards) {
     sentBytes: bytesToSize(stats.sentBytes),
     recvBytes: bytesToSize(stats.recvBytes),
     responses: responseRatio(servers),
-    leaderboards: sortedLeaderboardsByTS(leaderboards),
-    usgnUsers: usgn.getUserCountAPI(),
-    steamUsers: steam.getUserCountAPI()
+    leaderboards: sortedLeaderboardsByTS(leaderboards)
   }
 }
 

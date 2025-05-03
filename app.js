@@ -1,6 +1,6 @@
 require('dotenv').config()
 const { getMTimeUnix } = require('./src/utils')
-const fastify = require('fastify')({ trustProxy: true, logger: true })
+const fastify = require('fastify')({ trustProxy: true })
 fastify.register(require('@fastify/multipart'))
 fastify.register(require('@fastify/formbody'))
 require('./src/routes')(fastify)

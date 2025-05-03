@@ -10,7 +10,7 @@ PORT=3000
 NODE_ENV=production
 IPINFO_APIKEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
-> You can get the IPDATA_APIKEY by creating a free account at [ipinfo.io](https://ipinfo.io)
+> You can get the IPINFO_APIKEY by creating a free account at [ipinfo.io](https://ipinfo.io)
 
 ## NGINX Configuration
 If you are using NGINX as a reverse proxy, you should add the following:

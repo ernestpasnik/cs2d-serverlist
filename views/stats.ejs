@@ -21,11 +21,11 @@
     </div>
     <div class="stat-item">
       <span>USGN Players Online</span>
-      <span><%= stats.usgnUsers %></span>
+      <span><%= stats.unrealSoftware %></span>
     </div>
     <div class="stat-item">
       <span>Steam Players Online</span>
-      <span><%= stats.steamUsers %></span>
+      <span><%= stats.steam %></span>
     </div>
   </div>
   <div class="stats-container">
@@ -71,7 +71,11 @@
 
 <div class="stats">
   <div class="stats-container">
-    <label><abbr title="Since Node.js process started <%= stats.uptime %>">UDP Network Metrics</abbr></label>
+    <label>Service Metrics</label>
+    <div class="stat-item">
+      <span>Uptime</span>
+      <span><%= stats.uptime %></span>
+    </div>
     <div class="stat-item">
       <span>Bytes Sent</span>
       <span><%= stats.sentBytes %></span>

@@ -16,16 +16,16 @@
   <div class="endpoint">
     <h2>Endpoint: Server Status</h2>
     <p>Get information for one or more CS2D servers. Provide each server's IP address and port.</p>
-    <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001"</code>
+    <code class="api"><span class="curl">curl</span> <span class="str">"<%= url %>/157.90.170.75:20001"</code>
     <p>You can query multiple servers in a single request:</p>
-    <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001,157.90.170.75:20002"</span></code>
+    <code class="api"><span class="curl">curl</span> <span class="str">"<%= url %>/api/157.90.170.75:20001,157.90.170.75:20002"</span></code>
     <p><b>Note:</b> In the JSON response, the <code>ts</code> field represents the timestamp of the last received server query, measured in seconds since <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank">the UNIX epoch</a>.</p>
   </div>
   
   <div class="endpoint">
     <h2>Endpoint: Upload Leaderboard</h2>
     <p>Upload the leaderboard. Make sure to access this from the same IP as the hosted server.</p>
-    <code class="api"><span class="curl">curl</span> -4 -X POST <span class="str">"https://cs2d.pp.ua/api/upload"</span> -F <span class="str">"file=@sys/stats/userstats.dat"</span> -F <span class="str">"port=36963"</span></code>
+    <code class="api"><span class="curl">curl</span> -4 -X POST <span class="str">"<%= url %>/upload"</span> -F <span class="str">"file=@sys/stats/userstats.dat"</span> -F <span class="str">"port=36963"</span></code>
     <ul>
       <li><b><code>file</code></b> (required): Path to the <code>userstats.dat</code></li>
       <li><b><code>port</code></b> (required): Port number of the server</li>

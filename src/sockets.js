@@ -16,7 +16,6 @@ async function addServer(ipPort) {
     ip,
     port: parseInt(port),
     dbg: {
-      geoip: {},
       sentPackets: 0,
       recvPackets: 0,
       sentBytes: 0,
@@ -26,18 +25,14 @@ async function addServer(ipPort) {
 
   try {
     const ipInfo = await ipinfoWrapper.lookupIp(ip)
-    servers[ipPort].dbg.geoip = {
-      country_name: ipInfo.country || null,
-      city: ipInfo.city || null,
-      emoji_flag: ipInfo.countryFlag.emoji || null
+    servers[ipPort].dbg = {
+      ...servers[ipPort].dbg,
+      country_name: ipInfo.country,
+      city: ipInfo.city,
+      emoji_flag: ipInfo.countryFlag?.emoji
     }
   } catch (err) {
     console.error(`Error fetching geoip for ${ip}:`, err)
-    servers[ipPort].dbg.geoip = {
-      country_name: null,
-      city: null,
-      emoji_flag: null
-    }
   }
 
   const client = dgram.createSocket('udp4')
@@ -94,6 +89,7 @@ async function initialize() {
 
 function getServer(ipPort, full = false) {
   if (!servers[ipPort]) return false
+  if (!servers[ipPort].ts) return false
   if (full) return servers[ipPort]
 
   const { dbg, client, interval, playerlist, ...filteredServer } = servers[ipPort]

@@ -78,7 +78,7 @@ p {
 label, button, input, .alert {
   font-size: .9rem;
 }
-p, li, .alert {
+p, li {
   font-size: .9rem;
   line-height: 1.5;
 }
@@ -277,7 +277,6 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   margin-bottom: 1rem;
   align-items: flex-start;
 }
-
 .details-api {
   display: flex;
   gap: 1.5rem;
@@ -288,7 +287,6 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 .details,.details-api > div {
   flex: 1;
 }
-
 .svlist>tbody>tr>td:nth-child(4) {
   color: rgba(128, 128, 128, .5);
 }
@@ -537,7 +535,6 @@ button {
   font-weight: 500;
   color: #ddd;
   border: 1px solid rgba(115, 130, 140, .25);
-  margin-top: .25rem;
 }
 
 button:hover {
@@ -572,41 +569,26 @@ button:hover {
   transform: rotate(45deg);
   opacity: 0;
 }
-
 .checkbox-container > div > input[type="checkbox"]:checked::after {
   opacity: 1;
 }
-
+.alert-container {
+  width: 100%;
+}
 .alert {
-  padding: .6rem .75rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  border-radius: .25rem;
+  padding: .6rem 0;
   align-items: center;
   font-weight: 500;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  margin-bottom: .5rem;
 }
-
-.alert-err {
-  background-color: rgb(248, 212, 213);
-  border: 1px solid rgb(240, 169, 171);
-  color: rgb(87, 16, 18);
+.err {
+  color: #e14f4f;
 }
-.alert-msg {
-  background-color: rgb(213, 240, 230);
-  border: 1px solid rgb(172, 225, 204);
-  color: rgb(19, 72, 51);
+.msg {
+  color: #3adf45;
 }
-
-
-
-
-
-
-
 
 /* MOBILE */
-
 @media (max-width: 916px) {
   .svlst>thead>tr>th:nth-child(2), .svlst>tbody>tr>td:nth-child(2) {
     width: 0;

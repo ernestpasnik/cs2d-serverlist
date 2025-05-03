@@ -11,7 +11,7 @@
     <div title="Off-Screen Damage" class="flag offscreendamage<% if (s.offscreendamage) { %> enabled<% } %>"></div>
     <div title="Has Downloads" class="flag hasdownloads<% if (s.hasdownloads) { %> enabled<% } %>"></div>
     <span title="<%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] %>" class="flag-gm <%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></span>
-    <abbr class="emoji" title="<%= s.dbg.geoip.city ? s.dbg.geoip.city + ', ' + s.dbg.geoip.country_name : s.dbg.geoip.country_name || 'Unknown' %>"><%= s.dbg.geoip.emoji_flag || '🏳️' %></abbr>
+    <abbr class="emoji" title="<%= s.dbg.city || 'Unknown'%>, <%= s.dbg.country_name || 'Unknown' %>"><%= s.dbg.emoji_flag || '🏳️' %></abbr>
     </div>
 </div>
 
@@ -36,7 +36,6 @@
       </tr>
     </thead>
     <tbody id="ct">
-      <% s.playerlist.sort((a, b) => b.score - a.score) %>
       <% s.playerlist.forEach(function(p) { %>
       <% if (p.team >= 2) { %>
       <tr>

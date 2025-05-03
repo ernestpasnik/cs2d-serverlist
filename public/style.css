@@ -248,13 +248,22 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 }
 .details {
   display: flex;
-  gap: 1rem;
+  gap: .5rem;
   margin-bottom: 1rem;
-  align-items: self-start;
+  align-items: flex-start;
 }
-.details>div {
-  width: 50%;
+
+.details-api {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  align-items: flex-start;
 }
+
+.details,.details-api > div {
+  flex: 1;
+}
+
 .svlist>tbody>tr>td:nth-child(4) {
   color: rgba(128, 128, 128, .5);
 }
@@ -615,12 +624,16 @@ button:hover {
     flex: 1 0 40%;
     font-size: .8rem;
   }
-  .details, .stats {
+  .endpoint:nth-child(2) {
+    margin-top: 0;
+  }
+  .details, .stats, .details-api {
     flex-direction: column;
     min-height: auto;
   }
-  .details>div, .stats>div {
-    width: auto;
+  .details > div, .stats > div, .details-api > div {
+    width: 100%;
+    flex: none;
   }
   th, td {
     font-size: .8rem;

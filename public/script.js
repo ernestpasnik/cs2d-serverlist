@@ -42,7 +42,6 @@ const timeAgo = ms => {
 
 const updateUI = d => {
   document.title = `${d.players}/${d.maxplayers} ${d.name} · CS2D Server List`
-  $('#ts').dataset.ts = d.ts
   $('#name').textContent = d.name
   $('#map').textContent = d.map
   $('#p').textContent = `${d.players}/${d.maxplayers}${d.bots ? ` (${d.bots} bot${d.bots > 1 ? 's' : ''})` : ''}`
@@ -77,12 +76,16 @@ const updateUI = d => {
   $('.spec').textContent = spectators.length
     ? `Spectators: ${spectators.map(p => p.name).join(', ')}`
     : ''
+
+    const el = $('#ts')
+    el.dataset.ts = d.ts
+    updateTs(el)
 }
 
 const addr = $('#addr')
 if (addr) {
   const el = $('#ts')
-  setInterval(() => updateTs(el), 1000)
+  setInterval(() => updateTs(el), 200)
   const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10)
   const timeNow = Date.now()
   const timeSinceLastUpdate = timeNow - lastTimeUpdatedTs

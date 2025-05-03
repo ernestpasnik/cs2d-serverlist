@@ -12,14 +12,15 @@
   <li><b>Public access</b> with CORS enabled (*)</li>
 </ul>
 
-<div class="details">
+<div class="details-api">
   <div class="endpoint">
     <h2>Endpoint: Server Status</h2>
     <p>Get information for one or more CS2D servers. Provide each server's IP address and port.</p>
     <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001"</code>
-      <p>It returns JSON data including server name, current map, number of players, and more. You can query multiple servers in a single request:</p>
-      <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001,157.90.170.75:20002"</span></code>
-    </div>
+    <p>It returns JSON data including server name, current map, number of players, and more. You can query multiple servers in a single request:</p>
+    <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001,157.90.170.75:20002"</span></code>
+    <p><b>Note:</b> In the JSON response, the <code>ts</code> field indicates when the server was last updated (measured in milliseconds since the UNIX epoch).</p>
+  </div>
   
   <div class="endpoint">
     <h2>Endpoint: Upload Leaderboard</h2>

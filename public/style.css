@@ -156,11 +156,18 @@ td {
 .table-sm > tbody > tr > td {
   padding: .25rem !important;
 }
-.table-sm > tbody > tr > td:first-child {
-  width: 108px;
+.table-sm > tbody > tr > td:nth-child(1) {
+  max-width: 100px !important;
+  text-align: right;
+}
+.table-sm > tbody > tr > td:nth-child(2) {
+  text-align: left;
+}
+.table-sm > tbody > tr > td {
+  max-width: stretch;
 }
 .modal__container.details {
-  gap: .75rem;
+  gap: 0;
 }
 td>a {
   color: #999;
@@ -612,7 +619,6 @@ button:hover {
 .vlue {
   color: #c6ff74;
 }
-
 
 /**************************\
   Basic Modal Styles

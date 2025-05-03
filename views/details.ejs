@@ -80,18 +80,17 @@
     <div class="modal__container details" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
       <table class="table-sm">
         <tbody>
-          <tr><td><b>Country</b></td><td class="vlue"><%= s.dbg.country_name || 'N/A' %></td></tr>
-          <tr><td><b>City</b></td><td class="vlue"><%= s.dbg.city || 'N/A' %></td></tr>
-          <tr><td><b>Location</b></td><td class="vlue"><%= s.dbg.loc || 'N/A' %></td></tr>
           <tr><td><b>IP Address</b></td><td class="vlue"><%= s.ip %></td></tr>
-          <tr><td><b>Organization</b></td><td class="vlue"><%= s.dbg.org || 'N/A' %></td></tr>
           <tr><td><b>Hostname</b></td><td class="vlue"><%= s.dbg.hostname || 'N/A' %></td></tr>
-          <tr><td><b>Region</b></td><td class="vlue"><%= s.dbg.region || 'N/A' %></td></tr>
-          <tr><td><b>Postal Code</b></td><td class="vlue"><%= s.dbg.postal || 'N/A' %></td></tr>
-          <tr><td><b>Timezone</b></td><td class="vlue"><%= s.dbg.timezone || 'N/A' %></td></tr>
+          <tr><td><b>Organization</b></td><td class="vlue"><%= s.dbg.org || 'N/A' %></td></tr>
           <tr><td><b>Anycast</b></td><td class="vlue"><%= s.dbg.anycast ? 'Yes' : 'No' %></td></tr>
-        </tbody>
-              
+          <tr><td><b>Country</b></td><td class="vlue"><%= s.dbg.country_name || 'N/A' %></td></tr>
+          <tr><td><b>Region</b></td><td class="vlue"><%= s.dbg.region || 'N/A' %></td></tr>
+          <tr><td><b>City</b></td><td class="vlue"><%= s.dbg.city || 'N/A' %></td></tr>
+          <tr><td><b>Postal Code</b></td><td class="vlue"><%= s.dbg.postal || 'N/A' %></td></tr>
+          <tr><td><b>Location</b></td><td class="vlue"><%= s.dbg.loc || 'N/A' %></td></tr>
+          <tr><td><b>Timezone</b></td><td class="vlue"><%= s.dbg.timezone || 'N/A' %></td></tr>
+        </tbody>        
       </table>
       <table class="table-sm">
         <tbody>

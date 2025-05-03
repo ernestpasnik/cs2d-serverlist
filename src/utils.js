@@ -1,5 +1,9 @@
 const fs = require('fs')
 
+function getUnixTimestamp() {
+  return Math.floor(Date.now() / 1000)
+}
+
 function getMTimeUnix(filepath) {
   try {
     return Math.floor(fs.statSync(filepath).mtime.getTime() / 1000)
@@ -27,7 +31,7 @@ function formatTime(s) {
 }
 
 function timeAgo(ts) {
-  const s = Math.floor((Date.now() - ts) / 1000)
+  const s = getUnixTimestamp() - ts
   const u = [
     ['year', 31536000],
     ['month', 2592000],
@@ -50,6 +54,7 @@ function escapeQuotes(str) {
 }
 
 module.exports = {
+  getUnixTimestamp,
   getMTimeUnix,
   formatTime,
   timeAgo,

@@ -1,30 +1,24 @@
 const $ = s => document.querySelector(s)
 
-const update = (url) => {
-  setTimeout(() => update(url), 10 * 1000)
-  
+const update = url => {
+  $('#loader').style.display = 'inline-block'
+  $('#ts').style.opacity = 0.5
   fetch(url)
     .then(r => r.ok ? r.json() : null)
     .then(d => {
-      if (d) {
-        updateUI(d)
-      }
+      setTimeout(() => {
+        if (d) {
+          updateUI(d)
+        }
+        $('#loader').style.display = 'none'
+        $('#ts').style.opacity = 1
+      }, 1500)
     })
-    .catch(err => {
-      console.error(err)
-    })
+    .catch(() => {})
 }
 
-
-const updateTs = el => {
-  const value = parseInt(el.getAttribute('data-ts'), 10)
-  const timeNow = Date.now()
-  const timeElapsed = timeNow - value
-  el.textContent = timeAgo(timeElapsed)
-}
-
-const timeAgo = ms => {
-  const s = Math.floor(ms / 1000)
+const timeAgo = ts => {
+  const s = Math.floor(Date.now() / 1000) - ts
   const u = [
     ['year', 31536000],
     ['month', 2592000],
@@ -38,14 +32,15 @@ const timeAgo = ms => {
     if (v) return `${v} ${name}${v > 1 ? 's' : ''} ago`
   }
   return 'just now'
-}
+}    
 
 const updateUI = d => {
   document.title = `${d.players}/${d.maxplayers} ${d.name} · CS2D Server List`
+  $('#ts').textContent = timeAgo(d.ts)
   $('#name').textContent = d.name
   $('#map').textContent = d.map
-  $('#p').textContent = `${d.players}/${d.maxplayers}${d.bots ? ` (${d.bots} bot${d.bots > 1 ? 's' : ''})` : ''}`
-
+  $('#p').textContent = `${d.players}/${d.maxplayers}${d.bots ? ` (${d.bots} bot${d.bots > 1 ? 's' : ''})` : ''}`;
+  
   const gm = $('.flag-gm')
   const gmCodes = ['s', 'd', 't', 'c', 'z']
   const gmNames = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!']
@@ -76,23 +71,25 @@ const updateUI = d => {
   $('.spec').textContent = spectators.length
     ? `Spectators: ${spectators.map(p => p.name).join(', ')}`
     : ''
-
-    const el = $('#ts')
-    el.dataset.ts = d.ts
-    updateTs(el)
 }
 
 const addr = $('#addr')
 if (addr) {
   const el = $('#ts')
-  setInterval(() => updateTs(el), 200)
   const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10)
-  const timeNow = Date.now()
+  const timeNow = Math.floor(Date.now() / 1000)
   const timeSinceLastUpdate = timeNow - lastTimeUpdatedTs
-  const remainder = timeSinceLastUpdate % 10000
-  const timeToNextUpdate = remainder === 0 ? 0 : 10000 - remainder
+  const remainder = timeSinceLastUpdate % 10
+  const timeToNextUpdate = (remainder === 0 ? 0 : 10 - remainder) + 1
+  
+  console.log(timeToNextUpdate);
+  
+
   const url = `/api/${addr.textContent}`
-  setTimeout(() => update(url), timeToNextUpdate)
+  setTimeout(() => {
+    update(url)
+    setInterval(() => update(url), 10 * 1000)
+  }, timeToNextUpdate * 1000)
 
   let clicked = false
   addr.addEventListener('click', () => {

@@ -19,7 +19,7 @@
     <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001"</code>
     <p>It returns JSON data including server name, current map, number of players, and more. You can query multiple servers in a single request:</p>
     <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001,157.90.170.75:20002"</span></code>
-    <p><b>Note:</b> In the JSON response, the <code>ts</code> field indicates when the server was last updated (measured in milliseconds since the UNIX epoch).</p>
+    <p><b>Note:</b> In the JSON response, the <code>ts</code> field represents the timestamp of the last received server query, measured in seconds since <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank">the UNIX epoch</a>.</p>
   </div>
   
   <div class="endpoint">

@@ -220,7 +220,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   display: flex;
   flex-direction: column;
   text-align: center;
-  padding: .5rem;
+  padding: .6rem .9rem;
   background-color: hsla(204,10%,50%,.05);
   border-radius: .25rem;
   font-size: .9rem;
@@ -234,6 +234,30 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   color: #ddd;
   font-weight: 500;
 }
+#ts {
+  display: inline-block;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#name {
+  display: inline;
+}
+
+#loader {
+  border: 3px solid rgb(21, 35, 44);
+  border-top: 3px solid #ddd;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  animation: spin 1s linear infinite;
+  margin-left: .2rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .c {
   color: rgb(66, 141, 255) !important;
 }
@@ -294,11 +318,6 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   justify-content: space-between;
   margin-bottom: .5rem;
   flex-wrap: wrap;
-}
-.flex>div {
-  overflow: hidden;
-  text-wrap: nowrap;
-  text-overflow: ellipsis;
 }
 .s {
   color: rgb(194, 194, 26) !important;
@@ -640,6 +659,9 @@ button:hover {
   }
   form {
     width: 100%;
+  }
+  .emoji, #loader {
+    font-size: .9rem;
   }
 }
 @media (max-width: 500px) {

@@ -1,4 +1,5 @@
 const streams = require('./streams.js')
+const { getUnixTimestamp } = require('./utils.js')
 const leaderboards = {}
 
 function parse(serverName, addr, sort, buf) {
@@ -65,7 +66,7 @@ function parse(serverName, addr, sort, buf) {
   }
 
   leaderboards[addr] = {
-    ts: Date.now(),
+    ts: getUnixTimestamp(),
     name: serverName,
     players: players.slice(0, 100),
     usgnUsers,

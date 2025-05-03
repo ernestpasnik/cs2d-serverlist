@@ -2,6 +2,7 @@ const dgram = require('node:dgram')
 const IPData = require('ipdata').default
 const received = require('./received.js')
 const stats = require('./stats.js')
+const { getUnixTimestamp } = require('./utils.js')
 const ipdata = new IPData(process.env.IPDATA_APIKEY)
 const fields = ['country_name', 'city', 'emoji_flag']
 const servers = {}
@@ -38,7 +39,7 @@ async function addServer(ipPort) {
     stats.increaseStatsRecvBytes(rinfo.size)
     const recv = received.serverquery(buf, rinfo.size)
     if (recv == null) return
-    servers[ipPort].ts = Date.now()
+    servers[ipPort].ts = getUnixTimestamp()
     servers[ipPort].dbg.recvPackets++
     servers[ipPort].dbg.recvBytes += rinfo.size
     servers[ipPort] = { ...servers[ipPort], ...recv }
@@ -75,11 +76,11 @@ async function initialize() {
   stats.increaseStatsSentBytes(4)
   usgn.send(req.serverlist, 36963, '81.169.236.243')
 
-  // Request CS2D server list every 15 minutes  
+  // Request CS2D server list every 5 minutes  
   setInterval(() => {
     stats.increaseStatsSentBytes(4)
     usgn.send(req.serverlist, 36963, '81.169.236.243')
-  }, 900000)
+  }, 300000)
 
   // Remove servers with no response or inactive for over a minute
   setInterval(cleanupServers, 60000)
@@ -102,7 +103,7 @@ function getServer(ipPort, full = false) {
 }
 
 function getRecentServers() {
-  const oneMinuteAgo = Date.now() - 60 * 1000
+  const oneMinuteAgo = getUnixTimestamp() - 60
   return Object.values(servers)
     .filter(s => s.ts && s.ts >= oneMinuteAgo)
     .map(({ client, interval, ...s }) => s)
@@ -114,7 +115,7 @@ function getRecentServers() {
 }
 
 function cleanupServers() {
-  const oneMinuteAgo = Date.now() - 60 * 1000
+  const oneMinuteAgo = getUnixTimestamp() - 60
   for (const ipPort in servers) {
     if (!servers[ipPort].ts || servers[ipPort].ts < oneMinuteAgo) {
       if (servers[ipPort].client) {

@@ -1,16 +1,12 @@
 const https = require('node:https')
 const Redis = require('ioredis')
 const sockets = require('./sockets')
-
-// Connect to Redis
 const redis = new Redis()
 
 let webhooks = []
 
-// Function to save webhooks to Redis
 async function saveWebhooksToRedis(webhooks) {
   try {
-    // Save the webhooks as a JSON string
     await redis.set('webhooks', JSON.stringify(webhooks))
     console.log('Webhooks saved to Redis')
   } catch (err) {
@@ -18,7 +14,6 @@ async function saveWebhooksToRedis(webhooks) {
   }
 }
 
-// Function to load webhooks from Redis
 async function loadWebhooksFromRedis() {
   try {
     const data = await redis.get('webhooks')
@@ -107,7 +102,7 @@ async function addWebhook(webhookUrl, servers) {
           servers
         })
       }
-      await saveWebhooksToRedis(webhooks)  // Save to Redis instead of file
+      await saveWebhooksToRedis(webhooks)
       return { msg: 'Webhook added successfully.' }
     } else {
       return { err: resData.message || 'Invalid response.' }
@@ -128,7 +123,7 @@ async function processWebhooks() {
           const index = webhooks.indexOf(webhook)
           if (index > -1) {
             webhooks.splice(index, 1)
-            await saveWebhooksToRedis(webhooks)  // Save to Redis instead of file
+            await saveWebhooksToRedis(webhooks)
           }
         }
       })
@@ -139,7 +134,7 @@ async function processWebhooks() {
 }
 
 (async () => {
-  webhooks = await loadWebhooksFromRedis()  // Load from Redis instead of file
+  webhooks = await loadWebhooksFromRedis()
   setInterval(processWebhooks, 10000)
 })()
 

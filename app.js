@@ -1,13 +1,33 @@
 require('dotenv').config()
 const { getMTimeUnix } = require('./src/utils')
 const fastify = require('fastify')({ trustProxy: true })
+const Redis = require('ioredis')
+const redis = new Redis({})
+
+const getFromCache = async (key) => {
+  console.log(`getFromCache ${key}`)
+  const cachedValue = await redis.get(key)
+  console.log(cachedValue)
+  return cachedValue ? JSON.parse(cachedValue) : null
+}
+
+const setToCache = async (key, value) => {
+  console.log(`setToCache ${key} ${value}`)
+  await redis.set(key, JSON.stringify(value), 'EX', 3600)
+}
+
 fastify.register(require('@fastify/multipart'))
 fastify.register(require('@fastify/formbody'))
 require('./src/routes')(fastify)
 
-// Minify HTML content in production and serve static files in non-production
 if (process.env.NODE_ENV === 'production') {
-  fastify.register(require('fastify-minify'), { global: true, cache: 2500 })
+  fastify.register(require('fastify-minify'), {
+    global: true,
+    cache: {
+      get: getFromCache,
+      set: setToCache
+    }
+  })
 } else {
   fastify.register(require('@fastify/static'), { root: __dirname + '/public' })
 }

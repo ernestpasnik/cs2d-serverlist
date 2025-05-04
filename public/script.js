@@ -43,8 +43,20 @@ const updateUI = d => {
   $('#ts').textContent = timeAgo(d.ts)
   $('#name').textContent = d.name
   $('#map').textContent = d.map
-  $('#p').textContent = `${d.players}/${d.maxplayers}${d.bots ? ` (${d.bots} bot${d.bots > 1 ? 's' : ''})` : ''}`
+  const p = document.getElementById('p')
+
+  if (d.players - d.bots > 0)
+    p.classList.add('e')
+  else
+    p.classList.remove('e')
   
+  p.innerHTML = `
+    <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="me-1.5 size-5 text-green-400">
+      <path d="M11.5 8A1.5 1.5 0 0 1 13 9.5v.5c0 2-1.9 4-5 4s-5-2-5-4v-.5A1.5 1.5 0 0 1 4.5 8zM8 1.5A2.7 2.7 0 1 1 8 7a2.7 2.7 0 0 1 0-5.5" fill="currentColor"></path>
+    </svg>
+    <i>${d.players - d.bots}</i>${d.bots > 0 ? `<span class="b">+${d.bots}</span>` : ''}
+  `
+    
   const gm = $('.flag-gm')
   const gmCodes = ['s', 'd', 't', 'c', 'z']
   const gmNames = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!']

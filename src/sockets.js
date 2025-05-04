@@ -22,19 +22,6 @@ async function addServer(ipPort) {
       recvBytes: 0
     }
   }
-  ipinfoWrapper.lookupIp(ip).then((ipInfo) => {
-    if (servers[ipPort] && servers[ipPort].dbg) {
-      servers[ipPort].dbg = {
-        ...servers[ipPort].dbg,
-        country_name: ipInfo.country,
-        city: ipInfo.city,
-        emoji_flag: ipInfo.countryFlag?.emoji,
-        org: ipInfo.org,
-        hostname: ipInfo.hostname
-      }      
-    }
-  })
-  
 
   const client = dgram.createSocket('udp4')
   client.on('message', (buf, rinfo) => {
@@ -45,6 +32,21 @@ async function addServer(ipPort) {
     servers[ipPort].dbg.recvPackets++
     servers[ipPort].dbg.recvBytes += rinfo.size
     servers[ipPort] = { ...servers[ipPort], ...recv }
+
+    // Skip ip lookup if country_name exists
+    if (servers[ipPort].dbg.country_name) return
+    ipinfoWrapper.lookupIp(ip).then((ipInfo) => {
+      if (servers[ipPort] && servers[ipPort].dbg) {
+        servers[ipPort].dbg = {
+          ...servers[ipPort].dbg,
+          country_name: ipInfo.country,
+          city: ipInfo.city,
+          emoji_flag: ipInfo.countryFlag?.emoji,
+          org: ipInfo.org,
+          hostname: ipInfo.hostname
+        }      
+      }
+    })
   })
 
   client.send(req.serverquery, servers[ipPort].port, servers[ipPort].ip)

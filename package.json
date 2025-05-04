@@ -33,6 +33,7 @@
     "ejs": "^3.1.10",
     "fastify": "^5.3.2",
     "fastify-minify": "^1.2.0",
+    "ioredis": "^5.6.1",
     "node-ipinfo": "^4.0.1"
   }
 }

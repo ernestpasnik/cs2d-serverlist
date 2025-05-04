@@ -1,23 +1,30 @@
 const https = require('node:https')
-const fs = require('node:fs/promises')
+const Redis = require('ioredis')
 const sockets = require('./sockets')
+
+// Connect to Redis
+const redis = new Redis()
 
 let webhooks = []
 
-async function saveWebhooksToFile(filename, webhooks) {
+// Function to save webhooks to Redis
+async function saveWebhooksToRedis(webhooks) {
   try {
-    await fs.writeFile(filename, JSON.stringify(webhooks, null, 2))
-    console.log('Webhooks saved to file')
+    // Save the webhooks as a JSON string
+    await redis.set('webhooks', JSON.stringify(webhooks))
+    console.log('Webhooks saved to Redis')
   } catch (err) {
-    console.error('Error saving webhooks:', err)
+    console.error('Error saving webhooks to Redis:', err)
   }
 }
 
-async function loadWebhooksFromFile(filename) {
+// Function to load webhooks from Redis
+async function loadWebhooksFromRedis() {
   try {
-    const data = await fs.readFile(filename, 'utf8')
-    return JSON.parse(data)
+    const data = await redis.get('webhooks')
+    return data ? JSON.parse(data) : []
   } catch (err) {
+    console.error('Error loading webhooks from Redis:', err)
     return []
   }
 }
@@ -100,7 +107,7 @@ async function addWebhook(webhookUrl, servers) {
           servers
         })
       }
-      saveWebhooksToFile('webhooks.json', webhooks)
+      await saveWebhooksToRedis(webhooks)  // Save to Redis instead of file
       return { msg: 'Webhook added successfully.' }
     } else {
       return { err: resData.message || 'Invalid response.' }
@@ -121,7 +128,7 @@ async function processWebhooks() {
           const index = webhooks.indexOf(webhook)
           if (index > -1) {
             webhooks.splice(index, 1)
-            saveWebhooksToFile('webhooks.json', webhooks)
+            await saveWebhooksToRedis(webhooks)  // Save to Redis instead of file
           }
         }
       })
@@ -132,7 +139,7 @@ async function processWebhooks() {
 }
 
 (async () => {
-  webhooks = await loadWebhooksFromFile('webhooks.json')
+  webhooks = await loadWebhooksFromRedis()  // Load from Redis instead of file
   setInterval(processWebhooks, 10000)
 })()
 

@@ -16,7 +16,7 @@ a {
 a:hover {
   color: #fff;
 }
-b, p > a {
+b, strong, p > a {
   font-weight: 500;
   color: #ddd;
 }
@@ -182,6 +182,7 @@ td>a {
   color: rgb(171 171 171 / 1);
 }
 .endpoint {
+  overflow: auto;
   margin-top: 1.5rem;
 }
 .svlst > tbody > tr > td:nth-child(3) {
@@ -218,8 +219,9 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   color: rgb(247, 158, 202);
 }
 .api {
+  white-space: nowrap;
   color: #c9d1d9;
-  padding: 13.5px;
+  padding: .84375rem;
   line-height: 1.5;
   display: block;
   background-color: rgba(115, 130, 140, .05);
@@ -242,7 +244,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   margin-top: 1rem;
   margin-bottom: .5rem;
 }
-.bar>div {
+.bar>div,.bar>a {
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -256,14 +258,18 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   color: rgba(255, 255, 255, 0.75);
   border: 1px solid rgba(115, 130, 140, .1);
 }
-.bar>div>span:first-child {
+.bar>div>span:first-child,
+.bar>a>span:first-child {
   color: #ddd;
   font-weight: 500;
   font-size: 13.2px;
 }
 .bar>div>span:nth-child(2),
-.bar>div>a {
+.bar>a>span {
   font-size: 12.6px;
+}
+.bar>a:hover>span {
+  color: #fff;
 }
 #ts {
   display: inline-block;
@@ -315,8 +321,8 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   align-items: flex-start;
 }
 
-.details,.details-api > div {
-  flex: 1;
+.details,.details-api {
+  display: flex;
 }
 .svlist>tbody>tr>td:nth-child(4) {
   color: rgba(128, 128, 128, .5);
@@ -464,9 +470,7 @@ i {
   justify-content: center;
   gap: .25rem;
   cursor: pointer;
-}
-.flags:hover {
-  opacity: 1;
+  align-items: center;
 }
 .flag {
   width: 10px;

@@ -24,7 +24,7 @@
       <i><%= (s.players - s.bots) %></i><% if (s.bots > 0) { %><span class="b">+<%= s.bots %></span><% } %>/<%= s.maxplayers %></div>
   <div><span>Map</span><span id="map"><%= s.map %></span></div>
   <div><span>Address</span><span id="addr"><%= s.ip %>:<%= s.port %></span></div>
-  <% if (l != false) { %><div><span>Leaderboard</span><a href="/leaderboard/<%= s.ip %>:<%= s.port %>">Visit Page</a></div><% } %>
+  <% if (l != false) { %><a href="/leaderboard/<%= s.ip %>:<%= s.port %>"><span>Leaderboard</span><span>Visit Page</span></a><% } %>
 </div>
 
 <div class="details">

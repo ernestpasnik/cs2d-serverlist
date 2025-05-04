@@ -7,7 +7,7 @@ require('./src/routes')(fastify)
 
 // Minify HTML content in production and serve static files in non-production
 if (process.env.NODE_ENV === 'production') {
-  fastify.register(require('fastify-minify'), { global: true })
+  fastify.register(require('fastify-minify'), { global: true, cache: 2500 })
 } else {
   fastify.register(require('@fastify/static'), { root: __dirname + '/public' })
 }

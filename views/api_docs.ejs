@@ -15,23 +15,22 @@
 <div class="details-api">
   <div class="endpoint">
     <h2>Endpoint: Server Status</h2>
-    <p>Get information for one or more CS2D servers. Provide each server's IP address and port.</p>
-    <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001"</code>
-    <p>You can query multiple servers in a single request:</p>
+    <p>This endpoint returns server status details such as the current player count, server map, and more. You can query a single server or multiple servers in a single request.</p>
+    <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001"</span></code>
+    <p>For multiple servers, simply include each server's IP and port, separated by commas:</p>
     <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001,157.90.170.75:20002"</span></code>
-    <p><b>Note:</b> In the JSON response, the <code>ts</code> field represents the timestamp of the last received server query, measured in seconds since <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank">the UNIX epoch</a>.</p>
+    <p><strong>Note:</strong> The <code>ts</code> field in the JSON response indicates the timestamp of the most recent server query. The value is measured in seconds since <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank">the UNIX epoch</a>.</p>
   </div>
   
   <div class="endpoint">
     <h2>Endpoint: Upload Leaderboard</h2>
-    <p>Upload the leaderboard. Make sure to access this from the same IP as the hosted server.</p>
+    <p>The leaderboard is uploaded as a <code>userstats.dat</code> file, which contains player stats. Ensure that the correct port number of the hosted server is included in the request.</p>
     <code class="api"><span class="curl">curl</span> -4 -X POST <span class="str">"https://cs2d.pp.ua/api/upload"</span> -F <span class="str">"file=@sys/stats/userstats.dat"</span> -F <span class="str">"port=36963"</span></code>
     <ul>
-      <li><b><code>file</code></b> (required): Path to the <code>userstats.dat</code></li>
-      <li><b><code>port</code></b> (required): Port number of the server</li>
-      <li><b><code>sort</code></b> (optional): Formula used to sort [default: 1]</li>
+      <li><strong><code>file</code></strong> (required): Path to the <code>userstats.dat</code> file containing player statistics.</li>
+      <li><strong><code>port</code></strong> (required): The port number on which the CS2D server is running.</li>
+      <li><strong><code>sort</code></strong> (optional): A sorting formula to determine how the leaderboard data is arranged. The default value is <code>1</code>.</li>
     </ul>
-    <p><b>Note:</b> The <code>-4</code> flag forces <code>curl</code> to use IPv4. This is useful if your server has both IPv4 and IPv6 but the API expects the IPv4 address to identify the server correctly.</p>
+    <p><strong>Note:</strong> The <code>-4</code> flag forces <code>curl</code> to use IPv4. This is especially helpful if your server is dual-stack (both IPv4 and IPv6) but the API expects IPv4 to correctly identify the server.</p>
   </div>
-  
 </div>

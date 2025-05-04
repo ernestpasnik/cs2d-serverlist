@@ -330,13 +330,12 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 #p {
   display: flex;
   align-items: center;
-  font-weight: 500;
 }
 #p {
   justify-content: center;
   align-items: center;
 }
-.e,
+.e>svg,
 .e>td:nth-child(4)>i,
 .e>td:nth-child(4)>svg{
   color: #2fcc2f;
@@ -356,7 +355,6 @@ tr:hover>td:nth-child(4)>span{
   color: rgb(194, 194, 26);
 }
 i {
-  color: #a4a4a4;
   font-style: initial;
 }
 .flex-details {
@@ -387,8 +385,7 @@ i {
   user-select: none;
 }
 .b {
-  color: rgb(183, 183, 71);
-  padding-left: 4px;
+  color: rgb(204, 204, 36);
   text-align: right;
 }
 .spec {
@@ -601,9 +598,13 @@ button {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
-button:hover {
+button:not(:disabled):hover {
   background-color: rgb(72, 147, 84);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+button:disabled {
+  cursor: initial;
 }
 
 .checkbox-container > div > input[type="checkbox"] {

@@ -22,6 +22,10 @@ b, p > a {
   font-weight: 500;
   color: #ddd;
 }
+svg {
+  width: 1rem;
+  height: 1rem;
+}
 body {
   padding: 0;
   margin: 0 auto;
@@ -59,7 +63,7 @@ footer>span>a:hover {
 h1,h2 {
   color: #ddd;
   margin: 0;
-  font-size: 1.075rem;
+  font-size: 1.0625rem;
   font-weight: 500;
 }
 h2 {
@@ -127,7 +131,15 @@ table {
   border-collapse: collapse;
   white-space: nowrap;
 }
-
+.lock {
+  width: 1rem;
+  height: 1rem;
+}
+td > a {
+  display: flex;
+  align-items: center;
+  color: #999;
+}
 th, td {
   font-size: .9rem;
 }
@@ -162,14 +174,14 @@ td {
 }
 .modal__container.details > .table-sm > tbody > tr > td:nth-child(2) {
   width: auto;
-  max-width: none;
+  min-width: auto;
 }
 .modal__container.details > .table-sm > tbody > tr {
   background-color: transparent;
 }
 tbody > tr
 td>a {
-  color: #999;
+  color: rgb(171 171 171 / 1);
 }
 .endpoint {
   margin-top: 1.5rem;
@@ -314,11 +326,28 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 .leaderboard>tbody>tr>td>a:hover {
   color: #fff;
 }
-.e>td:nth-child(4) {
-  color: #34d134;
+.svlst>tbody>tr>td:nth-child(4) {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  letter-spacing: 2px;
 }
-.e:hover>td:nth-child(4) {
+i {
+  font-style: initial;
+}
+.e>td:nth-child(4)>i,
+.e>td:nth-child(4)>svg{
+  color: #2fcc2f;
+}
+.e>td:nth-child(4)>i {
+  font-weight: 500;
+}
+.e:hover>td:nth-child(4)>i,
+.e:hover>td:nth-child(4)>svg{
   color: #33f733;
+}
+tr:hover>td:nth-child(4)>span{
+  color: rgb(236, 236, 32);
 }
 .e>td:nth-child(4)>span {
   color: rgb(194, 194, 26);
@@ -351,7 +380,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   user-select: none;
 }
 .b {
-  color: rgb(126, 126, 23);
+  color: rgb(153, 153, 35);
 }
 .spec {
   font-size: .9rem;
@@ -693,9 +722,6 @@ button:hover {
 .micromodal-slide .modal__overlay {
   will-change: transform;
 }
-.modal__container.details {
-  display: flex;
-}
 
 
 
@@ -774,10 +800,18 @@ button:hover {
     font-size: .9rem;
   }
   .modal__container {
-    max-width: 80%;
+    max-width: 85%;
   }
   .modal__container.details {
     gap: 0;
+  }
+  .modal__container.details > .table-sm {
+    white-space: wrap;
+  }
+  .modal__container.details > .table-sm > tbody > tr > td{
+    max-width: 100px;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
   }
 }
 @media (max-width: 500px) {

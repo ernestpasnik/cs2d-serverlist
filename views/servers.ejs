@@ -24,11 +24,11 @@
     
         <tr <% if (s.players - s.bots > 0) { %> class="e" <% } %>>
           <td class="<%= gamemode.toLowerCase() %>"><%= gamemode %></td>
-          <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %></a></td>
+          <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %><% if (s.password) { %><svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 18" aria-hidden="true" class="lock"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 2.25A3.75 3.75 0 0 1 13.25 6v1.5c.58.01.93.06 1.23.2.35.18.64.47.82.82.2.4.2.93.2 1.98v2.25c0 1.05 0 1.57-.2 1.98-.18.35-.47.64-.82.82-.4.2-.93.2-1.98.2h-6c-1.05 0-1.58 0-1.98-.2a1.87 1.87 0 0 1-.82-.82c-.2-.4-.2-.93-.2-1.98V10.5c0-1.05 0-1.57.2-1.98.18-.35.47-.64.82-.82.3-.14.65-.19 1.23-.2V6A3.75 3.75 0 0 1 9.5 2.25ZM11.75 6v1.5h-4.5V6a2.25 2.25 0 1 1 4.5 0Z" fill="currentColor"></path></svg><% } %></a></td>
           <td><%= s.map %></td>
           <td data-sort="<%= playerScore %>">
-            <%= s.players %>/<%= s.maxplayers %>
-            <% if (hasBots) { %> <span class="b"><%= s.bots %></span><% } %>
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="me-1.5 size-5 text-green-400"><path d="M11.5 8A1.5 1.5 0 0 1 13 9.5v.5c0 2-1.9 4-5 4s-5-2-5-4v-.5A1.5 1.5 0 0 1 4.5 8zM8 1.5A2.7 2.7 0 1 1 8 7a2.7 2.7 0 0 1 0-5.5" fill="currentColor"></path></svg>
+            <i><%= (s.players - s.bots) %></i> <% if (hasBots) { %><span class="b">+<%= s.bots %></span><% } %>
           </td>
           <td><%= s.dbg.country_name %></td>
         </tr>

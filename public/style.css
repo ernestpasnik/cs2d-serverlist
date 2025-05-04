@@ -212,7 +212,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   text-wrap: nowrap;
   cursor: pointer;
   user-select: none;
-  font-size: .875em;
+  font-size: 12.6px;
 }
 #addr:hover {
   color: rgb(247, 158, 202);
@@ -255,11 +255,15 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   gap: .25rem;
   color: rgba(255, 255, 255, 0.75);
   border: 1px solid rgba(115, 130, 140, .1);
-  font-size: .9rem;
 }
 .bar>div>span:first-child {
   color: #ddd;
   font-weight: 500;
+  font-size: 13.2px;
+}
+.bar>div>span:nth-child(2),
+.bar>div>a {
+  font-size: 12.6px;
 }
 #ts {
   display: inline-block;
@@ -331,6 +335,10 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   display: flex;
   align-items: center;
 }
+#p > svg {
+  width: .9rem;
+  height: .9rem;
+}
 #p {
   justify-content: center;
   align-items: center;
@@ -350,9 +358,6 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 }
 tr:hover>td:nth-child(4)>span{
   color: rgb(236, 236, 32);
-}
-.e>td:nth-child(4)>span {
-  color: rgb(194, 194, 26);
 }
 i {
   font-style: initial;
@@ -647,10 +652,10 @@ button:disabled {
   margin-bottom: .5rem;
 }
 .err {
-  color: #e14f4f;
+  color: #bb5d5d;
 }
 .msg {
-  color: #3adf45;
+  color: #49a258;
 }
 
 .enbl {
@@ -794,7 +799,6 @@ button:disabled {
   }
   div.bar > div {
     flex: 1 0 40%;
-    font-size: .8rem;
   }
   .endpoint:nth-child(2) {
     margin-top: 0;

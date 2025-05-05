@@ -85,13 +85,27 @@ p, li {
   font-size: .875rem;
   line-height: 1.6;
 }
-.dl{
-  font-weight: 600;
-}
 .note {
-  font-size: .8rem;
+  font-size: .85rem;
   font-style: italic;
+  color: #a2a6ae;
   line-height: 1.5;
+}
+.info {
+  background-color: rgba(18, 202, 147, 0.05);
+  border: 1px solid rgba(152, 255, 153, 0.1);
+  padding: 1rem 1rem .75rem 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+.info > p {
+  color: rgb(132, 223, 137);
+}
+.info > p > a {
+  color: rgb(112, 224, 36);
+}
+.info > p > a:hover {
+  color: rgb(152, 248, 88);
 }
 code {
   padding: 2px 4px;
@@ -531,8 +545,11 @@ i {
 .enabled {
   display: initial;
 }
-span, p, .stat-item > span, li {
+span, .stat-item > span {
   color: #bbc6ce;
+}
+p, li {
+  color: #c6d0d7;
 }
 .sortable thead th:not(.no-sort) {
   cursor: pointer;

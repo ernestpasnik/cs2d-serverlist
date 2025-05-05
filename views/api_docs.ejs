@@ -5,6 +5,9 @@
 </div>
 
 <p>Access CS2D server details and upload the leaderboard. Free, unlimited, with CORS access.</p>
+<div class="info">
+  <p>If you'd like to share server's leaderboard, place the <a href="/upload_leaderboard.lua">📄 upload_leaderboard.lua (1.34 kB)</a> in the <code>sys/lua/autorun</code> folder. The script will upload the leaderboard when no players are in-game (<code>os.execute</code> temporarily freezes the server).</p>
+</div>
 
 <div class="details-api">
   <div class="endpoint">
@@ -26,6 +29,5 @@
       <li><strong><code>sort</code></strong> (optional): Sorting preference</li>      
     </ul>
     <p class="note"><strong>Note:</strong> The <code>-4</code> flag forces <code>curl</code> to use IPv4, which this endpoint uses to correctly identify the server.</p>
-    <p>Place the <a href="/upload_leaderboard.lua" class="dl">📄 upload_leaderboard.lua (1.34 kB)</a> in the <code>sys/lua/autorun</code> folder to automate the process. It uploads when no players are in-game (<code>os.execute</code> freeze the server) and the <code>userstats.dat</code> file has changed since the last request.</p>
   </div>
 </div>

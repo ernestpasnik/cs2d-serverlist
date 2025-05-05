@@ -5,14 +5,11 @@ const Redis = require('ioredis')
 const redis = new Redis({})
 
 const getFromCache = async (key) => {
-  console.log(`getFromCache ${key}`)
   const cachedValue = await redis.get(key)
-  console.log(cachedValue)
   return cachedValue ? JSON.parse(cachedValue) : null
 }
 
 const setToCache = async (key, value) => {
-  console.log(`setToCache ${key} ${value}`)
   await redis.set(key, JSON.stringify(value), 'EX', 3600)
 }
 

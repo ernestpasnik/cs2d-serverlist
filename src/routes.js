@@ -27,9 +27,7 @@ function routes(fastify) {
 
   fastify.get('/details/:address', async (req, reply) => {
     const result = sockets.getServer(req.params.address, true)
-    if (!result) {
-      return err404(req, reply)
-    }
+    if (!result) return err404(req, reply)
     return reply.view('details', {
       title: escapeQuotes(result.name),
       description: `View active CS2D server details for ${escapeQuotes(result.name)} including map, player count, bots, and region. Quickly access stats and performance data.`,
@@ -43,9 +41,7 @@ function routes(fastify) {
 
   fastify.get('/leaderboard/:address', async (req, reply) => {
     const result = leaderboard.getLeaderboard(req.params.address)
-    if (!result) {
-      return err404(req, reply)
-    }
+    if (!result) return err404(req, reply)
     return reply.view('leaderboard', {
       title: escapeQuotes(result.name),
       description: `Browse the top-performing CS2D players for ${escapeQuotes(result.name)} based on server stats, including rankings, scores, and player achievements.`,
@@ -85,7 +81,7 @@ function routes(fastify) {
   
     const dcRes = await webhooks.addWebhook(url, servers)
     return reply.send(dcRes)
-  })  
+  })
 
   fastify.get('/stats', async (req, reply) => {
     const servers = sockets.getRecentServers()

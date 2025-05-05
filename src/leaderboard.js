@@ -1,8 +1,10 @@
+const Redis = require('ioredis')
 const streams = require('./streams')
 const { getUnixTimestamp } = require('./utils')
-const leaderboards = {}
 
-function parse(serverName, addr, sort, buf) {
+const redis = new Redis()
+
+async function parse(serverName, addr, sort, buf) {
   const d = new streams(buf, buf.length)
   const header = d.readLine()
   if (header !== 'userstats steam') {
@@ -61,25 +63,33 @@ function parse(serverName, addr, sort, buf) {
         return aScore - bScore
       })
       break
-    default:
-      break
   }
 
-  leaderboards[addr] = {
+  const leaderboard = {
     ts: getUnixTimestamp(),
     name: serverName,
     players: players.slice(0, 100),
     usgnUsers,
     steamUsers
   }
+
+  await redis.set(`leaderboard:${addr}`, JSON.stringify(leaderboard))
 }
 
-function getLeaderboard(addr) {
-  return leaderboards[addr] || false
+async function getLeaderboard(addr) {
+  const json = await redis.get(`leaderboard:${addr}`)
+  return json ? JSON.parse(json) : false
 }
 
-function getLeaderboards() {
-  return leaderboards
+async function getLeaderboards() {
+  const keys = await redis.keys('leaderboard:*')
+  if (!keys.length) return {}
+
+  const values = await redis.mget(...keys)
+  return keys.reduce((acc, key, i) => {
+    acc[key.replace('leaderboard:', '')] = JSON.parse(values[i])
+    return acc
+  }, {})
 }
 
 module.exports = {

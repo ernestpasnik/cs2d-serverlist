@@ -1,6 +1,8 @@
 *, *::before, *::after {
   box-sizing: border-box;
   scrollbar-width: thin;
+}
+body, input, button {
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-variation-settings: normal;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
@@ -221,7 +223,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 .api {
   white-space: nowrap;
   color: #c9d1d9;
-  padding: .84375rem;
+  padding: .85rem;
   line-height: 1.5;
   display: block;
   background-color: rgba(115, 130, 140, .05);
@@ -231,6 +233,8 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   word-wrap: normal;
   overflow: auto;
   word-break: normal;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+  
 }
 .curl {
   color: rgb(255, 203, 107);

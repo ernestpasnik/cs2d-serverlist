@@ -1,27 +1,27 @@
-const $ = s => document.querySelector(s)
+const $ = s => document.querySelector(s);
 
 const update = async url => {
   try {
-    $('#loader').style.display = 'inline-block'
-    $('#ts').style.opacity = 0.5
+    $('#loader').style.display = 'inline-block';
+    $('#ts').style.opacity = 0.5;
 
-    const response = await fetch(url)
-    if (!response.ok) throw new Error('Failed to fetch data')
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Failed to fetch data');
 
-    const data = await response.json()
-    updateUI(data)
+    const data = await response.json();
+    updateUI(data);
   } catch (err) {
-    console.error(err)
+    console.error(err);
   } finally {
     setTimeout(() => {
-      $('#loader').style.display = 'none'
-      $('#ts').style.opacity = 1
-    }, 500)
+      $('#loader').style.display = 'none';
+      $('#ts').style.opacity = 1;
+    }, 500);
   }
-}
+};
 
 const timeAgo = ts => {
-  const s = Math.floor(Date.now() / 1000) - ts
+  const s = Math.floor(Date.now() / 1000) - ts;
   const units = [
     ['year', 31536000],
     ['month', 2592000],
@@ -29,20 +29,20 @@ const timeAgo = ts => {
     ['hour', 3600],
     ['minute', 60],
     ['second', 1]
-  ]
+  ];
 
   for (const [name, sec] of units) {
-    const value = Math.floor(s / sec)
-    if (value) return `${value} ${name}${value > 1 ? 's' : ''} ago`
+    const value = Math.floor(s / sec);
+    if (value) return `${value} ${name}${value > 1 ? 's' : ''} ago`;
   }
-  return 'just now'
-}
+  return 'just now';
+};
 
 const updateUI = d => {
-  document.title = `${d.players}/${d.maxplayers} ${d.name} · CS2D Server List`
-  $('#ts').textContent = timeAgo(d.ts)
-  $('#name').textContent = d.name
-  $('#map').textContent = d.map
+  document.title = `${d.players}/${d.maxplayers} ${d.name} · CS2D Server List`;
+  $('#ts').textContent = timeAgo(d.ts);
+  $('#name').textContent = d.name;
+  $('#map').textContent = d.map;
 
   const p = document.getElementById('p');
   if (d.players - d.bots > 0) {
@@ -56,147 +56,148 @@ const updateUI = d => {
     </svg>
     <i>${d.players - d.bots}</i>${d.bots > 0 ? `<span class="b">+${d.bots}</span>` : ''}/${d.maxplayers}
   `;
-    
-  const gm = $('.flag-gm')
-  const gmCodes = ['s', 'd', 't', 'c', 'z']
-  const gmNames = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!']
-  const code = gmCodes[d.gamemode]
-  gm.className = `flag-gm ${code}`
-  gm.textContent = code.toUpperCase()
 
-  const gmCell = $('#gamemode')
-  gmCell.textContent = gmNames[d.gamemode]
-  gmCell.className = code
-  const flags = ['password', 'usgnonly', 'lua', 'fow', 'friendlyfire', 'forcelight', 'recoil', 'offscreendamage', 'hasdownloads']
+  const gm = $('.flag-gm');
+  const gmCodes = ['s', 'd', 't', 'c', 'z'];
+  const gmNames = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'];
+  const code = gmCodes[d.gamemode];
+  gm.className = `flag-gm ${code}`;
+  gm.textContent = code.toUpperCase();
+
+  const gmCell = $('#gamemode');
+  gmCell.textContent = gmNames[d.gamemode];
+  gmCell.className = code;
+
+  const flags = ['password', 'usgnonly', 'lua', 'fow', 'friendlyfire', 'forcelight', 'recoil', 'offscreendamage', 'hasdownloads'];
   flags.forEach(key => {
-    const flagEl = $(`.flag.${key}`)
-    if (flagEl) flagEl.classList.toggle('enabled', !!d[key])
-    const detailEl = $(`.vlue.${key}`)
+    const flagEl = $(`.flag.${key}`);
+    if (flagEl) flagEl.classList.toggle('enabled', !!d[key]);
+    const detailEl = $(`.vlue.${key}`);
     if (detailEl) {
-      detailEl.textContent = d[key] ? 'Enabled' : 'Disabled'
-      detailEl.className = `vlue ${key} ${d[key] ? 'enbl' : 'dsbl'}`
+      detailEl.textContent = d[key] ? 'Enabled' : 'Disabled';
+      detailEl.className = `vlue ${key} ${d[key] ? 'enbl' : 'dsbl'}`;
     }
-  })
-  
-  const [t, ct] = [$('#t'), $('#ct')]
-  t.innerHTML = ct.innerHTML = ''
+  });
+
+  const [t, ct] = [$('#t'), $('#ct')];
+  t.innerHTML = ct.innerHTML = '';
 
   d.playerlist.forEach(p => {
     if (p.team > 0) {
-      const row = document.createElement('tr')
-      row.innerHTML = `<td>${p.name}</td><td>${p.score}</td><td>${p.deaths}</td>`
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${p.name}</td><td>${p.score}</td><td>${p.deaths}</td>`;
       if (p.team == 1) {
-        t.appendChild(row)
+        t.appendChild(row);
       } else {
-        ct.appendChild(row)
+        ct.appendChild(row);
       }
     }
-  })
+  });
 
-  const spectators = d.playerlist.filter(p => p.team === 0)
+  const spectators = d.playerlist.filter(p => p.team === 0);
   $('.spec').textContent = spectators.length
     ? `Spectators: ${spectators.map(p => p.name).join(', ')}`
-    : ''
-}
+    : '';
+};
 
-const addr = $('#addr')
+const addr = $('#addr');
 if (addr) {
-  const el = $('#ts')
-  const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10)
-  const timeNow = Math.floor(Date.now() / 1000)
-  const timeSinceLastUpdate = timeNow - lastTimeUpdatedTs
-  const remainder = timeSinceLastUpdate % 10
-  const timeToNextUpdate = (remainder === 0 ? 0 : 10 - remainder) + 1
-  const url = `/api/${addr.textContent}`
+  const el = $('#ts');
+  const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10);
+  const timeNow = Math.floor(Date.now() / 1000);
+  const timeSinceLastUpdate = timeNow - lastTimeUpdatedTs;
+  const remainder = timeSinceLastUpdate % 10;
+  const timeToNextUpdate = (remainder === 0 ? 0 : 10 - remainder) + 1;
+  const url = `/api/${addr.textContent}`;
 
   setTimeout(() => {
-    update(url)
-    setInterval(() => update(url), 10 * 1000)
-  }, timeToNextUpdate * 1000)
+    update(url);
+    setInterval(() => update(url), 10 * 1000);
+  }, timeToNextUpdate * 1000);
 
-  let clicked = false
+  let clicked = false;
   addr.addEventListener('click', () => {
-    if (clicked) return
-    const originalText = addr.textContent
+    if (clicked) return;
+    const originalText = addr.textContent;
     navigator.clipboard.writeText(originalText).then(() => {
-      addr.textContent = 'Copied to clipboard'
-      clicked = true
+      addr.textContent = 'Copied to clipboard';
+      clicked = true;
       setTimeout(() => {
-        addr.textContent = originalText
-        clicked = false
-      }, 2000)
-    })
-  })
+        addr.textContent = originalText;
+        clicked = false;
+      }, 2000);
+    });
+  });
 }
 
 document.querySelectorAll('.svlst tbody > tr').forEach(row =>
   row.addEventListener('click', () => {
-    const link = row.querySelector('a')?.href
-    if (link) window.location.href = link
+    const link = row.querySelector('a')?.href;
+    if (link) window.location.href = link;
   })
-)
+);
 
-const serverForm = document.getElementById('server-form')
+const serverForm = document.getElementById('server-form');
 if (serverForm) {
   serverForm.addEventListener('submit', async function(event) {
-    event.preventDefault()
+    event.preventDefault();
 
-    const formData = new FormData(this)
-    const selectedServers = []
+    const formData = new FormData(this);
+    const selectedServers = [];
     formData.forEach((value, key) => {
       if (key === 'servers') {
-        selectedServers.push(value)
+        selectedServers.push(value);
       }
-    })
+    });
 
-    const url = formData.get('url')
+    const url = formData.get('url');
     const data = {
       servers: selectedServers,
       url: url
-    }
+    };
 
-    const submitButton = serverForm.querySelector('button[type="submit"]')
-    submitButton.disabled = true
+    const submitButton = serverForm.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
 
     try {
       const response = await fetch('/webhooks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-      })
+      });
 
-      const result = await response.json()
-      const alertContainer = document.getElementsByClassName('alert-container')[0]
-      alertContainer.innerHTML = ''
+      const result = await response.json();
+      const alertContainer = document.getElementsByClassName('alert-container')[0];
+      alertContainer.innerHTML = '';
 
       if (result.error) {
-        const errorDiv = document.createElement('div')
-        errorDiv.classList.add('alert', 'err')
-        errorDiv.textContent = result.error
-        alertContainer.appendChild(errorDiv)
+        const errorDiv = document.createElement('div');
+        errorDiv.classList.add('alert', 'err');
+        errorDiv.textContent = result.error;
+        alertContainer.appendChild(errorDiv);
       }
 
       if (result.msg) {
-        const msgDiv = document.createElement('div')
-        msgDiv.classList.add('alert', 'msg')
-        msgDiv.textContent = result.msg
-        alertContainer.appendChild(msgDiv)
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('alert', 'msg');
+        msgDiv.textContent = result.msg;
+        alertContainer.appendChild(msgDiv);
       }
     } catch (error) {
-      const alertContainer = document.getElementsByClassName('alert-container')[0]
-      alertContainer.innerHTML = ''
-      const errorDiv = document.createElement('div')
-      errorDiv.classList.add('alert', 'err')
-      errorDiv.textContent = 'An error occurred while submitting the form.'
-      alertContainer.appendChild(errorDiv)
+      const alertContainer = document.getElementsByClassName('alert-container')[0];
+      alertContainer.innerHTML = '';
+      const errorDiv = document.createElement('div');
+      errorDiv.classList.add('alert', 'err');
+      errorDiv.textContent = 'An error occurred while submitting the form.';
+      alertContainer.appendChild(errorDiv);
     } finally {
       setTimeout(() => {
-        submitButton.disabled = false
-      }, 1000)
+        submitButton.disabled = false;
+      }, 1000);
     }
-  })
+  });
 }
 
 MicroModal.init({
-  disableScroll: true,
-})
+  disableScroll: true
+});

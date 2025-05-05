@@ -9,7 +9,8 @@ async function parse(serverName, addr, sort, buf) {
   const d = new streams(buf, buf.length)
   const header = d.readLine()
   if (header !== 'userstats steam') {
-    throw new Error("Invalid header: expected 'userstats steam'")
+    console.log(`Invalid file upload attempt from ${addr}`)
+    return
   }
 
   let usgnUsers = 0

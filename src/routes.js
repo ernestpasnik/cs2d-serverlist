@@ -68,17 +68,17 @@ function routes(fastify) {
     const { url = '', servers = [] } = req.body
     if (!Array.isArray(servers)) servers = typeof servers === 'string' ? [servers] : []
     if (servers.length === 0) return reply.send({ error: 'No servers selected.' })
-    
+
     const ipPortRegex = /^(\d{1,3}\.){3}\d{1,3}:\d{1,5}$/
     if (servers.some(server => typeof server !== 'string' || !ipPortRegex.test(server))) {
       return reply.send({ error: 'Invalid server address provided.' })
     }
-  
+
     const discordWebhookRegex = /^https:\/\/discord\.com\/api\/webhooks\/\d{18,20}\/[A-Za-z0-9_-]{68}$/
     if (typeof url !== 'string' || !discordWebhookRegex.test(url)) {
       return reply.send({ error: 'Invalid webhook URL.' })
     }
-  
+
     const dcRes = await webhooks.addWebhook(url, servers)
     return reply.send(dcRes)
   })
@@ -122,14 +122,21 @@ function routes(fastify) {
   })
 
   fastify.post('/api/upload', async (req, reply) => {
-    let fileBuffer = null
+    let buff = null
     let port = null
     let sort = 1
     const parts = req.parts()
 
+    let uploadTime = 0
+    let fileSize = 0
+
     for await (const part of parts) {
       if (part.type === 'file' && part.fieldname === 'file') {
-        fileBuffer = await part.toBuffer()
+        const uploadStart = Date.now()
+        buff = await part.toBuffer()
+        const uploadEnd = Date.now()
+        uploadTime = uploadEnd - uploadStart
+        fileSize = buff.length
       } else if (part.type === 'field') {
         if (part.fieldname === 'port') {
           port = Number(part.value)
@@ -140,24 +147,25 @@ function routes(fastify) {
       }
     }
 
-    if (!port) {
-      return reply.code(500).send({ error: 'Port is required' })
-    }
+    if (!port) return reply.code(500).send({ error: 'Port is required' })
 
     const addr = `${req.ip}:${port}`
     const result = sockets.getServer(addr)
+    if (!result) return reply.code(500).send({ error: 'No valid servers found' })
 
-    if (!result) {
-      return reply.code(500).send({ error: 'No valid servers found' })
+    leaderboard.parse(result.name, addr, sort, buff)
+
+    let humanSize
+    if (fileSize >= 1024 * 1024) {
+      humanSize = (fileSize / (1024 * 1024)).toFixed(1) + ' MB'
+    } else {
+      humanSize = (fileSize / 1024).toFixed(1) + ' KB'
     }
 
-    try {
-      leaderboard.parse(result.name, addr, sort, fileBuffer)
-    } catch (err) {
-      return reply.code(500).send({ error: err.message })
-    }
-
-    return reply.send({ error: false })
+    return reply.send({
+      error: false,
+      message: `Uploaded ${humanSize} in ${uploadTime} ms`
+    })
   })
 
   fastify.setNotFoundHandler(async (req, reply) => {

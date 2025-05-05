@@ -25,7 +25,7 @@
   <div class="endpoint">
     <h2>Endpoint: Upload Leaderboard</h2>
     <p>The leaderboard is uploaded as a <code>userstats.dat</code> file, which contains player stats. Ensure that the correct port number of the hosted server is included in the request.</p>
-    <code class="api"><span class="curl">curl</span> -4 -X POST <span class="str">"https://cs2d.pp.ua/api/upload"</span> -F <span class="str">"file=@sys/stats/userstats.dat"</span> -F <span class="str">"port=36963"</span></code>
+    <code class="api"><span class="curl">curl</span> -4 <span class="str">"https://cs2d.pp.ua/api/upload"</span> -F <span class="str">"file=@sys/stats/userstats.dat"</span> -F <span class="str">"port=36963"</span></code>
     <ul>
       <li><strong><code>file</code></strong> (required): Path to the <code>userstats.dat</code> file containing player statistics.</li>
       <li><strong><code>port</code></strong> (required): The port number on which the CS2D server is running.</li>

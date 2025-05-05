@@ -34,13 +34,13 @@ function routes(fastify) {
       keywords: `CS2D, ${escapeQuotes(result.name)}, server stats, map, player count, bots, region, server performance`,
       url: req.url,
       s: result,
-      l: leaderboard.getLeaderboard(req.params.address),
+      l: await leaderboard.getLeaderboard(req.params.address),
       timeAgo
     })
   })
 
   fastify.get('/leaderboard/:address', async (req, reply) => {
-    const result = leaderboard.getLeaderboard(req.params.address)
+    const result = await leaderboard.getLeaderboard(req.params.address)
     if (!result) return err404(req, reply)
     return reply.view('leaderboard', {
       title: escapeQuotes(result.name),

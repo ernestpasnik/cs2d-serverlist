@@ -85,7 +85,7 @@ function routes(fastify) {
 
   fastify.get('/stats', async (req, reply) => {
     const servers = sockets.getRecentServers()
-    const leaderboards = leaderboard.getLeaderboards()
+    const leaderboards = await leaderboard.getLeaderboards()
     return reply.view('stats', {
       title: 'Statistics',
       description: 'Explore CS2D statistics: active players, server count, game modes, regions, and the most popular maps in a detailed breakdown.',

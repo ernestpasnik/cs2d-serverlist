@@ -789,10 +789,38 @@ button:disabled {
 
 
 
-
-
-
-
+/* LEADERBOARD */
+.leaderboard > tbody > tr > td:nth-child(1) {
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+.leaderboard > tbody > tr > td:not(:nth-child(1)) {
+  padding: .475rem .3rem;
+}
+.leaderboard > tbody > tr > td:nth-child(7) {
+  color: #ffdf36;
+}
+.leaderboard > thead > tr > th:nth-child(6),
+.leaderboard > tbody > tr > td:nth-child(6) {
+  color: #ff503e;
+}
+.leaderboard > thead > tr > th:nth-child(5),
+.leaderboard > tbody > tr > td:nth-child(5) {
+  color: #ffa736;
+}
+.leaderboard > thead > tr > th:nth-child(4),
+.leaderboard > tbody > tr > td:nth-child(4) {
+  color: #27c449;
+}
+.leaderboard > tbody > tr > td:nth-child(1),
+.leaderboard > thead > tr > th:nth-child(3),
+.leaderboard > tbody > tr > td:nth-child(3),
+.leaderboard > tbody > tr > td:nth-child(8) {
+  color: #ccc;
+}
+.medal {
+  font-size: .8rem;
+}
 
 
 

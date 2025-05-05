@@ -85,6 +85,13 @@ p, li {
   font-size: .9rem;
   line-height: 1.5;
 }
+P > code {
+  padding: 2px 4px;
+  font-size: 90%;
+  background-color: rgba(181, 113, 113, 0.2);
+  color: rgb(230, 133, 181);
+  border-radius: 4px;
+}
 label {
   margin-bottom: .5rem;
   display: block;
@@ -184,6 +191,7 @@ td>a {
   color: rgb(171 171 171 / 1);
 }
 .endpoint {
+  width: 50%;
   overflow: auto;
   margin-top: 1.5rem;
 }

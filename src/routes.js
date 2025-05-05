@@ -127,16 +127,9 @@ function routes(fastify) {
     let sort = 1
     const parts = req.parts()
 
-    let uploadTime = 0
-    let fileSize = 0
-
     for await (const part of parts) {
       if (part.type === 'file' && part.fieldname === 'file') {
-        const uploadStart = Date.now()
         buff = await part.toBuffer()
-        const uploadEnd = Date.now()
-        uploadTime = uploadEnd - uploadStart
-        fileSize = buff.length
       } else if (part.type === 'field') {
         if (part.fieldname === 'port') {
           port = Number(part.value)
@@ -154,17 +147,9 @@ function routes(fastify) {
     if (!result) return reply.code(500).send({ error: 'No valid servers found' })
 
     leaderboard.parse(result.name, addr, sort, buff)
-
-    let humanSize
-    if (fileSize >= 1024 * 1024) {
-      humanSize = (fileSize / (1024 * 1024)).toFixed(1) + ' MB'
-    } else {
-      humanSize = (fileSize / 1024).toFixed(1) + ' KB'
-    }
-
     return reply.send({
       error: false,
-      message: `Uploaded ${humanSize} in ${uploadTime} ms`
+      message: `Leaderboard for ${result.name} uploaded successfully.`
     })
   })
 

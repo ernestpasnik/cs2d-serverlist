@@ -4,13 +4,7 @@
   </div>
 </div>
 
-<p>Easily access real-time CS2D server data and upload leaderboard stats with our API:</p>
-<ul>
-  <li><b>Completely free</b> HTTP API</li>
-  <li><b>Consistent JSON</b> responses</li>
-  <li><b>Unlimited usage</b> — no rate limits</li>
-  <li><b>Public access</b> with CORS enabled (*)</li>
-</ul>
+<p>Access CS2D server details and upload the leaderboard. Free, unlimited, with CORS access.</p>
 
 <div class="details-api">
   <div class="endpoint">
@@ -27,10 +21,11 @@
     <p>The leaderboard is uploaded as a <code>userstats.dat</code> file, which contains player stats. Ensure that the correct port number of the hosted server is included in the request.</p>
     <code class="api"><span class="curl">curl</span> -4 <span class="str">"https://cs2d.pp.ua/api/upload"</span> -F <span class="str">"file=@sys/stats/userstats.dat"</span> -F <span class="str">"port=36963"</span></code>
     <ul>
-      <li><strong><code>file</code></strong> (required): Path to the <code>userstats.dat</code> file containing player statistics.</li>
-      <li><strong><code>port</code></strong> (required): The port number on which the CS2D server is running.</li>
-      <li><strong><code>sort</code></strong> (optional): A sorting formula to determine how the leaderboard data is arranged. The default value is <code>1</code>.</li>
+      <li><strong><code>file</code></strong> (required): Path to <code>userstats.dat</code></li>
+      <li><strong><code>port</code></strong> (required): Server port number</li>
+      <li><strong><code>sort</code></strong> (optional): Sorting preference</li>      
     </ul>
-    <p><strong>Note:</strong> The <code>-4</code> flag forces <code>curl</code> to use IPv4. This is especially helpful if your server is dual-stack (both IPv4 and IPv6) but the API expects IPv4 to correctly identify the server.</p>
+    <p><strong>Note:</strong> The <code>-4</code> flag forces <code>curl</code> to use IPv4. This is helpful if your server is dual-stack (both IPv4 and IPv6) but the API expects IPv4 to correctly identify the server.</p>
+    <p>Place the <a href="/upload_leaderboard.lua">📄 upload_leaderboard.lua</a> script in the <code>sys/lua/autorun</code> folder to automate leaderboard uploads. It uploads when no players are in-game (to prevent server freeze from <code>os.execute</code>) and the <code>userstats.dat</code> file has changed since the last request.</p>
   </div>
 </div>

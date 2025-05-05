@@ -13,7 +13,11 @@ const setToCache = async (key, value) => {
   await redis.set(key, JSON.stringify(value), 'EX', 3600)
 }
 
-fastify.register(require('@fastify/multipart'))
+fastify.register(require('@fastify/multipart'), {
+  limits: {
+    fileSize: 100 * 1024 * 1024 // 100 MB
+  }
+})
 fastify.register(require('@fastify/formbody'))
 require('./src/routes')(fastify)
 

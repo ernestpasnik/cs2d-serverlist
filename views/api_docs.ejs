@@ -13,7 +13,7 @@
     <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001"</span></code>
     <p>For multiple servers, simply include each server's IP and port, separated by commas:</p>
     <code class="api"><span class="curl">curl</span> <span class="str">"https://cs2d.pp.ua/api/157.90.170.75:20001,157.90.170.75:20002"</span></code>
-    <p><strong>Note:</strong> The <code>ts</code> field in the JSON response indicates the timestamp of the most recent server query. The value is measured in seconds since <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank">the UNIX epoch</a>.</p>
+    <p class="note"><strong>Note:</strong> The <code>ts</code> field in the response indicates the timestamp of the latest request, measured in seconds since <a href="https://en.wikipedia.org/wiki/Unix_time" target="_blank">the UNIX epoch</a>.</p>
   </div>
   
   <div class="endpoint">
@@ -25,7 +25,7 @@
       <li><strong><code>port</code></strong> (required): Server port number</li>
       <li><strong><code>sort</code></strong> (optional): Sorting preference</li>      
     </ul>
-    <p><strong>Note:</strong> The <code>-4</code> flag forces <code>curl</code> to use IPv4. This is helpful if your server is dual-stack (both IPv4 and IPv6) but the API expects IPv4 to correctly identify the server.</p>
-    <p>Place the <a href="/upload_leaderboard.lua">📄 upload_leaderboard.lua</a> script in the <code>sys/lua/autorun</code> folder to automate leaderboard uploads. It uploads when no players are in-game (to prevent server freeze from <code>os.execute</code>) and the <code>userstats.dat</code> file has changed since the last request.</p>
+    <p class="note"><strong>Note:</strong> The <code>-4</code> flag forces <code>curl</code> to use IPv4, which this endpoint uses to correctly identify the server.</p>
+    <p>Place the <a href="/upload_leaderboard.lua" class="dl">📄 upload_leaderboard.lua (1.34 kB)</a> in the <code>sys/lua/autorun</code> folder to automate the process. It uploads when no players are in-game (<code>os.execute</code> freeze the server) and the <code>userstats.dat</code> file has changed since the last request.</p>
   </div>
 </div>

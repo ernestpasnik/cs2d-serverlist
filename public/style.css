@@ -82,10 +82,18 @@ label, button, input, .alert {
   font-size: .9rem;
 }
 p, li {
-  font-size: .9rem;
+  font-size: .875rem;
+  line-height: 1.6;
+}
+.dl{
+  font-weight: 600;
+}
+.note {
+  font-size: .8rem;
+  font-style: italic;
   line-height: 1.5;
 }
-P > code {
+code {
   padding: 2px 4px;
   font-size: 90%;
   background-color: rgba(181, 113, 113, 0.2);

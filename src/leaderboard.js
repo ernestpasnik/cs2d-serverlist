@@ -1,6 +1,7 @@
 const Redis = require('ioredis')
 const streams = require('./streams')
 const { getUnixTimestamp } = require('./utils')
+const { JSONParse, JSONStringify } = require('json-with-bigint')
 
 const redis = new Redis()
 
@@ -14,6 +15,7 @@ async function parse(serverName, addr, sort, buf) {
   let usgnUsers = 0
   let steamUsers = 0
   const players = []
+
   while (true) {
     const name = d.readLine()
     if (!name.trim()) break
@@ -37,31 +39,19 @@ async function parse(serverName, addr, sort, buf) {
       deaths,
       assists,
       mvps,
-      time,
+      time
     })
   }
 
   switch (sort) {
     case 0:
-      players.sort((a, b) => {
-        const aScore = -(a.score + a.kills - a.deaths)
-        const bScore = -(b.score + b.kills - b.deaths)
-        return aScore - bScore
-      })
+      players.sort((a, b) => (a.score + a.kills - a.deaths) - (b.score + b.kills - b.deaths))
       break
     case 1:
-      players.sort((a, b) => {
-        const aScore = -(a.assists + a.kills - a.deaths)
-        const bScore = -(b.assists + b.kills - b.deaths)
-        return aScore - bScore
-      })
+      players.sort((a, b) => (a.assists + a.kills - a.deaths) - (b.assists + b.kills - b.deaths))
       break
     case 2:
-      players.sort((a, b) => {
-        const aScore = -(a.score + a.assists + a.deaths)
-        const bScore = -(b.score + b.assists + b.deaths)
-        return aScore - bScore
-      })
+      players.sort((a, b) => (a.score + a.assists + a.deaths) - (b.score + b.assists + b.deaths))
       break
   }
 
@@ -73,12 +63,12 @@ async function parse(serverName, addr, sort, buf) {
     steamUsers
   }
 
-  await redis.set(`leaderboard:${addr}`, JSON.stringify(leaderboard))
+  await redis.set(`leaderboard:${addr}`, JSONStringify(leaderboard))
 }
 
 async function getLeaderboard(addr) {
   const json = await redis.get(`leaderboard:${addr}`)
-  return json ? JSON.parse(json) : false
+  return json ? JSONParse(json) : false
 }
 
 async function getLeaderboards() {
@@ -87,7 +77,7 @@ async function getLeaderboards() {
 
   const values = await redis.mget(...keys)
   return keys.reduce((acc, key, i) => {
-    acc[key.replace('leaderboard:', '')] = JSON.parse(values[i])
+    acc[key.replace('leaderboard:', '')] = JSONParse(values[i])
     return acc
   }, {})
 }

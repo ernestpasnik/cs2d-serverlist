@@ -86,10 +86,11 @@ p, li {
   line-height: 1.6;
 }
 .note {
-  font-size: .85rem;
+  font-size: .8rem;
   font-style: italic;
   color: #a2a6ae;
   line-height: 1.5;
+  margin-top: .75rem;
 }
 .info {
   background-color: rgba(18, 202, 147, 0.05);

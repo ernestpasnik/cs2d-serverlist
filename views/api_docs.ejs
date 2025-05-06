@@ -26,7 +26,13 @@
     <ul>
       <li><strong><code>file</code></strong> (required): Path to <code>userstats.dat</code></li>
       <li><strong><code>port</code></strong> (required): Server port number</li>
-      <li><strong><code>sort</code></strong> (optional): Sorting preference</li>      
+      <li><strong><code>sort</code></strong> (optional): Formula used to sort users:</li>
+      <ul>
+        <li><code>0</code> – Sort by <code>score + kills - deaths</code></li>
+        <li><code>1</code> – Sort by <code>assists + kills - deaths</code> (default)</li>
+        <li><code>2</code> – Sort by <code>score + assists + deaths</code></li>
+      </ul>
+          
     </ul>
     <p class="note"><strong>Note:</strong> The <code>-4</code> flag forces <code>curl</code> to use IPv4, which this endpoint uses to correctly identify the server.</p>
   </div>

@@ -48,13 +48,13 @@ async function parse(serverName, addr, sort, buf) {
 
   switch (sort) {
     case 0:
-      players.sort((a, b) => (a.score + a.kills - a.deaths) - (b.score + b.kills - b.deaths))
+      players.sort((a, b) => (b.score + b.kills - b.deaths) - (a.score + a.kills - a.deaths))
       break
     case 1:
-      players.sort((a, b) => (a.assists + a.kills - a.deaths) - (b.assists + b.kills - b.deaths))
+      players.sort((a, b) => (b.assists + b.kills - b.deaths) - (a.assists + a.kills - a.deaths))
       break
     case 2:
-      players.sort((a, b) => (a.score + a.assists + a.deaths) - (b.score + a.assists + a.deaths))
+      players.sort((a, b) => (b.score + b.assists + b.deaths) - (a.score + a.assists + a.deaths))
       break
   }
 

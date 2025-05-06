@@ -11,7 +11,7 @@ async function parse(serverName, addr, sort, buf) {
   const d = new streams(buf, buf.length)
   const header = d.readLine()
   if (header !== 'userstats steam') {
-    console.log(`Invalid file upload attempt from ${addr}`)
+    console.log(`[${addr}] Invalid file upload attempt`)
     throw new Error('Invalid file')
   }
 
@@ -69,10 +69,9 @@ async function parse(serverName, addr, sort, buf) {
   await redis.set(`leaderboard:${addr}`, JSONStringify(leaderboard))
 
   const endTime = performance.now()
-  const duration = (endTime - startTime).toFixed(2)
-  console.log(`Leaderboard '${serverName}' parsed in ${duration} ms`)
-
-  return { serverName, duration }
+  const duration = Math.round(endTime - startTime)
+  console.log(`[${addr}] Leaderboard parsed in ${duration} ms`)
+  return duration
 }
 
 async function getLeaderboard(addr) {

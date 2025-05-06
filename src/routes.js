@@ -147,8 +147,8 @@ function routes(fastify) {
     if (!result) return reply.code(500).send({ error: 'No valid servers found' })
 
     try {
-      const { serverName, duration } = await leaderboard.parse(result.name, addr, sort, buff)
-      return reply.send(`Leaderboard '${serverName}' parsed in ${duration} ms`)
+      const duration = await leaderboard.parse(result.name, addr, sort, buff)
+      return reply.send(`Leaderboard parsed in ${duration} ms`)
     } catch (error) {
       return reply.code(500).send({ error: error.message })
     }

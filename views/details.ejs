@@ -36,10 +36,10 @@
       <div class="emoji"><%= s.dbg.emoji_flag || '🏳️' %></div>
     </div>
   </div>
-  <div>
+  <a href="#" id="copy-link">
     <span>Address</span>
     <span id="addr"><%= s.ip %>:<%= s.port %></span>
-  </div>
+  </a>  
   <% if (l != false) { %>
   <a href="/leaderboard/<%= s.ip %>:<%= s.port %>">
     <span>Leaderboard</span>

@@ -249,7 +249,11 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   user-select: none;
   font-size: 12.6px;
 }
-#addr:hover {
+.bar > a:hover {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.04);
+}
+#copy-link:hover > #addr {
   color: rgb(247, 158, 202);
 }
 .api {
@@ -510,11 +514,21 @@ i {
 .z {
   color: rgb(37, 226, 37) !important;
 }
+.emoji, .flag, .flag-gm {
+  opacity: .85;
+}
 #cvars {
   cursor: pointer;
 }
+#cvars:hover {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.04);
+}
 #cvars:hover > span {
   color: #fff;
+}
+#cvars:hover > div > * {
+  opacity: 1;
 }
 .flags {
   display: flex;
@@ -528,7 +542,7 @@ i {
   height: 10px;
   background-image: url("gui_server.bmp");
   background-color: #14202c;
-  background-blend-mode: screen;
+  background-blend-mode: lighten;
   display: none;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
@@ -884,7 +898,7 @@ button:disabled {
     flex-wrap: wrap;
     justify-content: space-between;
   }
-  div.bar > div {
+  div.bar > div, div.bar > a  {
     flex: 1 0 40%;
   }
   .endpoint:nth-child(2) {

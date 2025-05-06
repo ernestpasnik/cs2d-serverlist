@@ -102,9 +102,11 @@ const updateUI = d => {
     : '';
 };
 
+const copyLink = $('#copy-link');
 const addr = $('#addr');
-if (addr) {
-  const el = $('#ts');
+
+if (copyLink && addr) {
+  const el = document.getElementById('ts');
   const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10);
   const timeNow = Math.floor(Date.now() / 1000);
   const timeSinceLastUpdate = timeNow - lastTimeUpdatedTs;
@@ -118,8 +120,10 @@ if (addr) {
   }, timeToNextUpdate * 1000);
 
   let clicked = false;
-  addr.addEventListener('click', () => {
+  copyLink.addEventListener('click', (e) => {
+    e.preventDefault();
     if (clicked) return;
+
     const originalText = addr.textContent;
     navigator.clipboard.writeText(originalText).then(() => {
       addr.textContent = 'Copied to clipboard';
@@ -138,6 +142,7 @@ document.querySelectorAll('.svlst tbody > tr').forEach(row =>
     if (link) window.location.href = link;
   })
 );
+
 
 const serverForm = document.getElementById('server-form');
 if (serverForm) {

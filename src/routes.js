@@ -8,8 +8,8 @@ sockets.initialize()
 function err404(req, reply) {
   return reply.status(404).view('404', {
     title: '404 Not Found',
-    description: 'The page you\'re looking for doesn\'t exist.',
-    keywords: '404, page not found',
+    description: null,
+    keywords: null,
     url: req.url
   })
 }

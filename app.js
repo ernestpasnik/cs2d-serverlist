@@ -14,7 +14,8 @@ const setToCache = async (key, value) => {
 
 fastify.register(require('@fastify/multipart'), {
   limits: {
-    fileSize: 100 * 1024 * 1024 // 100 MB
+    fileSize: 1048576,  // 1 MB in bytes
+    files: 1,           // Max number of file fields
   }
 })
 fastify.register(require('@fastify/formbody'))

@@ -100,13 +100,14 @@ p, li {
   margin: 1rem 0;
 }
 .info > p {
-  color: rgb(132, 223, 137);
+  color: rgb(111, 209, 116);
 }
 .info > p > a {
-  color: rgb(112, 224, 36);
+  color: rgb(178, 236, 141);
+  font-weight: 600;
 }
 .info > p > a:hover {
-  color: rgb(152, 248, 88);
+  color: rgb(219, 255, 195);
 }
 code {
   padding: 2px 4px;

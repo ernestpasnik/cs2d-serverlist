@@ -129,6 +129,12 @@ function routes(fastify) {
 
     for await (const part of parts) {
       if (part.type === 'file' && part.fieldname === 'file') {
+        // Check if the file has a .dat extension
+        const filename = part.filename
+        const fileExtension = filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
+        if (fileExtension.toLowerCase() !== 'dat') {
+          return reply.code(400).send({ error: 'Invalid file type. Only .dat files are allowed.' })
+        }
         buff = await part.toBuffer()
       } else if (part.type === 'field') {
         if (part.fieldname === 'port') {

@@ -58,6 +58,7 @@ async function parse(serverName, addr, sort, buf) {
 
   const leaderboard = {
     ts: getUnixTimestamp(),
+    sortMode: sort,
     name: serverName,
     players: players.slice(0, 100),
     usgnUsers,

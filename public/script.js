@@ -2,6 +2,7 @@ const $ = s => document.querySelector(s);
 
 const update = async url => {
   try {
+    $('#timer').style.display = 'none';
     $('#loader').style.display = 'inline-block';
     $('#ts').style.opacity = 0.5;
 
@@ -16,6 +17,7 @@ const update = async url => {
     setTimeout(() => {
       $('#loader').style.display = 'none';
       $('#ts').style.opacity = 1;
+      $('#timer').style.display = 'inline-block';
     }, 500);
   }
 };

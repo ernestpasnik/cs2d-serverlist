@@ -2,11 +2,29 @@
   <div>
     <h1><%= r.name %></h1>
   </div>
+  <div id="timeAgo">
+    <span id="ts"><%= timeAgo(r.ts) %></span>
+    <div id="timer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+      </svg>
+    </div>
+  </div>
 </div>
 
-<% const total = r.usgnUsers + r.steamUsers %>
+<%
+const total = r.usgnUsers + r.steamUsers
+const sortLabels = [
+  'Sort: score+kills-deaths',
+  'Sort: assists+kills-deaths',
+  'Sort: score+assists+deaths'
+]
+%>
 <div class="bar">
-  <div><span>Updated</span><span><%= timeAgo(r.ts) %></span></div>
+  <div>
+    <span>Sorting Method</span>
+    <span><%= sortLabels[r.sortMode] || 'Unknown' %></span>  
+  </div>
   <div>
     <span>USGN Users</span>
     <span><%= r.usgnUsers %> (<%= total ? ((r.usgnUsers / total) * 100).toFixed(1) : 0 %>%)</span>

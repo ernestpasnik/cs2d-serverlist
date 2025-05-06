@@ -306,6 +306,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 .bar>div>span:nth-child(2),
 .bar>a>span {
   font-size: 12.6px;
+  overflow: clip;
 }
 .bar>a:hover>span {
   color: #fff;

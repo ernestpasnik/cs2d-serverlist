@@ -1,7 +1,6 @@
 const https = require('node:https')
-const Redis = require('ioredis')
+const redis = require('./utils/redis')
 const sockets = require('./sockets')
-const redis = new Redis()
 
 let webhooks = []
 

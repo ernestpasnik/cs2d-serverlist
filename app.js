@@ -1,8 +1,7 @@
 require('dotenv').config()
-const { getMTimeUnix } = require('./src/utils')
+const redis = require('./src/utils/redis')
+const { getMTimeUnix } = require('./src/utils/utils')
 const fastify = require('fastify')({ trustProxy: true })
-const Redis = require('ioredis')
-const redis = new Redis()
 
 const getFromCache = async (key) => {
   const cachedValue = await redis.get(key)

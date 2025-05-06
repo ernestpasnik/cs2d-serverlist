@@ -4,13 +4,14 @@ A Node.js app that displays the scoreboard, server details, and other real-time 
 Currently hosted at: [cs2d.pp.ua](https://cs2d.pp.ua)
 
 ## ENV Configuration
-Create a `.env` file in the project root with the following content:
-```env
-PORT=3000
-NODE_ENV=production
-IPINFO_APIKEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
-> You can get the IPINFO_APIKEY by creating a free account at [ipinfo.io](https://ipinfo.io)
+Below are the environment variables used to configure the application, along with their default values if not explicitly set in the .env file.
+| **Variable**    | **Description**                                         | **Default Value**        |
+| --------------- | ------------------------------------------------------- | ------------------------ |
+| `HOST`          | Address to bind the server to                           | `0.0.0.0`                |
+| `PORT`          | Port for the server to listen on                        | `3000`                   |
+| `REDIS_URL`     | URL for connecting to the Redis server                  | `redis://127.0.0.1:6379` |
+| `NODE_ENV`      | Defines the application environment                     | `development`            |
+| `IPINFO_APIKEY` | [API key for IP geolocation service](https://ipinfo.io) | *Not set*                |
 
 ## NGINX Configuration
 If you are using NGINX as a reverse proxy, you should add the following:

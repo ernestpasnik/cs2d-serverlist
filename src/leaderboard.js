@@ -1,9 +1,7 @@
-const Redis = require('ioredis')
-const streams = require('./streams')
-const { getUnixTimestamp } = require('./utils')
+const redis = require('./utils/redis')
+const streams = require('./utils/streams')
+const { getUnixTimestamp } = require('./utils/utils')
 const { JSONParse, JSONStringify } = require('json-with-bigint')
-
-const redis = new Redis()
 
 async function parse(serverName, addr, sort, buf) {
   const startTime = performance.now()

@@ -2,7 +2,7 @@ const sockets = require('./sockets')
 const leaderboard = require('./leaderboard')
 const webhooks = require('./webhooks')
 const stats = require('./stats')
-const { escapeQuotes, formatTime, timeAgo } = require('./utils')
+const { escapeQuotes, formatTime, timeAgo } = require('./utils/utils')
 sockets.initialize()
 
 function err404(req, reply) {

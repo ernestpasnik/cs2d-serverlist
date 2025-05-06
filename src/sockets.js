@@ -2,8 +2,8 @@ const dgram = require('node:dgram')
 const { IPinfoWrapper } = require('node-ipinfo')
 const received = require('./received')
 const stats = require('./stats')
-const { getUnixTimestamp } = require('./utils')
-const ipinfoWrapper = new IPinfoWrapper(process.env.IPINFO_APIKEY)
+const { getUnixTimestamp } = require('./utils/utils')
+const ipinfoWrapper = process.env.IPINFO_APIKEY ? new IPinfoWrapper(process.env.IPINFO_APIKEY) : null
 const servers = {}
 const req = {
   serverlist: Buffer.from([1, 0, 20, 1]),
@@ -33,8 +33,9 @@ async function addServer(ipPort) {
     servers[ipPort].dbg.recvBytes += rinfo.size
     servers[ipPort] = { ...servers[ipPort], ...recv }
 
-    // Skip ip lookup if country_name exists
-    if (servers[ipPort].dbg.country_name) return
+    // Skip IP lookup if country_name exists or if IPinfoWrapper is not available
+    if (servers[ipPort].dbg.country_name || !ipinfoWrapper) return
+
     ipinfoWrapper.lookupIp(ip).then((ipInfo) => {
       if (servers[ipPort] && servers[ipPort].dbg) {
         servers[ipPort].dbg = {

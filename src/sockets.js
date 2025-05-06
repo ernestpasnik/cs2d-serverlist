@@ -1,9 +1,11 @@
 const dgram = require('node:dgram')
-const { IPinfoWrapper } = require('node-ipinfo')
 const received = require('./received')
 const stats = require('./stats')
 const { getUnixTimestamp } = require('./utils/utils')
-const ipinfoWrapper = process.env.IPINFO_APIKEY ? new IPinfoWrapper(process.env.IPINFO_APIKEY) : null
+const { IPinfoWrapper } = require('node-ipinfo')
+const RedisCache = require('./utils/ipinfoRedisCache')
+const cache = new RedisCache(24 * 60 * 60 * 1000) // 7 days
+const ipinfoWrapper = process.env.IPINFO_APIKEY ? new IPinfoWrapper(process.env.IPINFO_APIKEY, cache) : null
 const servers = {}
 const req = {
   serverlist: Buffer.from([1, 0, 20, 1]),

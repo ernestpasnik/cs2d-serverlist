@@ -6,11 +6,13 @@ const { JSONParse, JSONStringify } = require('json-with-bigint')
 const redis = new Redis()
 
 async function parse(serverName, addr, sort, buf) {
+  const startTime = performance.now()
+
   const d = new streams(buf, buf.length)
   const header = d.readLine()
   if (header !== 'userstats steam') {
     console.log(`Invalid file upload attempt from ${addr}`)
-    return
+    throw new Error('Invalid file')
   }
 
   let usgnUsers = 0
@@ -52,7 +54,7 @@ async function parse(serverName, addr, sort, buf) {
       players.sort((a, b) => (a.assists + a.kills - a.deaths) - (b.assists + b.kills - b.deaths))
       break
     case 2:
-      players.sort((a, b) => (a.score + a.assists + a.deaths) - (b.score + b.assists + b.deaths))
+      players.sort((a, b) => (a.score + a.assists + a.deaths) - (b.score + a.assists + a.deaths))
       break
   }
 
@@ -65,6 +67,12 @@ async function parse(serverName, addr, sort, buf) {
   }
 
   await redis.set(`leaderboard:${addr}`, JSONStringify(leaderboard))
+
+  const endTime = performance.now()
+  const duration = (endTime - startTime).toFixed(2)
+  console.log(`Leaderboard '${serverName}' parsed in ${duration} ms`)
+
+  return { serverName, duration }
 }
 
 async function getLeaderboard(addr) {

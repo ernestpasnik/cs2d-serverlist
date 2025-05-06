@@ -797,6 +797,7 @@ button:disabled {
 .leaderboard > tbody > tr > td:not(:nth-child(1)) {
   padding: .475rem .3rem;
 }
+.leaderboard > thead > tr > th:nth-child(7),
 .leaderboard > tbody > tr > td:nth-child(7) {
   color: #ffdf36;
 }

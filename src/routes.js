@@ -148,7 +148,7 @@ function routes(fastify) {
 
     try {
       const duration = await leaderboard.parse(result.name, addr, sort, buff)
-      return reply.send(`Leaderboard parsed in ${duration} ms`)
+      return reply.send({ error: false, message: `Leaderboard parsed in ${duration} ms` })
     } catch (error) {
       return reply.code(500).send({ error: error.message })
     }

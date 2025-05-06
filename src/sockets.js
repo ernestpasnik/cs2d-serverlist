@@ -89,7 +89,7 @@ async function initialize() {
     usgn.send(req.serverlist, 36963, '81.169.236.243')
   }, 300000)
 
-  // Remove servers with no response or inactive for over a minute
+  // Cleanup servers every minute if unresponsive for 2+ minutes
   setInterval(cleanupServers, 60000)
 }
 
@@ -118,7 +118,7 @@ function getRecentServers() {
 }
 
 function cleanupServers() {
-  const oneMinuteAgo = getUnixTimestamp() - 60
+  const oneMinuteAgo = getUnixTimestamp() - 120
   for (const ipPort in servers) {
     if (!servers[ipPort].ts || servers[ipPort].ts < oneMinuteAgo) {
       if (servers[ipPort].client) {

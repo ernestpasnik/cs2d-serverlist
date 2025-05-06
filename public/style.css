@@ -104,7 +104,7 @@ p, li {
 }
 .info > p > a {
   color: rgb(178, 236, 141);
-  font-weight: 600;
+  font-weight: 500;
 }
 .info > p > a:hover {
   color: rgb(219, 255, 195);
@@ -112,7 +112,7 @@ p, li {
 code {
   padding: 2px 4px;
   font-size: 90%;
-  background-color: rgba(181, 113, 113, 0.2);
+  background-color: rgba(255, 96, 238, 0.05);
   color: rgb(230, 133, 181);
   border-radius: 4px;
 }
@@ -297,6 +297,8 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   gap: .25rem;
   color: rgba(255, 255, 255, 0.75);
   border: 1px solid rgba(115, 130, 140, .1);
+  width: 50%;
+  overflow: hidden;
 }
 .bar>div>span:first-child,
 .bar>a>span:first-child {
@@ -525,6 +527,9 @@ i {
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.04);
 }
+#cvars:hover > div > .flag {
+  background-color: #202c33;
+}
 #cvars:hover > span {
   color: #fff;
 }
@@ -542,7 +547,7 @@ i {
   width: 10px;
   height: 10px;
   background-image: url("gui_server.bmp");
-  background-color: #14202c;
+  background-color: #1c2831;
   background-blend-mode: lighten;
   display: none;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
@@ -669,7 +674,7 @@ button {
   color: #ddd;
   border: 1px solid rgba(255, 255, 255, 0.1);
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 500;
   font-size: .8rem;
   min-width: 125px;
   margin-top: .25rem;
@@ -763,7 +768,7 @@ button:disabled {
   background-color: rgb(27, 38, 45);
   border-radius:  .375rem;
   padding: 1rem .75rem;
-  max-width: 600px;
+  max-width: 900px;
   max-height: 100vh;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -932,7 +937,7 @@ button:disabled {
     white-space: wrap;
   }
   .modal__container.details > .table-sm > tbody > tr > td{
-    max-width: 100px;
+    max-width: 100%;
     text-overflow: ellipsis;
     text-wrap: nowrap;
   }

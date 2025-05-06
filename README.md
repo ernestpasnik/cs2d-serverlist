@@ -13,22 +13,9 @@ Below are the environment variables used to configure the application, along wit
 | `NODE_ENV`      | Defines the application environment                     | `development`            |
 | `IPINFO_APIKEY` | [API key for IP geolocation service](https://ipinfo.io) | *Not set*                |
 
-## NGINX Configuration
-If you are using NGINX as a reverse proxy, you should add the following:
-- Block bots from accessing `/api/` by serving a custom `robots.txt`
-- Enable CORS for API requests
-```conf
-location = /robots.txt {
-    default_type text/plain;
-    return 200 "User-agent: *\nDisallow: /api/\n";
-}
+## Nginx Configuration
 
-location ~ ^/api/.*$ {
-    proxy_pass http://127.0.0.1:3000;
-    add_header Access-Control-Allow-Origin *;
-    add_header Access-Control-Allow-Methods 'GET';
-}
-```
+Example Nginx configurations are available in the [`config/nginx`](config/nginx) directory. These templates cover a range of common use cases, such as Cloudflare proxy settings, SSL configurations, and more. You can easily modify them to suit your specific requirements.
 
 ## License
 This project is licensed under the [MIT License](LICENSE).

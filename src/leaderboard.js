@@ -60,7 +60,7 @@ async function parse(serverName, addr, sort, buf) {
     ts: getUnixTimestamp(),
     sortMode: sort,
     name: serverName,
-    players: players.slice(0, 100),
+    players,
     usgnUsers,
     steamUsers
   }
@@ -79,14 +79,17 @@ async function getLeaderboard(addr) {
 }
 
 async function getLeaderboards() {
-  const keys = await redis.keys('leaderboard:*')
-  if (!keys.length) return {}
+  const keys = await redis.keys('leaderboard:*');
+  if (!keys.length) return {};
 
-  const values = await redis.mget(...keys)
+  const values = await redis.mget(...keys);
   return keys.reduce((acc, key, i) => {
-    acc[key.replace('leaderboard:', '')] = JSONParse(values[i])
-    return acc
-  }, {})
+    const parsed = JSONParse(values[i]);
+    acc[key.replace('leaderboard:', '')] = Array.isArray(parsed)
+      ? parsed.slice(0, 100)
+      : parsed;
+    return acc;
+  }, {});
 }
 
 module.exports = {

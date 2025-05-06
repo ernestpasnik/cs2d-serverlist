@@ -1,6 +1,6 @@
 const sockets = require('./sockets')
 const leaderboard = require('./leaderboard')
-const webhooks = require('./webhooks')
+const tools = require('./tools')
 const stats = require('./stats')
 const { escapeQuotes, formatTime, timeAgo } = require('./utils/utils')
 sockets.initialize()
@@ -8,8 +8,6 @@ sockets.initialize()
 function err404(req, reply) {
   return reply.status(404).view('404', {
     title: '404 Not Found',
-    description: null,
-    keywords: null,
     url: req.url
   })
 }
@@ -31,7 +29,6 @@ function routes(fastify) {
     return reply.view('details', {
       title: escapeQuotes(result.name),
       description: `View active CS2D server details for ${escapeQuotes(result.name)} including map, player count, bots, and region. Quickly access stats and performance data.`,
-      keywords: `CS2D, ${escapeQuotes(result.name)}, server stats, map, player count, bots, region, server performance`,
       url: req.url,
       s: result,
       l: await leaderboard.getLeaderboard(req.params.address),
@@ -45,7 +42,6 @@ function routes(fastify) {
     return reply.view('leaderboard', {
       title: escapeQuotes(result.name),
       description: `Browse the top-performing CS2D players for ${escapeQuotes(result.name)} based on server stats, including rankings, scores, and player achievements.`,
-      keywords: `CS2D, ${escapeQuotes(result.name)}, leaderboard, top players, rankings, scores, player achievements`,
       url: req.url,
       r: result,
       addr: req.params.address,
@@ -54,17 +50,17 @@ function routes(fastify) {
     })
   })
 
-  fastify.get('/webhooks', async (req, reply) => {
-    return reply.view('webhooks.ejs', {
-      title: 'Webhooks',
+  fastify.get('/tools', async (req, reply) => {
+    return reply.view('tools.ejs', {
+      title: 'Tools',
       description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
-      keywords: 'CS2D, webhooks, Discord, server updates, server notifications, webhook URL',
+      keywords: 'CS2D, Tools, Discord, server updates, server notifications, webhook URL',
       url: req.url,
       srv: sockets.getRecentServers()
     })
   })
 
-  fastify.post('/webhooks', async (req, reply) => {
+  fastify.post('/tools', async (req, reply) => {
     const { url = '', servers = [] } = req.body
     if (!Array.isArray(servers)) servers = typeof servers === 'string' ? [servers] : []
     if (servers.length === 0) return reply.send({ error: 'No servers selected.' })
@@ -79,7 +75,7 @@ function routes(fastify) {
       return reply.send({ error: 'Invalid webhook URL.' })
     }
 
-    const dcRes = await webhooks.addWebhook(url, servers)
+    const dcRes = await tools.addWebhook(url, servers)
     return reply.send(dcRes)
   })
 

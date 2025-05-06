@@ -38,6 +38,7 @@ fastify.register(require('@fastify/view'), {
   root: 'views',
   layout: 'layout.ejs',
   defaultContext: {
+    description: null, keywords: null,
     style: getMTimeUnix('public/style.css'),
     script: getMTimeUnix('public/script.js')
   },

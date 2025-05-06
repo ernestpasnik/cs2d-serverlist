@@ -41,23 +41,20 @@ footer {
   margin-bottom: 5rem;
   display: flex;
   flex-wrap: wrap;
-  gap: .25rem;
+  gap: 1.5rem;
   justify-content: center;
 }
 form {
   margin: 2rem auto;
   width: 50%;
 }
-footer>span {
-  text-align: center;
-  display: block;
-  width: 100%;
+footer>a {
   font-size: .85rem;
 }
-footer>span>a {
-  color: #c9d1d9;
+footer>a {
+  color: #afbcca;
 }
-footer>span>a:hover {
+footer>a:hover {
   color: #fff;
 }
 h1,h2 {
@@ -95,7 +92,7 @@ p, li {
 .info {
   background-color: rgba(18, 202, 147, 0.05);
   border: 1px solid rgba(152, 255, 153, 0.1);
-  padding: 1rem 1rem .75rem 1rem;
+  padding: 1rem 1rem .5rem 1rem;
   border-radius: 4px;
   margin: 1rem 0;
 }

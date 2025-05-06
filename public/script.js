@@ -167,7 +167,7 @@ if (serverForm) {
     submitButton.disabled = true;
 
     try {
-      const response = await fetch('/webhooks', {
+      const response = await fetch('/tools', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)

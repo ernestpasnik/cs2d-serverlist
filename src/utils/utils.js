@@ -14,20 +14,8 @@ function getMTimeUnix(filepath) {
 }
 
 function formatTime(s) {
-  const days = Math.floor(s / 86400)
-  const hours = Math.floor((s % 86400) / 3600)
-  const minutes = Math.floor((s % 3600) / 60)
-  const seconds = s % 60
-
-  if (days > 0) {
-    return `${days} d`
-  } else if (hours > 0) {
-    return `${hours} h`
-  } else if (minutes > 0) {
-    return `${minutes} min`
-  } else {
-    return `${seconds} s`
-  }
+  const hours = s / 3600
+  return `${hours.toFixed(1)} h`
 }
 
 function timeAgo(ts) {

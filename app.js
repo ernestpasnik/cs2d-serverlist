@@ -44,6 +44,37 @@ fastify.register(require('@fastify/view'), {
   },
 })
 
+const gracefulShutdown = async (signal) => {
+  if (isShuttingDown) return
+  isShuttingDown = true
+
+  console.info(`${signal} received`)
+
+  const timeout = setTimeout(() => {
+    console.warn('Forcefully shutting down after 10 seconds')
+    process.exit(1)
+  }, 10000)
+
+  timeout.unref()
+
+  try {
+    await fastify.close()
+    console.log('Closed out remaining connections')
+
+    await redis.quit()
+    console.log('Redis connection closed')
+  } catch (err) {
+    console.error('Error while shutting down:', err)
+  }
+
+  clearTimeout(timeout)
+  process.exit(0)
+}
+
+let isShuttingDown = false
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))
+process.on('SIGINT', () => gracefulShutdown('SIGINT'))
+
 fastify.listen({
   host: process.env.HOST || '0.0.0.0',
   port: process.env.PORT || 3000

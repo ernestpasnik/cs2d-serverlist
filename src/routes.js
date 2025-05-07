@@ -54,7 +54,7 @@ function routes(fastify) {
 
   fastify.get('/maps', async (req, reply) => {
     return reply.view('maps.ejs', {
-      title: 'Tools',
+      title: 'Maps',
       url: req.url
     })
   })

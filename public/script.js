@@ -41,7 +41,7 @@ const timeAgo = ts => {
 };
 
 const updateUI = d => {
-  document.title = `${d.players}/${d.maxplayers} ${d.name} · CS2D Server List`;
+  document.title = `${d.players}/${d.maxplayers} ${d.name} - CS2D Server List`;
   $('#ts').textContent = timeAgo(d.ts);
   $('#name').textContent = d.name;
   $('#map').textContent = d.map;

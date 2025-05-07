@@ -85,9 +85,7 @@ async function getLeaderboards() {
   const values = await redis.mget(...keys);
   return keys.reduce((acc, key, i) => {
     const parsed = JSONParse(values[i]);
-    acc[key.replace('leaderboard:', '')] = Array.isArray(parsed)
-      ? parsed.slice(0, 100)
-      : parsed;
+    acc[key.replace('leaderboard:', '')] = parsed; // no slice
     return acc;
   }, {});
 }

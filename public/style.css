@@ -200,10 +200,6 @@ td {
   width: 90px;
   text-align: right;
 }
-.modal__container.details > .table-sm > tbody > tr > td:nth-child(2) {
-  width: auto;
-  min-width: auto;
-}
 .modal__container.details > .table-sm > tbody > tr {
   background-color: transparent;
 }
@@ -848,12 +844,26 @@ button:disabled {
 .leaderboard > tbody > tr > td:nth-child(4) {
   color: #27c449;
 }
-.leaderboard > tbody > tr > td:nth-child(1),
 .leaderboard > thead > tr > th:nth-child(3),
-.leaderboard > tbody > tr > td:nth-child(3),
-.leaderboard > tbody > tr > td:nth-child(8) {
-  color: #ccc;
+.leaderboard > tbody > tr > td:nth-child(3) {
+  color: #79d276;
 }
+.leaderboard > thead > tr > th:nth-child(8),
+.leaderboard > tbody > tr > td:nth-child(8) {
+  color: #f4ae00;
+}
+.leaderboard > thead > tr > th:nth-child(1),
+.leaderboard > tbody > tr > td:nth-child(1) {
+  color: #bbb;
+}
+
+.leaderboard > thead > tr > th:not(:nth-child(2)) {
+  width: 10%;
+}
+.leaderboard > thead > tr > th:nth-child(1) {
+  width: 1%;
+}
+
 .medal {
   font-size: .8rem;
 }
@@ -911,6 +921,7 @@ button:disabled {
   .details, .stats, .details-api {
     flex-direction: column;
     min-height: auto;
+    flex: 1 auto;
   }
   .details > div, .stats > div, .details-api > div {
     width: 100%;
@@ -933,11 +944,6 @@ button:disabled {
   }
   .modal__container.details > .table-sm {
     white-space: wrap;
-  }
-  .modal__container.details > .table-sm > tbody > tr > td{
-    max-width: 100%;
-    text-overflow: ellipsis;
-    text-wrap: nowrap;
   }
 }
 @media (max-width: 500px) {

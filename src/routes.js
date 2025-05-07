@@ -39,11 +39,13 @@ function routes(fastify) {
   fastify.get('/leaderboard/:address', async (req, reply) => {
     const result = await leaderboard.getLeaderboard(req.params.address)
     if (!result) return err404(req, reply)
+
+    const top100 = {...result, players: result.players.slice(0, 100) }
     return reply.view('leaderboard', {
-      title: escapeQuotes(result.name),
-      description: `Browse the top-performing CS2D players for ${escapeQuotes(result.name)} based on server stats, including rankings, scores, and player achievements.`,
+      title: escapeQuotes(top100.name),
+      description: `Browse the top-performing CS2D players for ${escapeQuotes(top100.name)} based on server stats, including rankings, scores, and player achievements.`,
       url: req.url,
-      r: result,
+      r: top100,
       addr: req.params.address,
       formatTime,
       timeAgo

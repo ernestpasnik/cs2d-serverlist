@@ -106,6 +106,7 @@ const copyLink = $('#copy-link');
 const addr = $('#addr');
 
 if (copyLink && addr) {
+  MicroModal.init({ disableScroll: true });
   const el = document.getElementById('ts');
   const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10);
   const timeNow = Math.floor(Date.now() / 1000);
@@ -205,6 +206,27 @@ if (serverForm) {
   });
 }
 
-MicroModal.init({
-  disableScroll: true
-});
+const searchInput = $('#search');
+if (searchInput) {
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      const searchInput = document.getElementById('search');
+      if (searchInput) searchInput.focus();
+    }
+  });
+  searchInput.addEventListener('input', () => {
+    const search = searchInput.value.toLowerCase();
+    const visibleRows = [];
+    document.querySelectorAll('.svlst tbody > tr').forEach(row => {
+      const text = row.textContent.toLowerCase();
+      const match = text.includes(search);
+      row.style.display = match ? '' : 'none';
+      if (match) visibleRows.push(row);
+    });
+    visibleRows.forEach((row, index) => {
+      row.classList.toggle('odd', index % 2 === 0);
+      row.classList.toggle('even', index % 2 === 1);
+    });
+  });
+}

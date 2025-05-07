@@ -171,8 +171,15 @@ td > a {
 th, td {
   font-size: .9rem;
 }
-tbody>tr:nth-of-type(odd) {
+#t > tr:nth-of-type(odd),
+#ct > tr:nth-of-type(odd) {
   background-color: rgba(115, 130, 140, .03);
+}
+tbody > tr.odd {
+  background-color: rgba(115, 130, 140, .03);
+}
+tbody > tr.even {
+  background-color: transparent;
 }
 th {
   text-align: left;
@@ -659,6 +666,10 @@ input:not([type="checkbox"]), button {
   color: #ddd;
   width: 100%;
   margin-bottom: .5rem;
+}
+
+#search {
+  margin-top: .5rem;
 }
 
 button {

@@ -4,6 +4,8 @@
   </div>
 </div>
 
+<input type="text" id="search" name="search" placeholder="Search" autocomplete="off">
+
 <div class="responsive">
   <table class="svlst sortable asc">
     <thead>
@@ -16,13 +18,13 @@
       </tr>
     </thead>
     <tbody>
-      <% for (const ipPort in srv) { %>
+      <% let i = 0; for (const ipPort in srv) { %>
         <% const s = srv[ipPort] %>
         <% const gamemode = ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %>
         <% const playerScore = (s.players - s.bots) * 100 + s.bots %>
         <% const hasBots = s.bots > 0 %>
-    
-        <tr <% if (s.players - s.bots > 0) { %> class="e" <% } %>>
+        <% const classes = [(i % 2 === 0 ? 'odd' : 'even'), (s.players - s.bots > 0 ? 'e' : '')].filter(Boolean).join(' ') %>
+        <tr class="<%= classes %>">
           <td class="<%= gamemode.toLowerCase() %>"><%= gamemode %></td>
           <td><a href="/details/<%= s.ip %>:<%= s.port %>"><%= s.name %><% if (s.password) { %><svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19 18" aria-hidden="true" class="lock"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.5 2.25A3.75 3.75 0 0 1 13.25 6v1.5c.58.01.93.06 1.23.2.35.18.64.47.82.82.2.4.2.93.2 1.98v2.25c0 1.05 0 1.57-.2 1.98-.18.35-.47.64-.82.82-.4.2-.93.2-1.98.2h-6c-1.05 0-1.58 0-1.98-.2a1.87 1.87 0 0 1-.82-.82c-.2-.4-.2-.93-.2-1.98V10.5c0-1.05 0-1.57.2-1.98.18-.35.47-.64.82-.82.3-.14.65-.19 1.23-.2V6A3.75 3.75 0 0 1 9.5 2.25ZM11.75 6v1.5h-4.5V6a2.25 2.25 0 1 1 4.5 0Z" fill="currentColor"></path></svg><% } %></a></td>
           <td><%= s.map %></td>
@@ -32,6 +34,7 @@
           </td>
           <td><%= s.dbg.country_name || 'N/A' %></td>
         </tr>
+        <% i++ %>
       <% } %>
     </tbody>
     

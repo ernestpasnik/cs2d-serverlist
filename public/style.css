@@ -152,7 +152,7 @@ main {
   border-radius: .375rem;
   padding: 1.5rem;
   box-shadow: 0 26px 58px 0 rgba(0, 0, 0, .22), 0 5px 14px 0 rgba(0, 0, 0, .18);
-  min-height: 50vw;
+  min-height: 100vh;
 }
 table {
   width: 100%;
@@ -171,8 +171,7 @@ td > a {
 th, td {
   font-size: .9rem;
 }
-#t > tr:nth-of-type(odd),
-#ct > tr:nth-of-type(odd) {
+tbody:not(.svlst) > tr:nth-of-type(odd) {
   background-color: rgba(115, 130, 140, .03);
 }
 tbody > tr.odd {
@@ -237,23 +236,15 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   user-select: none;
 }
 #addr {
-  width: 100%;
-  text-align: center;
   color: rgb(230, 133, 181);
-  display: block;
-  margin: 0;
-  overflow: auto;
-  border-radius: .25rem;
-  text-wrap: nowrap;
   cursor: pointer;
   user-select: none;
-  font-size: 12.6px;
 }
 .bar > a:hover {
   border: 1px solid rgba(255, 255, 255, 0.1);
   background-color: rgba(255, 255, 255, 0.04);
 }
-#copy-link:hover > #addr {
+#addr:hover {
   color: rgb(247, 158, 202);
 }
 .api {
@@ -288,27 +279,26 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   display: flex;
   flex-direction: column;
   text-align: center;
-  padding: .4rem .6rem;
-  background-color: rgba(255, 255, 255, 0.025);
-  border-radius: 4px;
+  padding: .45rem .3rem;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 3px;
   width: 100%;
   text-wrap: nowrap;
   justify-content: space-around;
-  gap: .25rem;
+  gap: .2rem;
   color: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(115, 130, 140, .1);
-  width: 50%;
   overflow: hidden;
+  border: 1px solid rgba(170, 169, 169, 0.04);
 }
 .bar>div>span:first-child,
 .bar>a>span:first-child {
-  color: #ddd;
+  color: #d2d2d2;
   font-weight: 500;
-  font-size: 13.2px;
+  font-size: .85rem;
 }
 .bar>div>span:nth-child(2),
 .bar>a>span {
-  font-size: 12.6px;
+  font-size: .8rem;
   overflow: clip;
 }
 .bar>a:hover>span {
@@ -316,8 +306,8 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 }
 #ts {
   display: inline-block;
-  transition: opacity 0.5s ease-in-out;
-  font-size: 13.2px;
+  transition: opacity 1s ease-in-out;
+  font-size: .9rem;
   color: #ddd;
   font-weight: 500;
 }
@@ -325,6 +315,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   display: flex;
   align-self: center;
   gap: .5rem;
+  transition: opacity 1s ease-in-out;
 }
 #name {
   display: inline;
@@ -340,7 +331,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 
 #timer, #loader {
   width: 18px;
-  height: 22px;
+  height: 18px;
 }
 
 @keyframes spin {
@@ -517,47 +508,24 @@ i {
 .z {
   color: rgb(37, 226, 37) !important;
 }
-.emoji, .flag, .flag-gm {
-  opacity: .85;
-}
-#cvars {
-  cursor: pointer;
-  user-select: none;
-}
-#cvars:hover {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: rgba(255, 255, 255, 0.04);
-}
-#cvars:hover > div > .flag {
-  background-color: #202c33;
-}
-#cvars:hover > span {
-  color: #fff;
-}
-#cvars:hover > div > * {
-  opacity: 1;
-}
-.flags {
+.fl {
   display: flex;
   justify-content: center;
-  gap: .25rem;
-  align-items: center;
-  height: 15px;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: 1.25rem;
 }
-.flag {
-  width: 10px;
-  height: 10px;
-  background-image: url("gui_server.bmp");
-  background-color: #1c2831;
-  background-blend-mode: lighten;
-  display: none;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-.flag-gm {
-  font-size: 10px;
-  user-select: none;
-  padding-right: .3rem;
-  color: rgb(227, 229, 230) !important;
+.fl > div {
+  font-size: .7rem;
+  border: 1px solid rgba(115, 130, 140, .1);
+  padding: .3rem .5rem;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.025);
+  flex: 1 10%;
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-wrap: nowrap;
 }
 .password {
   background-position: 0 0;
@@ -742,11 +710,15 @@ button:disabled {
 }
 
 .enbl {
-  color: #5eff68;
+  color: #5eff68b8;
+  border-color: rgba(94, 255, 104, 0.15) !important;
+  background: rgba(49, 81, 51, 0.28) !important;
 }
 
 .dsbl {
-  color: #f55;
+  color: #ff5555d4;
+  border-color: rgba(255, 85, 85, 0.24) !important;
+  background: rgba(74, 35, 35, 0.26) !important;
 }
 
 .vlue {
@@ -886,6 +858,9 @@ button:disabled {
 
 /* MOBILE */
 @media (max-width: 916px) {
+  .fl > div {
+    flex: 1 18%;
+  }
   .svlst>thead>tr>th:nth-child(2), .svlst>tbody>tr>td:nth-child(2) {
     width: 0;
     padding-left: .6rem;
@@ -944,7 +919,7 @@ button:disabled {
   form {
     width: 100%;
   }
-  .emoji, #loader {
+  #loader {
     font-size: .9rem;
   }
   .modal__container {

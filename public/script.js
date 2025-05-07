@@ -4,7 +4,7 @@ const update = async url => {
   try {
     $('#timer').style.display = 'none';
     $('#loader').style.display = 'inline-block';
-    $('#ts').style.opacity = 0.5;
+    $('#timeAgo').style.opacity = 0.5;
 
     const response = await fetch(url);
     if (!response.ok) throw new Error('Failed to fetch data');
@@ -16,7 +16,7 @@ const update = async url => {
   } finally {
     setTimeout(() => {
       $('#loader').style.display = 'none';
-      $('#ts').style.opacity = 1;
+      $('#timeAgo').style.opacity = 1;
       $('#timer').style.display = 'inline-block';
     }, 500);
   }
@@ -59,27 +59,17 @@ const updateUI = d => {
     <i>${d.players - d.bots}</i>${d.bots > 0 ? `<span class="b">+${d.bots}</span>` : ''}/${d.maxplayers}
   `;
 
-  const gm = $('.flag-gm');
-  const gmCodes = ['s', 'd', 't', 'c', 'z'];
+  const gm = $('#gm');
   const gmNames = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'];
-  const code = gmCodes[d.gamemode];
-  gm.className = `flag-gm ${code}`;
-  gm.textContent = code.toUpperCase();
+  gm.textContent = gmNames[d.gamemode];
 
-  const gmCell = $('#gamemode');
-  gmCell.textContent = gmNames[d.gamemode];
-  gmCell.className = code;
-
-  const flags = ['password', 'usgnonly', 'lua', 'fow', 'friendlyfire', 'forcelight', 'recoil', 'offscreendamage', 'hasdownloads'];
+  const flags = ['password', 'usgnonly', 'lua', 'fow', 'friendlyfire', 'forcelight', 'recoil', 'offscreendamage', 'downloads'];
   flags.forEach(key => {
-    const flagEl = $(`.flag.${key}`);
-    if (flagEl) flagEl.classList.toggle('enabled', !!d[key]);
-    const detailEl = $(`.vlue.${key}`);
-    if (detailEl) {
-      detailEl.textContent = d[key] ? 'Enabled' : 'Disabled';
-      detailEl.className = `vlue ${key} ${d[key] ? 'enbl' : 'dsbl'}`;
+    const el = document.querySelector(`[data-flag="${key}"]`);
+    if (el) {
+      el.className = d[key] ? 'enbl' : 'dsbl';
     }
-  });
+  });  
 
   const [t, ct] = [$('#t'), $('#ct')];
   t.innerHTML = ct.innerHTML = '';
@@ -102,10 +92,9 @@ const updateUI = d => {
     : '';
 };
 
-const copyLink = $('#copy-link');
-const addr = $('#addr');
 
-if (copyLink && addr) {
+const addr = $('#addr');
+if (addr) {
   MicroModal.init({ disableScroll: true });
   const el = document.getElementById('ts');
   const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10);
@@ -121,7 +110,7 @@ if (copyLink && addr) {
   }, timeToNextUpdate * 1000);
 
   let clicked = false;
-  copyLink.addEventListener('click', (e) => {
+  addr.addEventListener('click', (e) => {
     e.preventDefault();
     if (clicked) return;
 

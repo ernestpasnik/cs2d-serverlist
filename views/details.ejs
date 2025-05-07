@@ -1,6 +1,6 @@
 <div class="flex">
   <div>
-    <h1 id="name"><%= s.name %></h1>
+    <div class="emoji"><%= s.dbg.emoji_flag || '❓' %></div><h1 id="name"><%= s.name %></h1>
   </div>
   <div id="timeAgo">
     <span id="ts" data-ts="<%= s.ts %>"><%= timeAgo(s.ts) %></span>
@@ -22,30 +22,37 @@
     <span>Map</span>
     <span id="map"><%= s.map %></span>
   </div>
-  <div id="cvars" data-micromodal-trigger="modal-1">
-    <span>Flags</span>
-    <div class="flags">
-      <div class="flag password<% if (s.password) { %> enabled<% } %>"></div>
-      <div class="flag usgnonly<% if (s.usgnonly) { %> enabled<% } %>"></div>
-      <div class="flag fow<% if (s.fow) { %> enabled<% } %>"></div>
-      <div class="flag forcelight<% if (s.forcelight) { %> enabled<% } %>"></div>
-      <div class="flag recoil<% if (s.recoil) { %> enabled<% } %>"></div>
-      <div class="flag offscreendamage<% if (s.offscreendamage) { %> enabled<% } %>"></div>
-      <div class="flag hasdownloads<% if (s.hasdownloads) { %> enabled<% } %>"></div>
-      <div class="flag-gm <%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>"><%= ['S', 'D', 'T', 'C', 'Z'][s.gamemode] || '' %></div>
-      <div class="emoji"><%= s.dbg.emoji_flag || '🏳️' %></div>
-    </div>
+  <div>
+    <span>Game Mode</span>
+    <span id="gm"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] %></span>
   </div>
-  <a href="#" id="copy-link">
+  <div>
     <span>Address</span>
     <span id="addr"><%= s.ip %>:<%= s.port %></span>
-  </a>  
+  </div>
   <% if (l != false) { %>
   <a href="/leaderboard/<%= s.ip %>:<%= s.port %>">
     <span>Leaderboard</span>
     <span>Visit Page</span>
   </a>
+  <% } else { %>
+  <div href="/leaderboard/<%= s.ip %>:<%= s.port %>">
+    <span>Leaderboard</span>
+    <span>Not Available</span>
+  </div>
   <% } %>
+</div>
+
+<div class="fl">
+  <div data-flag="lua" class="<%= s.lua ? 'enbl' : 'dsbl' %>">Lua scripts</div>
+  <div data-flag="downloads" class="<%= s.downloads ? 'enbl' : 'dsbl' %>">Downloads</div>
+  <div data-flag="offscreendamage" class="<%= s.offscreendamage ? 'enbl' : 'dsbl' %>">Off-Scn Dmg</div>
+  <div data-flag="fow" class="<%= s.fow ? 'enbl' : 'dsbl' %>">Fog of War</div>
+  <div data-flag="forcelight" class="<%= s.forcelight ? 'enbl' : 'dsbl' %>">Force Light</div>
+  <div data-flag="friendlyfire" class="<%= s.friendlyfire ? 'enbl' : 'dsbl' %>">Friendly Fire</div>
+  <div data-flag="recoil" class="<%= s.recoil ? 'enbl' : 'dsbl' %>">Dyn Recoil</div>
+  <div data-flag="password" class="<%= s.password ? 'enbl' : 'dsbl' %>">Password</div>
+  <div data-flag="usgnonly" class="<%= s.usgnonly ? 'enbl' : 'dsbl' %>">USGN Only</div>
 </div>
 
 <div class="details">

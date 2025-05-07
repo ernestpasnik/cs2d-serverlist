@@ -103,44 +103,4 @@
     Spectators: <%= s.playerlist.filter(p => p.team == 0).map(p => p.name).join(', ') %>
   <% } %>
 </div>
-<div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
-  <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-    <div class="modal__container details" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
-      
-      <table class="table-sm">
-        <tbody>
-          <tr><td><b>IP Address</b></td><td class="vlue"><%= s.ip %></td></tr>
-          <tr><td><b>Hostname</b></td><td class="vlue"><%= s.dbg.hostname || 'N/A' %></td></tr>
-          <tr><td><b>Location</b></td><td class="vlue"><%= s.dbg.city || 'N/A' %>, <%= s.dbg.country_name || 'N/A' %></td></tr>
-          <tr>
-            <td><b>Provider</b></td>
-            <td class="vlue">
-              <%= (s.dbg.org || 'N/A').split(' ').slice(1).join(' ') || 'N/A' %>
-            </td>
-          </tr>
-          <tr>
-            <td><b>Game Mode</b></td>
-            <td id="gamemode" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] || '' %>">
-              <%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] %>
-            </td>
-          </tr>
-          <tr><td><b>Lua Script</b></td><td class="<%= s.lua ? 'enbl' : 'dsbl' %>"><%= s.lua ? 'Enabled' : 'Disabled' %></td></tr>
-          <tr><td><b>Downloads</b></td><td class="<%= s.hasdownloads ? 'enbl' : 'dsbl' %>"><%= s.hasdownloads ? 'Enabled' : 'Disabled' %></td></tr>
-        </tbody>        
-      </table>
-      <table class="table-sm">
-        <tbody>
-          <tr><td><b>Off-Scn Dmg</b></td><td class="<%= s.offscreendamage ? 'enbl' : 'dsbl' %>"><%= s.offscreendamage ? 'Enabled' : 'Disabled' %></td></tr>
-          <tr><td><b>Fog of War</b></td><td class="<%= s.fow ? 'enbl' : 'dsbl' %>"><%= s.fow ? 'Enabled' : 'Disabled' %></td></tr>
-          <tr><td><b>Force Light</b></td><td class="<%= s.forcelight ? 'enbl' : 'dsbl' %>"><%= s.forcelight ? 'Enabled' : 'Disabled' %></td></tr>
-          <tr><td><b>Friendly Fire</b></td><td class="<%= s.friendlyfire ? 'enbl' : 'dsbl' %>"><%= s.friendlyfire ? 'Enabled' : 'Disabled' %></td></tr>
-          <tr><td><b>Password</b></td><td class="<%= s.password ? 'enbl' : 'dsbl' %>"><%= s.password ? 'Enabled' : 'Disabled' %></td></tr>
-          <tr><td><b>Dyn Recoil</b></td><td class="<%= s.recoil ? 'enbl' : 'dsbl' %>"><%= s.recoil ? 'Enabled' : 'Disabled' %></td></tr>
-          <tr><td><b>USGN Only</b></td><td class="<%= s.usgnonly ? 'enbl' : 'dsbl' %>"><%= s.usgnonly ? 'Enabled' : 'Disabled' %></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
 

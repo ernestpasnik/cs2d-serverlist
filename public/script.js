@@ -95,7 +95,6 @@ const updateUI = d => {
 
 const addr = $('#addr');
 if (addr) {
-  MicroModal.init({ disableScroll: true });
   const el = document.getElementById('ts');
   const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10);
   const timeNow = Math.floor(Date.now() / 1000);

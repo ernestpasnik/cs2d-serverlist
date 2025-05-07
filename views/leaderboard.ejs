@@ -44,8 +44,8 @@ const sortLabels = ['score+kills-deaths', 'assists+kills-deaths', 'score+assists
         <th>Player</th>
         <th><abbr title="Kills per Death">K/D</abbr></th>
         <th><abbr title="Kills">K</abbr></th>
-        <th><abbr title="Assists">A</abbr></th>
         <th><abbr title="Deaths">D</abbr></th>
+        <th><abbr title="Assists">A</abbr></th>
         <th><abbr title="MVPs">⭐</abbr></th>
         <th><abbr title="Time Played">⌛</abbr></th>
       </tr>
@@ -67,8 +67,8 @@ const sortLabels = ['score+kills-deaths', 'assists+kills-deaths', 'score+assists
           <td><a href="<%= profileUrl %>" target="_blank"><%= p.name %></a></td>
           <td><%= kdRatio > 10 ? '10>' : kdRatio %></td>
           <td><%= p.kills %></td>
-          <td><%= p.assists %></td>
           <td><%= p.deaths %></td>
+          <td><%= p.assists %></td>
           <td><%= p.mvps %></td>
           <td data-sort="<%= p.time %>"><%= formatTime(p.time) %></td>
         </tr>

@@ -52,6 +52,13 @@ function routes(fastify) {
     })
   })
 
+  fastify.get('/maps', async (req, reply) => {
+    return reply.view('maps.ejs', {
+      title: 'Tools',
+      url: req.url
+    })
+  })
+
   fastify.get('/tools', async (req, reply) => {
     return reply.view('tools.ejs', {
       title: 'Tools',

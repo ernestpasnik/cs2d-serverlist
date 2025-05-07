@@ -832,13 +832,13 @@ button:disabled {
 .leaderboard > tbody > tr > td:nth-child(7) {
   color: #ffdf36;
 }
-.leaderboard > thead > tr > th:nth-child(6),
-.leaderboard > tbody > tr > td:nth-child(6) {
-  color: #ff503e;
-}
 .leaderboard > thead > tr > th:nth-child(5),
 .leaderboard > tbody > tr > td:nth-child(5) {
-  color: #ffa736;
+  color: #ff503e;
+}
+.leaderboard > thead > tr > th:nth-child(6),
+.leaderboard > tbody > tr > td:nth-child(6) {
+  color: #fff786;
 }
 .leaderboard > thead > tr > th:nth-child(4),
 .leaderboard > tbody > tr > td:nth-child(4) {

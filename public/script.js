@@ -60,8 +60,8 @@ const updateUI = d => {
   `;
 
   const gm = $('#gm');
-  const gmNames = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'];
-  gm.textContent = gmNames[d.gamemode];
+  gm.className = ['s', 'd', 't', 'c', 'z'][d.gamemode];
+  gm.textContent = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][d.gamemode];
 
   const flags = ['password', 'usgnonly', 'lua', 'fow', 'friendlyfire', 'forcelight', 'recoil', 'offscreendamage', 'downloads'];
   flags.forEach(key => {

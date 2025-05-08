@@ -35,16 +35,11 @@
     <span>Leaderboard</span>
     <span>Visit Page</span>
   </a>
-  <% } else { %>
-  <div href="/leaderboard/<%= s.ip %>:<%= s.port %>">
-    <span>Leaderboard</span>
-    <span>Not Available</span>
-  </div>
   <% } %>
 </div>
 
 <div class="fl">
-  <div data-flag="lua" class="<%= s.lua ? 'enbl' : 'dsbl' %>">Lua scripts</div>
+  <div data-flag="lua" class="<%= s.lua ? 'enbl' : 'dsbl' %>">Lua Scripts</div>
   <div data-flag="downloads" class="<%= s.downloads ? 'enbl' : 'dsbl' %>">Downloads</div>
   <div data-flag="offscreendamage" class="<%= s.offscreendamage ? 'enbl' : 'dsbl' %>">Off-Scn Dmg</div>
   <div data-flag="fow" class="<%= s.fow ? 'enbl' : 'dsbl' %>">Fog of War</div>

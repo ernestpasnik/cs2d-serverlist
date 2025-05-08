@@ -279,7 +279,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   display: flex;
   flex-direction: column;
   text-align: center;
-  padding: .45rem .3rem;
+  padding: .5rem;
   background-color: rgba(255, 255, 255, 0.02);
   border-radius: 3px;
   width: 100%;
@@ -294,11 +294,11 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 .bar>a>span:first-child {
   color: #d2d2d2;
   font-weight: 500;
-  font-size: .85rem;
+  font-size: .8rem;
 }
 .bar>div>span:nth-child(2),
 .bar>a>span {
-  font-size: .8rem;
+  font-size: .75rem;
   overflow: clip;
 }
 .bar>a:hover>span {
@@ -314,7 +314,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 #timeAgo {
   display: flex;
   align-self: center;
-  gap: .5rem;
+  gap: .25rem;
   transition: opacity 1s ease-in-out;
 }
 #name {
@@ -419,7 +419,10 @@ i {
   display: flex;
   justify-content: space-between;
   margin-bottom: .5rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow: clip;
+  text-wrap: nowrap;
+  gap: .5rem;
 }
 .flex>div:first-child {
   display: flex;
@@ -839,7 +842,7 @@ button:disabled {
     width: auto;
     padding: 0 0 1.5rem 0;
   }
-  h1,h2 {
+  .emoji,h1,h2 {
     font-size: .95rem;
   }
   nav, nav > a, footer, label, footer>span, .alert {

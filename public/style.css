@@ -184,7 +184,7 @@ th {
   text-align: left;
   font-weight: 500;
   border-bottom: 1px solid rgba(115, 130, 140, .1);
-  padding: .6rem .3rem;
+  padding: .6rem .375rem;
   color: #ddd;
   user-select: none;
 }
@@ -193,7 +193,7 @@ abbr {
   cursor: help;
 }
 td {
-  padding: .6rem .3rem;
+  padding: .6rem .35rem;
   max-width: 165px;
   overflow: clip;
   text-overflow: ellipsis;
@@ -248,20 +248,17 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   color: rgb(247, 158, 202);
 }
 .api {
-  white-space: nowrap;
   color: #c9d1d9;
-  padding: .85rem;
+  padding: 1rem;
   line-height: 1.5;
   display: block;
   background-color: rgba(115, 130, 140, .05);
   font-size: .85rem;
   margin-bottom: .5rem;
   border-radius: 3px;
-  word-wrap: normal;
   overflow: auto;
-  word-break: normal;
+  word-break: break-all;
   font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
-  
 }
 .curl {
   color: rgb(255, 203, 107);
@@ -307,7 +304,6 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
 #ts {
   display: inline-block;
   transition: opacity 1s ease-in-out;
-  font-size: .9rem;
   color: #ddd;
   font-weight: 500;
 }
@@ -316,6 +312,7 @@ thead>tr>th:nth-child(1), tbody>tr>td:nth-child(1) {
   align-self: center;
   gap: .25rem;
   transition: opacity 1s ease-in-out;
+  align-items: end;
 }
 #name {
   display: inline;
@@ -858,7 +855,7 @@ button:disabled {
     padding: 1.5rem 0;
   }
   .flex {
-    font-size: .98rem;
+    font-size: .95rem;
   }
   main {
     padding: 1rem .75rem;

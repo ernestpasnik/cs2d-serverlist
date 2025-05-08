@@ -24,18 +24,18 @@ const update = async url => {
 
 const timeAgo = ts => {
   const s = Math.floor(Date.now() / 1000) - ts;
-  const units = [
-    ['year', 31536000],
-    ['month', 2592000],
-    ['day', 86400],
-    ['hour', 3600],
-    ['minute', 60],
-    ['second', 1]
+  const u = [
+    ['y', 31536000],
+    ['m', 2592000],
+    ['d', 86400],
+    ['h', 3600],
+    ['min', 60],
+    ['s', 1]
   ];
 
-  for (const [name, sec] of units) {
-    const value = Math.floor(s / sec);
-    if (value) return `${value} ${name}${value > 1 ? 's' : ''} ago`;
+  for (const [name, sec] of u) {
+    const v = Math.floor(s / sec);
+    if (v) return `${v} ${name} ago`
   }
   return 'just now';
 };

@@ -35,8 +35,13 @@
     <meta name="twitter:description" content="<%= description %>">
   <% } %>
   <meta name="twitter:image" content="https://cs2d.pp.ua/capsule_main_616x353.jpg">
-</head>  
+</head>
 <body>
+  <% if (!production) { %>
+  <div class="development_mode">
+    <p>🔧 You're in development mode, set <code>process.env.NODE_ENV</code> to <code>'production'</code> before deploying 🚀</p>
+  </div>
+  <% } %>
   <nav>
     <a href="/">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">

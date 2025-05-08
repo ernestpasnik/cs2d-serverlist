@@ -21,7 +21,8 @@ fastify.register(require('@fastify/multipart'), {
 fastify.register(require('@fastify/formbody'))
 require('./src/routes')(fastify)
 
-if (process.env.NODE_ENV === 'production') {
+const production = process.env.NODE_ENV === 'production'
+if (production) {
   fastify.register(require('fastify-minify'), {
     global: true,
     cache: {
@@ -38,6 +39,7 @@ fastify.register(require('@fastify/view'), {
   root: 'views',
   layout: 'layout.ejs',
   defaultContext: {
+    production,
     description: null, keywords: null,
     style: getMTimeUnix('public/style.css'),
     script: getMTimeUnix('public/script.js')

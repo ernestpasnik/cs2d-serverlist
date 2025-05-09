@@ -250,6 +250,24 @@ if (searchInput) {
   });
 }
 
+const headers = document.querySelectorAll('.svlst > thead > tr > th');
+headers.forEach(header => {
+  header.addEventListener('click', () => {
+    setTimeout(() => {
+      let visibleRows = [];
+      document.querySelectorAll('.svlst tbody > tr').forEach(row => {
+        if (row.style.display !== 'none') {
+          visibleRows.push(row);
+        }
+      });
+      visibleRows.forEach((row, index) => {
+        row.classList.toggle('odd', index % 2 === 0);
+        row.classList.toggle('even', index % 2 === 1);
+      });
+    }, 5);
+  });
+});
+
 tippy('[data-tippy-content]', {
   allowHTML: true,
   theme: 'translucent'

@@ -208,7 +208,7 @@ td {
   font-size: .9rem;
 }
 
-tbody:not(.svlst)>tr:nth-of-type(odd) {
+table:not(.svlst)>tbody>tr:not(.svlst):nth-of-type(odd) {
   background-color: rgba(115, 130, 140, .03);
 }
 

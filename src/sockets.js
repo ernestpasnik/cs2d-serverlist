@@ -43,7 +43,6 @@ async function addServer(ipPort) {
           ...servers[ipPort].dbg,
           country: v.country,
           city: v.city,
-          emoji: v.countryFlag?.emoji,
           org: v.org
         }
       }

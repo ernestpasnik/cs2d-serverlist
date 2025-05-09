@@ -3,7 +3,7 @@ const leaderboard = require('./leaderboard')
 const tools = require('./tools')
 const stats = require('./stats')
 const profile = require('./profile')
-const { formatTime, timeAgo } = require('./utils/utils')
+const { formatTime, timeAgo, getEmojiByCountry } = require('./utils/utils')
 sockets.initialize()
 
 function err404(req, reply) {
@@ -33,7 +33,8 @@ function routes(fastify) {
       url: req.url,
       s: result,
       l: await leaderboard.getLeaderboard(req.params.address),
-      timeAgo
+      timeAgo,
+      getEmojiByCountry
     })
   })
 

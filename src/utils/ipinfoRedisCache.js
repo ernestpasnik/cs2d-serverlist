@@ -11,7 +11,6 @@ class RedisCache {
     return {
       country: data.country,
       city: data.city,
-      emoji: data.countryFlag?.emoji,
       org: data.org
     }
   }

@@ -1,4 +1,5 @@
 const fs = require('fs')
+const { flag } = require('country-emoji')
 
 function getUnixTimestamp() {
   return Math.floor(Date.now() / 1000)
@@ -37,9 +38,14 @@ function timeAgo(ts) {
   return 'just now'
 }
 
+function getEmojiByCountry(country) {
+  return flag(country)
+}
+
 module.exports = {
   getUnixTimestamp,
   getMTimeUnix,
   formatTime,
-  timeAgo
+  timeAgo,
+  getEmojiByCountry
 }

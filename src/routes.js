@@ -3,6 +3,7 @@ const leaderboard = require('./leaderboard')
 const tools = require('./tools')
 const stats = require('./stats')
 const profile = require('./profile')
+const { maps } = require('./maps')
 const { formatTime, timeAgo, getEmojiByCountry } = require('./utils/utils')
 sockets.initialize()
 
@@ -114,6 +115,14 @@ function routes(fastify) {
       url: req.url,
       formatTime
     })
+  })
+
+  fastify.get('/minimap/:name', async (req, reply) => {
+    const name = req.params.name
+    if (maps.hasOwnProperty(name)) {
+      return reply.header('Content-Type', 'image/png').send(maps[name])
+    }
+    return reply.status(404).send({ error: 'Minimap not found' })
   })
 
   fastify.get('/api', async (req, reply) => {

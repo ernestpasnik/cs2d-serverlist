@@ -9,9 +9,10 @@ Below are the environment variables used to configure the application, along wit
 | --------------- | ------------------------------------------------------- | ------------------------ |
 | `HOST`          | Address to bind the server to                           | `0.0.0.0`                |
 | `PORT`          | Port for the server to listen on                        | `3000`                   |
-| `REDIS_URL`     | URL for connecting to the Redis server                  | `redis://127.0.0.1:6379` |
 | `NODE_ENV`      | Defines the application environment                     | `development`            |
+| `REDIS_URL`     | URL for connecting to the Redis server                  | `redis://127.0.0.1:6379` |
 | `IPINFO_APIKEY` | [API key for IP geolocation service](https://ipinfo.io) | *Not set*                |
+| `CS2D_DIRECTORY`| Path to the CS2D game directory (used for parsing data) | *Not set*                |
 
 ## Nginx Configuration
 Example Nginx configurations are available in the [`config/nginx`](config/nginx) directory. These templates cover a range of common use cases, such as Cloudflare proxy settings, SSL configurations, and more. You can easily modify them to suit your specific requirements.

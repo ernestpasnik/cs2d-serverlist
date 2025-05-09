@@ -542,7 +542,7 @@ i {
 }
 
 .stat-item>span:first-child {
-  color: #ddd;
+  color: #bbb;
   max-width: 200px;
 }
 
@@ -626,7 +626,7 @@ i {
 
 span,
 .stat-item>span {
-  color: #bbc6ce;
+  color: #bbb;
 }
 
 p,
@@ -672,7 +672,7 @@ li {
   height: 188px;
   overflow-y: scroll;
   overflow-x: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(115, 130, 140, .1);
   padding: .4rem .6rem;
   border-radius: .25rem;
   background-color: rgba(115, 130, 140, .05);
@@ -685,7 +685,7 @@ li {
 }
 
 .checkbox-container>div:hover>label {
-  color: #fff;
+  color: #ddd;
 }
 
 .checkbox-container>div:hover>input[type="checkbox"] {
@@ -702,7 +702,7 @@ li {
 }
 
 .checkbox-container>div>label {
-  color: #ddd;
+  color: #999;
   cursor: pointer;
   user-select: none;
   margin-bottom: 0;
@@ -787,10 +787,11 @@ button:disabled {
 }
 
 .alert {
-  padding: .6rem 0;
+  padding: .6rem;
   align-items: center;
   font-weight: 500;
   margin-bottom: .5rem;
+  font-size: .85rem;
 }
 
 .err {
@@ -931,35 +932,35 @@ button:disabled {
 
 
 /* TIPPYJS */
-.tippy-box[data-theme~="translucent"] {
+.tippy-box {
   background-color: rgb(14, 21, 26);
   font-size: .8rem;
   color: #d2d2d2;
 }
-.tippy-box[data-theme~="translucent"] > .tippy-arrow {
+.tippy-box > .tippy-arrow {
   width: 14px;
   height: 14px;
 }
-.tippy-box[data-theme~="translucent"][data-placement^="top"] > .tippy-arrow:before {
+.tippy-box[data-placement^="top"] > .tippy-arrow:before {
   border-width: 7px 7px 0;
   border-top-color: rgb(14, 21, 26);
 }
-.tippy-box[data-theme~="translucent"][data-placement^="bottom"] > .tippy-arrow:before {
+.tippy-box[data-placement^="bottom"] > .tippy-arrow:before {
   border-width: 0 7px 7px;
   border-bottom-color: rgb(14, 21, 26);
 }
-.tippy-box[data-theme~="translucent"][data-placement^="left"] > .tippy-arrow:before {
+.tippy-box[data-placement^="left"] > .tippy-arrow:before {
   border-width: 7px 0 7px 7px;
   border-left-color: rgb(14, 21, 26);
 }
-.tippy-box[data-theme~="translucent"][data-placement^="right"] > .tippy-arrow:before {
+.tippy-box[data-placement^="right"] > .tippy-arrow:before {
   border-width: 7px 7px 7px 0;
   border-right-color: rgb(14, 21, 26);
 }
-.tippy-box[data-theme~="translucent"] > .tippy-backdrop {
+.tippy-box > .tippy-backdrop {
   background-color: rgb(14, 21, 26);
 }
-.tippy-box[data-theme~="translucent"] > .tippy-svg-arrow {
+.tippy-box > .tippy-svg-arrow {
   fill: rgb(14, 21, 26);
 }
 

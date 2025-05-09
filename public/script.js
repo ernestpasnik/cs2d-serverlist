@@ -24,18 +24,10 @@ const update = async url => {
 
 const timeAgo = ts => {
   const s = Math.floor(Date.now() / 1000) - ts;
-  const u = [
-    ['y', 31536000],
-    ['m', 2592000],
-    ['d', 86400],
-    ['h', 3600],
-    ['min', 60],
-    ['s', 1]
-  ];
-
+  const u = [['d', 86400], ['h', 3600], ['m', 60], ['s', 1]];
   for (const [name, sec] of u) {
     const v = Math.floor(s / sec);
-    if (v) return `${v} ${name} ago`
+    if (v) return v + name + ' ago';
   }
   return 'just now';
 };
@@ -196,6 +188,7 @@ if (serverForm) {
 
 const searchInput = $('#search');
 if (searchInput) {
+  const svlst = $('.svlst');
   const urlParams = new URLSearchParams(window.location.search);
   const searchQuery = urlParams.get('q');
   const serversCountElement = document.getElementById('servers');
@@ -215,7 +208,7 @@ if (searchInput) {
 
   const filterTable = (search) => {
     const visibleRows = [];
-    document.querySelectorAll('.svlst tbody > tr').forEach(row => {
+    svlst.querySelectorAll('tbody > tr').forEach(row => {
       const text = row.textContent.toLowerCase();
       const match = text.includes(search);
       row.style.display = match ? '' : 'none';
@@ -248,27 +241,21 @@ if (searchInput) {
     window.history.replaceState({}, '', newUrl);
     filterTable(search);
   });
+
+  svlst.addEventListener('sort-end', function (e) {
+    let visibleRows = [];
+    e.target.querySelectorAll('tbody > tr').forEach(row => {
+      if (row.style.display !== 'none') {
+        visibleRows.push(row);
+      }
+    });
+    visibleRows.forEach((row, index) => {
+      row.classList.toggle('odd', index % 2 === 0);
+      row.classList.toggle('even', index % 2 === 1);
+    });
+  })
 }
 
-const headers = document.querySelectorAll('.svlst > thead > tr > th');
-headers.forEach(header => {
-  header.addEventListener('click', () => {
-    setTimeout(() => {
-      let visibleRows = [];
-      document.querySelectorAll('.svlst tbody > tr').forEach(row => {
-        if (row.style.display !== 'none') {
-          visibleRows.push(row);
-        }
-      });
-      visibleRows.forEach((row, index) => {
-        row.classList.toggle('odd', index % 2 === 0);
-        row.classList.toggle('even', index % 2 === 1);
-      });
-    }, 5);
-  });
-});
-
 tippy('[data-tippy-content]', {
-  allowHTML: true,
-  theme: 'translucent'
+  allowHTML: true
 })

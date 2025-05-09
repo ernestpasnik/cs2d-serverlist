@@ -21,20 +21,11 @@ function formatTime(s) {
 
 function timeAgo(ts) {
   const s = getUnixTimestamp() - ts
-  const u = [
-    ['y', 31536000],
-    ['m', 2592000],
-    ['d', 86400],
-    ['h', 3600],
-    ['min', 60],
-    ['s', 1]
-  ]
-
+  const u = [['d', 86400], ['h', 3600], ['m', 60], ['s', 1]]
   for (const [name, sec] of u) {
     const v = Math.floor(s / sec)
-    if (v) return `${v} ${name} ago`
+    if (v) return v + name + ' ago'
   }
-
   return 'just now'
 }
 

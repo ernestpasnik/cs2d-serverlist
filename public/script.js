@@ -1,6 +1,6 @@
 /* Utils */
 const $ = s => document.querySelector(s);
-tippy('[data-tippy-content]', { allowHTML: true })
+tippy('[data-tippy-content]', { allowHTML: true });
 
 
 
@@ -71,17 +71,19 @@ const updateUI = d => {
   const [t, ct] = [$('#t'), $('#ct')];
   t.innerHTML = ct.innerHTML = '';
 
-  d.playerlist.forEach(p => {
-    if (p.team > 0) {
-      const row = document.createElement('tr');
-      row.innerHTML = `<td>${p.name}</td><td>${p.score}</td><td>${p.deaths}</td>`;
-      if (p.team == 1) {
-        t.appendChild(row);
-      } else {
-        ct.appendChild(row);
+  if (Array.isArray(d.playerlist) && d.playerlist.length > 0) {
+    d.playerlist.forEach(p => {
+      if (p.team > 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${p.name}</td><td>${p.score}</td><td>${p.deaths}</td>`;
+        if (p.team == 1) {
+          t.appendChild(row);
+        } else {
+          ct.appendChild(row);
+        }
       }
-    }
-  });
+    });
+  }
 
   const spectators = d.playerlist.filter(p => p.team === 0);
   $('.spec').textContent = spectators.length
@@ -269,5 +271,5 @@ if (searchInput) {
       row.classList.toggle('odd', index % 2 === 0);
       row.classList.toggle('even', index % 2 === 1);
     });
-  })
+  });
 }

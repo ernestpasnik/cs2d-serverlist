@@ -4,7 +4,7 @@ A Node.js app that displays the scoreboard, server details, and other real-time 
 Currently hosted at: [cs2d.pp.ua](https://cs2d.pp.ua)
 
 ## ENV Configuration
-Below are the environment variables used to configure the application, along with their default values if not explicitly set in the .env file.
+Below are the environment variables used to configure the application, along with their default values:
 | **Variable**    | **Description**                                         | **Default Value**        |
 | --------------- | ------------------------------------------------------- | ------------------------ |
 | `HOST`          | Address to bind the server to                           | `0.0.0.0`                |
@@ -14,7 +14,6 @@ Below are the environment variables used to configure the application, along wit
 | `IPINFO_APIKEY` | [API key for IP geolocation service](https://ipinfo.io) | *Not set*                |
 
 ## Nginx Configuration
-
 Example Nginx configurations are available in the [`config/nginx`](config/nginx) directory. These templates cover a range of common use cases, such as Cloudflare proxy settings, SSL configurations, and more. You can easily modify them to suit your specific requirements.
 
 ## License

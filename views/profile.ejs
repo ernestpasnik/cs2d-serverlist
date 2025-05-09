@@ -54,7 +54,7 @@
         <tr>
           <td data-sort="<%= v.rank %>"><%= (v.rank + 1) %> of <%= v.server.rankedUsers %></td>
           <td><a href="/leaderboard/<%= v.server.address %>"><%= v.server.name %></a></td>
-          <td><%= kdRatio > 10 ? '10>' : kdRatio %></td>
+          <td><%= kdRatio > 10 ? '+10' : kdRatio %></td>
           <td><%= v.player.kills %></td>
           <td><%= v.player.deaths %></td>
           <td><%= v.player.assists %></td>

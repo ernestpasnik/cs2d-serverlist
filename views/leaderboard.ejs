@@ -65,7 +65,7 @@ const sortLabels = ['score+kills-deaths', 'assists+kills-deaths', 'score+assists
             <%= i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1) %>
           </td>
           <td><a href="/profile/<%= p.userid %>"><%= p.name %></a></td>
-          <td><%= kdRatio > 10 ? '10>' : kdRatio %></td>
+          <td><%= kdRatio > 10 ? '+10' : kdRatio %></td>
           <td><%= p.kills %></td>
           <td><%= p.deaths %></td>
           <td><%= p.assists %></td>

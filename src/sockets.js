@@ -4,8 +4,8 @@ const stats = require('./stats')
 const { getUnixTimestamp } = require('./utils/utils')
 const { IPinfoWrapper } = require('node-ipinfo')
 const RedisCache = require('./utils/ipinfoRedisCache')
-const cache = new RedisCache(24 * 60 * 60 * 1000) // 7 days
-const ipinfoWrapper = process.env.IPINFO_APIKEY ? new IPinfoWrapper(process.env.IPINFO_APIKEY, cache) : null
+const cache = new RedisCache()
+const ipinfo = process.env.IPINFO_APIKEY ? new IPinfoWrapper(process.env.IPINFO_APIKEY, cache) : null
 const servers = {}
 const req = {
   serverlist: Buffer.from([1, 0, 20, 1]),
@@ -35,17 +35,16 @@ async function addServer(ipPort) {
     servers[ipPort].dbg.recvBytes += rinfo.size
     servers[ipPort] = { ...servers[ipPort], ...recv }
 
-    // Skip IP lookup if country exists or if IPinfoWrapper is not available
-    if (servers[ipPort].dbg.country || !ipinfoWrapper) return
-
-    ipinfoWrapper.lookupIp(ip).then((ipInfo) => {
+    // Exit if ipinfo is not available
+    if (!ipinfo) return
+    ipinfo.lookupIp(ip).then((v) => {
       if (servers[ipPort] && servers[ipPort].dbg) {
         servers[ipPort].dbg = {
           ...servers[ipPort].dbg,
-          country: ipInfo.country,
-          city: ipInfo.city,
-          emoji: ipInfo.countryFlag?.emoji,
-          org: ipInfo.org
+          country: v.country,
+          city: v.city,
+          emoji: v.countryFlag?.emoji,
+          org: v.org
         }
       }
     })
@@ -117,9 +116,9 @@ function getRecentServers() {
 }
 
 function cleanupServers() {
-  const oneMinuteAgo = getUnixTimestamp() - 120
+  const twoMinutesAgo = getUnixTimestamp() - 120
   for (const ipPort in servers) {
-    if (!servers[ipPort].ts || servers[ipPort].ts < oneMinuteAgo) {
+    if (!servers[ipPort].ts || servers[ipPort].ts < twoMinutesAgo) {
       if (servers[ipPort].client) {
         servers[ipPort].client.close()
         clearInterval(servers[ipPort].interval)

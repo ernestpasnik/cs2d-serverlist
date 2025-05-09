@@ -1,6 +1,6 @@
 <div class="flex">
   <div>
-    <div class="emoji" data-tippy-content="<%= s.dbg.city || 'Unknown' %>, <%= s.dbg.country || 'Unknown' %><br><%= s.dbg.org || 'Unknown' %>"><%= s.dbg.emoji || '❓' %></div><h1 id="name"><%= s.name %></h1>
+    <% if (s.dbg.emoji) { %><div class="emoji" data-tippy-content="IP Geolocation: <%= s.dbg.city || 'Unknown' %>, <%= s.dbg.country || 'Unknown' %><br><%= s.dbg.org || 'Unknown' %>"><%= s.dbg.emoji %></div><% } %><h1 id="name"><%= s.name %></h1>
   </div>
   <div id="timeAgo">
     <span id="ts" data-ts="<%= s.ts %>"><%= timeAgo(s.ts) %></span>

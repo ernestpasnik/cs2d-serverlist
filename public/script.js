@@ -53,7 +53,7 @@ const updateUI = d => {
     p.classList.remove('e');
   }
   p.innerHTML = `
-    <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="me-1.5 size-5 text-green-400">
+    <svg fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 16 16" class="me-1.5 size-5 text-green-400">
       <path d="M11.5 8A1.5 1.5 0 0 1 13 9.5v.5c0 2-1.9 4-5 4s-5-2-5-4v-.5A1.5 1.5 0 0 1 4.5 8zM8 1.5A2.7 2.7 0 1 1 8 7a2.7 2.7 0 0 1 0-5.5" fill="currentColor"></path>
     </svg>
     <i>${d.players - d.bots}</i>${d.bots > 0 ? `<span class="b">+${d.bots}</span>` : ''}/${d.maxplayers}
@@ -196,6 +196,15 @@ if (serverForm) {
 
 const searchInput = $('#search');
 if (searchInput) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const searchQuery = urlParams.get('q');
+  const serversCountElement = document.getElementById('servers');
+
+  if (searchQuery) {
+    searchInput.value = searchQuery;
+    searchInput.focus();
+  }
+
   document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
       e.preventDefault();
@@ -203,8 +212,8 @@ if (searchInput) {
       if (searchInput) searchInput.focus();
     }
   });
-  searchInput.addEventListener('input', () => {
-    const search = searchInput.value.toLowerCase();
+
+  const filterTable = (search) => {
     const visibleRows = [];
     document.querySelectorAll('.svlst tbody > tr').forEach(row => {
       const text = row.textContent.toLowerCase();
@@ -212,10 +221,32 @@ if (searchInput) {
       row.style.display = match ? '' : 'none';
       if (match) visibleRows.push(row);
     });
+    
     visibleRows.forEach((row, index) => {
       row.classList.toggle('odd', index % 2 === 0);
       row.classList.toggle('even', index % 2 === 1);
     });
+
+    if (serversCountElement) {
+      const serverCount = visibleRows.length;
+      serversCountElement.innerHTML = `${serverCount} Server${serverCount !== 1 ? 's' : ''}`;
+    }
+  };
+
+  if (searchQuery) {
+    filterTable(searchQuery.toLowerCase());
+  }
+
+  searchInput.addEventListener('input', () => {
+    const search = searchInput.value.toLowerCase();
+    const newUrl = new URL(window.location);
+    if (search) {
+      newUrl.searchParams.set('q', search);
+    } else {
+      newUrl.searchParams.delete('q');
+    }
+    window.history.replaceState({}, '', newUrl);
+    filterTable(search);
   });
 }
 

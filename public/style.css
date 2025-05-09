@@ -34,11 +34,6 @@ p>a {
   color: #ddd;
 }
 
-svg {
-  width: 1.125rem;
-  height: 1.125rem;
-}
-
 body {
   padding: 0;
   margin: 0 auto;
@@ -374,7 +369,7 @@ tbody>tr>td:nth-child(1) {
   color: #fff;
 }
 
-#ts {
+#ts, #servers {
   display: inline-block;
   transition: opacity 1s ease-in-out;
   color: #ddd;
@@ -461,11 +456,6 @@ tbody>tr>td:nth-child(1) {
   align-items: center;
 }
 
-#p>svg {
-  width: .9rem;
-  height: .9rem;
-}
-
 #p {
   justify-content: center;
   align-items: center;
@@ -513,7 +503,7 @@ i {
 .flex>div:first-child {
   display: flex;
   gap: .25rem;
-  align-items: center;
+  align-items: baseline;
 }
 
 .svlst>tbody>tr:hover>td,
@@ -814,13 +804,13 @@ button:disabled {
 
 /* CVARS */
 .enbl {
-  color: #5eff68b8;
+  color: rgba(94, 255, 104, 0.72);
   border-color: rgba(94, 255, 104, 0.15) !important;
   background: rgba(49, 81, 51, 0.28) !important;
 }
 
 .dsbl {
-  color: #ff5555d4;
+  color: rgba(255, 85, 85, 0.83);
   border-color: rgba(255, 85, 85, 0.24) !important;
   background: rgba(74, 35, 35, 0.26) !important;
 }
@@ -828,23 +818,23 @@ button:disabled {
 
 /* GAME MODES */
 .s {
-  color: rgb(194, 194, 26) !important;
+  color: rgba(194, 194, 26, 0.89) !important;
 }
 
 .d {
-  color: rgb(224, 53, 53) !important;
+  color: rgba(255, 85, 85, 0.89) !important;
 }
 
 .z {
-  color: rgb(37, 226, 37) !important;
+  color: rgba(37, 226, 37, 0.89) !important;
 }
 
 .c {
-  color: rgb(66, 141, 255) !important;
+  color: rgba(66, 141, 255, 0.89) !important;
 }
 
 .t {
-  color: rgb(236, 155, 5) !important;
+  color: rgba(236, 155, 5, 0.89) !important;
 }
 
 

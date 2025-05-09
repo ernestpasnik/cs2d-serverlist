@@ -35,19 +35,18 @@ async function addServer(ipPort) {
     servers[ipPort].dbg.recvBytes += rinfo.size
     servers[ipPort] = { ...servers[ipPort], ...recv }
 
-    // Skip IP lookup if country_name exists or if IPinfoWrapper is not available
-    if (servers[ipPort].dbg.country_name || !ipinfoWrapper) return
+    // Skip IP lookup if country exists or if IPinfoWrapper is not available
+    if (servers[ipPort].dbg.country || !ipinfoWrapper) return
 
     ipinfoWrapper.lookupIp(ip).then((ipInfo) => {
       if (servers[ipPort] && servers[ipPort].dbg) {
         servers[ipPort].dbg = {
           ...servers[ipPort].dbg,
-          country_name: ipInfo.country,
+          country: ipInfo.country,
           city: ipInfo.city,
-          emoji_flag: ipInfo.countryFlag?.emoji,
-          org: ipInfo.org,
-          hostname: ipInfo.hostname
-        }      
+          emoji: ipInfo.countryFlag?.emoji,
+          org: ipInfo.org
+        }
       }
     })
   })

@@ -293,6 +293,7 @@ tbody>tr>td:nth-child(1) {
 .emoji {
   font-size: 1.125rem;
   user-select: none;
+  cursor: help;
 }
 
 #addr {
@@ -911,6 +912,67 @@ button:disabled {
 .medal {
   font-size: .8rem;
 }
+
+
+
+/* TOOLTIP */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+
+
+/* TIPPYJS */
+.tippy-box[data-theme~="translucent"] {
+  background-color: rgb(14, 21, 26);
+  font-size: .8rem;
+  color: #d2d2d2;
+}
+.tippy-box[data-theme~="translucent"] > .tippy-arrow {
+  width: 14px;
+  height: 14px;
+}
+.tippy-box[data-theme~="translucent"][data-placement^="top"] > .tippy-arrow:before {
+  border-width: 7px 7px 0;
+  border-top-color: rgb(14, 21, 26);
+}
+.tippy-box[data-theme~="translucent"][data-placement^="bottom"] > .tippy-arrow:before {
+  border-width: 0 7px 7px;
+  border-bottom-color: rgb(14, 21, 26);
+}
+.tippy-box[data-theme~="translucent"][data-placement^="left"] > .tippy-arrow:before {
+  border-width: 7px 0 7px 7px;
+  border-left-color: rgb(14, 21, 26);
+}
+.tippy-box[data-theme~="translucent"][data-placement^="right"] > .tippy-arrow:before {
+  border-width: 7px 7px 7px 0;
+  border-right-color: rgb(14, 21, 26);
+}
+.tippy-box[data-theme~="translucent"] > .tippy-backdrop {
+  background-color: rgb(14, 21, 26);
+}
+.tippy-box[data-theme~="translucent"] > .tippy-svg-arrow {
+  fill: rgb(14, 21, 26);
+}
+
 
 
 /* FOOTER */

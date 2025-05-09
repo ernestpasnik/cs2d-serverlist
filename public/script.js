@@ -218,3 +218,8 @@ if (searchInput) {
     });
   });
 }
+
+tippy('[data-tippy-content]', {
+  allowHTML: true,
+  theme: 'translucent'
+})

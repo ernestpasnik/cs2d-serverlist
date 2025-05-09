@@ -36,7 +36,7 @@ const countServerStats = (servers) => {
 }
 
 const countCountries = (servers) => Object.values(servers).reduce((acc, server) => {
-  const country = server.dbg.country_name
+  const country = server.dbg.country
   if (country) acc[country] = (acc[country] || 0) + 1
   return acc
 }, {})

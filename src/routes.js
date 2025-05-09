@@ -2,7 +2,8 @@ const sockets = require('./sockets')
 const leaderboard = require('./leaderboard')
 const tools = require('./tools')
 const stats = require('./stats')
-const { escapeQuotes, formatTime, timeAgo } = require('./utils/utils')
+const profile = require('./profile')
+const { formatTime, timeAgo } = require('./utils/utils')
 sockets.initialize()
 
 function err404(req, reply) {
@@ -27,8 +28,8 @@ function routes(fastify) {
     const result = sockets.getServer(req.params.address, true)
     if (!result) return err404(req, reply)
     return reply.view('details', {
-      title: escapeQuotes(result.name),
-      description: `View active CS2D server details for ${escapeQuotes(result.name)} including map, player count, bots, and region. Quickly access stats and performance data.`,
+      title: result.name,
+      description: `View active CS2D server details for ${result.name} including map, player count, bots, and region. Quickly access stats and performance data.`,
       url: req.url,
       s: result,
       l: await leaderboard.getLeaderboard(req.params.address),
@@ -42,8 +43,8 @@ function routes(fastify) {
 
     const top100 = {...result, players: result.players.slice(0, 100) }
     return reply.view('leaderboard', {
-      title: escapeQuotes(top100.name),
-      description: `Browse the top-performing CS2D players for ${escapeQuotes(top100.name)} based on server stats, including rankings, scores, and player achievements.`,
+      title: top100.name,
+      description: `Browse the top-performing CS2D players for ${top100.name} based on server stats, including rankings, scores, and player achievements.`,
       url: req.url,
       r: top100,
       addr: req.params.address,
@@ -98,6 +99,23 @@ function routes(fastify) {
       url: req.url,
       stats: stats.getStats(servers, leaderboards),
       timeAgo
+    })
+  })
+
+  fastify.get('/profile/:userid(^\\d+$)', async (req, reply) => {
+    const leaderboards = await leaderboard.getLeaderboards()
+    const p = profile.findPlayerByUserId(req.params.userid, leaderboards)
+    if (p.length == 0) return err404(req, reply)
+    return reply.view('profile', {
+      p,
+      total: profile.calculatePlayerStats(p),
+      userid: req.params.userid,
+      usertype: p[0].player.usertype,
+      title: p[0].player.name,
+      description: `${p[0].player.name}'s CS2D Profile: Discover stats for ${p[0].player.name} (User ID: ${p[0].player.userid}). View performance with impressive kills, deaths, assists, MVPs, and time played. Explore activity across various servers and maps.`,
+      keywords: `${p[0].player.name}, ${p[0].player.userid}, CS2D, statistics, active players, server count, game modes, regions, maps, player stats`,
+      url: req.url,
+      formatTime
     })
   })
 

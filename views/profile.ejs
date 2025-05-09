@@ -1,0 +1,67 @@
+<div class="flex">
+  <div>
+    <h1><%= title %></h1>
+  </div>
+</div>
+
+<div class="bar">
+  <% const profileUrl = usertype === 1 ? `https://steamcommunity.com/profiles/${userid}` : `https://unrealsoftware.de/profile.php?userid=${userid}` %>
+  <a href="<%= profileUrl %>" target="_blank">
+    <span>User ID</span>
+    <span><%= userid %></span>
+  </a>
+  <div>
+    <span>Kills</span>
+    <span><%= total.totalKills %></span>
+  </div>
+  <div>
+    <span>Deaths</span>
+    <span><%= total.totalDeaths %></span>
+  </div>
+  <div>
+    <span>Assists</span>
+    <span><%= total.totalAssists %></span>
+  </div>
+  <div>
+    <span>MVPs</span>
+    <span><%= total.totalMvps %></span>
+  </div>
+  <div>
+    <span>Time Played</span>
+    <span><%= formatTime(total.totalTime) %></span>
+  </div>
+</div>
+
+<div class="responsive">
+  <table class="leaderboard sortable">
+    <thead>
+      <tr>
+        <th aria-sort="ascending">Rank</th>
+        <th>Server</th>
+        <th><abbr data-tippy-content="Kills per Death">K/D</abbr></th>
+        <th><abbr data-tippy-content="Kills">K</abbr></th>
+        <th><abbr data-tippy-content="Deaths">D</abbr></th>
+        <th><abbr data-tippy-content="Assists">A</abbr></th>
+        <th><abbr data-tippy-content="MVPs">⭐</abbr></th>
+        <th><abbr data-tippy-content="Time Played">⌛</abbr></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% p.forEach((v, i) => { %>
+        <% const kdRatio = v.player.deaths > 0 
+          ? (v.player.kills / v.player.deaths).toFixed(2) 
+          : (v.player.kills).toFixed(2) %>
+        <tr>
+          <td data-sort="<%= v.rank %>"><%= (v.rank + 1) %> of <%= v.server.rankedUsers %></td>
+          <td><a href="/leaderboard/<%= v.server.address %>"><%= v.server.name %></a></td>
+          <td><%= kdRatio > 10 ? '10>' : kdRatio %></td>
+          <td><%= v.player.kills %></td>
+          <td><%= v.player.deaths %></td>
+          <td><%= v.player.assists %></td>
+          <td><%= v.player.mvps %></td>
+          <td data-sort="<%= v.player.time %>"><%= formatTime(v.player.time) %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

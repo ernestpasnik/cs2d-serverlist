@@ -37,14 +37,9 @@ function timeAgo(ts) {
   return 'just now'
 }
 
-function escapeQuotes(str) {
-  return (str || '').replace(/"/g, '\\"')
-}
-
 module.exports = {
   getUnixTimestamp,
   getMTimeUnix,
   formatTime,
-  timeAgo,
-  escapeQuotes
+  timeAgo
 }

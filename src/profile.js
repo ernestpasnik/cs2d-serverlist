@@ -17,7 +17,7 @@ function findPlayerByUserId(userId, allLeaderboards) {
       }
     }
   }
-
+  results.sort((a, b) => a.rank - b.rank)
   return results
 }
 

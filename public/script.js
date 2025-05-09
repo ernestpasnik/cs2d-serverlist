@@ -1,5 +1,10 @@
+/* Utils */
 const $ = s => document.querySelector(s);
+tippy('[data-tippy-content]', { allowHTML: true })
 
+
+
+/* Details */
 const update = async url => {
   try {
     $('#timer').style.display = 'none';
@@ -84,7 +89,6 @@ const updateUI = d => {
     : '';
 };
 
-
 const addr = $('#addr');
 if (addr) {
   const el = document.getElementById('ts');
@@ -117,18 +121,16 @@ if (addr) {
   });
 }
 
-document.querySelectorAll('.svlst tbody > tr').forEach(row =>
-  row.addEventListener('click', () => {
-    const link = row.querySelector('a')?.href;
-    if (link) window.location.href = link;
-  })
-);
 
 
+/* Tools */
 const serverForm = document.getElementById('server-form');
 if (serverForm) {
+  const alertContainer = $('.alert-container');
+
   serverForm.addEventListener('submit', async function(event) {
     event.preventDefault();
+    alertContainer.innerHTML = '';
 
     const formData = new FormData(this);
     const selectedServers = [];
@@ -137,12 +139,23 @@ if (serverForm) {
         selectedServers.push(value);
       }
     });
+    if (selectedServers.length === 0) {
+      const errorDiv = document.createElement('div');
+      errorDiv.classList.add('alert', 'err');
+      errorDiv.textContent = 'No servers selected.';
+      alertContainer.appendChild(errorDiv);
+      return;
+    }
 
     const url = formData.get('url');
-    const data = {
-      servers: selectedServers,
-      url: url
-    };
+    const discordWebhookRegex = /^https:\/\/discord\.com\/api\/webhooks\/\d{18,20}\/[A-Za-z0-9_-]{68}$/;
+    if (typeof url !== 'string' || !discordWebhookRegex.test(url)) {
+      const errorDiv = document.createElement('div');
+      errorDiv.classList.add('alert', 'err');
+      errorDiv.textContent = 'Invalid webhook URL.';
+      alertContainer.appendChild(errorDiv);
+      return;
+    }
 
     const submitButton = serverForm.querySelector('button[type="submit"]');
     submitButton.disabled = true;
@@ -151,21 +164,16 @@ if (serverForm) {
       const response = await fetch('/tools', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+        body: JSON.stringify({ servers: selectedServers, url: url })
       });
 
       const result = await response.json();
-      const alertContainer = document.getElementsByClassName('alert-container')[0];
-      alertContainer.innerHTML = '';
-
       if (result.error) {
         const errorDiv = document.createElement('div');
         errorDiv.classList.add('alert', 'err');
         errorDiv.textContent = result.error;
         alertContainer.appendChild(errorDiv);
-      }
-
-      if (result.msg) {
+      } else if (result.msg) {
         const msgDiv = document.createElement('div');
         msgDiv.classList.add('alert', 'msg');
         msgDiv.textContent = result.msg;
@@ -179,13 +187,14 @@ if (serverForm) {
       errorDiv.textContent = 'An error occurred while submitting the form.';
       alertContainer.appendChild(errorDiv);
     } finally {
-      setTimeout(() => {
-        submitButton.disabled = false;
-      }, 1000);
+      submitButton.disabled = false;
     }
   });
 }
 
+
+
+/* Server List */
 const searchInput = $('#search');
 if (searchInput) {
   const svlst = $('.svlst');
@@ -197,6 +206,13 @@ if (searchInput) {
     searchInput.value = searchQuery;
     searchInput.focus();
   }
+
+  document.querySelectorAll('.svlst tbody > tr').forEach(row =>
+    row.addEventListener('click', () => {
+      const link = row.querySelector('a')?.href;
+      if (link) window.location.href = link;
+    })
+  );
 
   document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
@@ -255,7 +271,3 @@ if (searchInput) {
     });
   })
 }
-
-tippy('[data-tippy-content]', {
-  allowHTML: true
-})

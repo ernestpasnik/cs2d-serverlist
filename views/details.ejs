@@ -2,7 +2,7 @@
   <div>
     <% if (s.dbg.country) { %><div class="emoji" data-tippy-content="IP Geolocation: <%= s.dbg.city || 'Unknown' %>, <%= s.dbg.country || 'Unknown' %><br><%= s.dbg.org || 'Unknown' %>"><%= getEmojiByCountry(s.dbg.country) %></div><% } %><h1 id="name"><%= s.name %></h1>
   </div>
-  <div id="timeAgo">
+  <div id="timeAgo" data-tippy-content="Time since last server query response">
     <span id="ts" data-ts="<%= s.ts %>"><%= timeAgo(s.ts) %></span>
     <div id="loader"></div>
     <div id="timer">

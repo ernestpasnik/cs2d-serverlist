@@ -18,7 +18,6 @@ function routes(fastify) {
     return reply.view('servers.ejs', {
       title: null,
       description: 'Browse the list of active CS2D servers with detailed stats on map, player count, bots, and region. Access server data with our open API.',
-      keywords: `CS2D, server list, active servers, server stats, map, player count, bots, region, API, server data`,
       url: req.url,
       srv: sockets.getRecentServers()
     })
@@ -65,7 +64,6 @@ function routes(fastify) {
     return reply.view('tools.ejs', {
       title: 'Tools',
       description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
-      keywords: 'CS2D, Tools, Discord, server updates, server notifications, webhook URL',
       url: req.url,
       srv: sockets.getRecentServers()
     })
@@ -96,7 +94,6 @@ function routes(fastify) {
     return reply.view('stats', {
       title: 'Statistics',
       description: 'Explore CS2D statistics: active players, server count, game modes, regions, and the most popular maps in a detailed breakdown.',
-      keywords: 'CS2D, statistics, active players, server count, game modes, regions, maps, player stats',
       url: req.url,
       stats: stats.getStats(servers, leaderboards),
       timeAgo
@@ -114,7 +111,6 @@ function routes(fastify) {
       usertype: p[0].player.usertype,
       title: p[0].player.name,
       description: `${p[0].player.name}'s CS2D Profile: Discover stats for ${p[0].player.name} (User ID: ${p[0].player.userid}). View performance with impressive kills, deaths, assists, MVPs, and time played. Explore activity across various servers and maps.`,
-      keywords: `${p[0].player.name}, ${p[0].player.userid}, CS2D, statistics, active players, server count, game modes, regions, maps, player stats`,
       url: req.url,
       formatTime
     })
@@ -124,7 +120,6 @@ function routes(fastify) {
     return reply.view('api_docs', {
       title: 'API Documentation',
       description: 'Access CS2D server and leaderboard data with our open API. Free, unlimited access with CORS support and easy integration.',
-      keywords: 'CS2D, API, server data, leaderboard, CORS, free API, server integration',
       url: req.url
     })
   })

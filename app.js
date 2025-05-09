@@ -40,7 +40,7 @@ fastify.register(require('@fastify/view'), {
   layout: 'layout.ejs',
   defaultContext: {
     production,
-    description: null, keywords: null,
+    description: null,
     style: getMTimeUnix('public/style.css'),
     script: getMTimeUnix('public/script.js')
   },

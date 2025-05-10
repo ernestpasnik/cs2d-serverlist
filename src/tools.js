@@ -36,22 +36,23 @@ async function generateEmbedsFromServers(servers) {
     const players = `${server.players || 0}/${server.maxplayers || 0}` +
       (server.bots ? ` (${server.bots} bot${server.bots !== 1 ? 's' : ''})` : '')
 
-    embeds.push({
+    const embed = {
       title: server.name || 'Unknown Server',
       url: `https://cs2d.pp.ua/details/${ipPort}`,
       color: 0x3498db,
       fields: [
         { name: 'Players', value: players, inline: true },
         { name: 'Map', value: server.map || 'Unknown', inline: true }
-      ],
-    })
+      ]
+    }
 
     const minimapBuffer = await redis.get(`minimap:${server.map}`)
     if (minimapBuffer) {
-      embeds.thumbnail = {
+      embed.thumbnail = {
         url: `https://cs2d.pp.ua/minimap/${server.map}`
       }
     }
+    embeds.push(embed)
   }
   return embeds
 }

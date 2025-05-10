@@ -43,7 +43,8 @@ async function generateEmbedsFromServers(servers) {
       fields: [
         { name: 'Players', value: players, inline: true },
         { name: 'Map', value: server.map || 'Unknown', inline: true }
-      ]
+      ],
+      timestamp: new Date(server.ts * 1000).toISOString()
     }
 
     const existingMap = await redis.exists(`map:${server.map}`)

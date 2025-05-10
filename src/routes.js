@@ -4,7 +4,7 @@ const leaderboard = require('./leaderboard')
 const tools = require('./tools')
 const stats = require('./stats/stats')
 const profile = require('./profile')
-const { formatTime, timeAgo, bytesToSize, getEmojiByCountry } = require('./utils/utils')
+const { formatTime, timeAgo, getEmojiByCountry } = require('./utils/utils')
 sockets.initialize()
 require('./maps/maps')
 
@@ -17,7 +17,7 @@ function err404(req, reply) {
 
 function routes(fastify) {
   fastify.get('/', async (req, reply) => {
-    return reply.view('servers.ejs', {
+    return reply.view('servers', {
       title: null,
       description: 'Browse the list of active CS2D servers with detailed stats on map, player count, bots, and region. Access server data with our open API.',
       url: req.url,

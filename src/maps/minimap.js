@@ -55,6 +55,17 @@ class Minimap {
           }
         }
 
+        parsed.entities.forEach(v => {
+          if (v.type == 0) {
+            ctx.fillStyle = '#ed5141' // Terrorist
+          } else if (v.type == 1) {
+            ctx.fillStyle = '#4ca3ff' // Counter-Terrorist
+          } else {
+            return
+          }
+          ctx.fillRect(v.x * 2, v.y * 2, 2, 2)
+        })
+
         // Canvas outputs BGRA, PNG wants RGBA
         const raw = canvas.toBuffer('raw')
         const rgba = Buffer.alloc(raw.length)

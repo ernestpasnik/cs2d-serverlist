@@ -33,9 +33,9 @@
     <span id="map"><%= s.map %></span>
   </div>
   <% } %>
-  <a id="copyBtn" href="#">
+  <a class="copyBtn" href="#">
     <span>Address</span>
-    <span id="addr"><%= s.ip %>:<%= s.port %></span>
+    <span id="addr" class="copyContent"><%= s.ip %>:<%= s.port %></span>
   </a>
   <% if (l != false) { %>
   <a href="/leaderboard/<%= s.ip %>:<%= s.port %>">

@@ -18,26 +18,22 @@
   <% } %>
   <div>
     <span>Map Size</span>
-    <span><%= v.header.mapWidth %>x<%= v.header.mapHeight %></span>
+    <span><%= v.header.mapWidth %>×<%= v.header.mapHeight %> Tiles</span>
   </div>
   <div>
     <span>Tileset Image</span>
-    <span><%= v.header.tilesetImage || 'N/A' %></span>
+    <span><%= v.header.tilesetImage %></span>
   </div>
-  <div>
-    <span>Background Image</span>
-    <span><%= v.header.backgroundImage || 'N/A' %></span>
-  </div>
+  <a class="copyBtn" href="#">
+    <span>SHA-256 Hash</span>
+    <code class="copyContent"><%= v.sha256 %></code>
+  </a>
 </div>
 
 <div class="fl">
   <div data-flag="nobuying" class="<%= v.entities.some(entity => entity.type === 11) ? 'dsbl' : 'enbl' %>">Is buying allowed?</div>
   <div data-flag="noweapons" class="<%= v.entities.some(entity => entity.type === 12) ? 'dsbl' : 'enbl' %>">Are weapons allowed?</div>
   <div data-flag="teleporters" class="<%= v.entities.some(entity => entity.type === 70) ? 'enbl' : 'dsbl' %>">Are there any teleporters?</div>
-</div>
-
-<div class="center">
-  <div class="alert err">Map preview is coming soon — for now, you can view the minimap.</div>
 </div>
 
 <img class="minimap" src="/maps/<%= title %>/minimap.webp" alt="<%= title %>">

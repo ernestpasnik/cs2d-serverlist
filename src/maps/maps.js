@@ -1,17 +1,25 @@
 const fs = require('fs')
 const path = require('path')
+const crypto = require('crypto')
 const Parser = require('./parser')
 const Minimap = require('./minimap')
 const redis = require('../utils/redis')
 
 const generateAndStoreMinimap = async (mapName, mapPath) => {
   try {
-    //const existingMap = await redis.exists(`map:${mapName}`)
-    //if (existingMap) return
+    // const existingMap = await redis.exists(`map:${mapName}`)
+    // if (existingMap) return
 
     const buffer = fs.readFileSync(mapPath)
     const parsed = new Parser(buffer).parse()
+
+    // Generate minimap
     parsed.minimap = await new Minimap().generate(parsed)
+
+    // Compute SHA-256 hash
+    const hash = crypto.createHash('sha256').update(buffer).digest('hex')
+    parsed.sha256 = hash
+
     await redis.set(`map:${mapName}`, JSON.stringify(parsed))
   } catch (err) {
     console.error(mapName, err)

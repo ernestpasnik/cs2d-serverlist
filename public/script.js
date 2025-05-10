@@ -93,7 +93,6 @@ const updateUI = d => {
 
 const addr = $('#addr');
 if (addr) {
-  const copyBtn = $('#copyBtn');
   const el = document.getElementById('ts');
   const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10);
   const timeNow = Math.floor(Date.now() / 1000);
@@ -106,23 +105,31 @@ if (addr) {
     update(url);
     setInterval(() => update(url), 10 * 1000);
   }, timeToNextUpdate * 1000);
+}
 
+
+
+/* Copy */
+const copyBtn = $('.copyBtn');
+if (copyBtn) {
+  const copyContent = $('.copyContent');
   let clicked = false;
   copyBtn.addEventListener('click', (e) => {
     e.preventDefault();
     if (clicked) return;
 
-    const originalText = addr.textContent;
+    const originalText = copyContent.textContent;
     navigator.clipboard.writeText(originalText).then(() => {
-      addr.textContent = 'Copied to clipboard';
+      copyContent.textContent = 'Copied to clipboard';
       clicked = true;
       setTimeout(() => {
-        addr.textContent = originalText;
+        copyContent.textContent = originalText;
         clicked = false;
       }, 2000);
     });
   });
 }
+
 
 
 

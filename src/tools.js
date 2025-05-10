@@ -119,7 +119,7 @@ async function addWebhook(webhookUrl, servers) {
 
 async function processWebhooks() {
   for (const webhook of webhooks) {
-    const data = JSON.stringify({ embeds: generateEmbedsFromServers(webhook.servers) })
+    const data = JSON.stringify({ embeds: await generateEmbedsFromServers(webhook.servers) })
     const updateUrl = `${webhook.webhookUrl}/messages/${webhook.messageId}`
 
     sendWebhookRequest('PATCH', updateUrl, data)

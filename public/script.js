@@ -133,27 +133,27 @@ if (copyBtn) {
 
 
 /* Map Filter */
-const maps_filter = document.getElementById('maps_filter')
+const maps_filter = document.getElementById('maps_filter');
 if (maps_filter) {
-  const mapLinks = document.querySelectorAll('.maplist a')
-  const mapCountDisplay = document.getElementById('map-count')
+  const mapLinks = document.querySelectorAll('.maplist a');
+  const mapCountDisplay = document.getElementById('map-count');
 
   maps_filter.addEventListener('input', function () {
-    const filterText = maps_filter.value.toLowerCase()
-    let visibleMapCount = 0
+    const filterText = maps_filter.value.toLowerCase();
+    let visibleMapCount = 0;
 
     mapLinks.forEach(link => {
-      const mapName = link.textContent.toLowerCase()
+      const mapName = link.textContent.toLowerCase();
       if (mapName.includes(filterText)) {
-        link.style.display = 'inline-block'
-        visibleMapCount++
+        link.style.display = 'inline-block';
+        visibleMapCount++;
       } else {
-        link.style.display = 'none'
+        link.style.display = 'none';
       }
-    })
+    });
 
-    mapCountDisplay.textContent = `${visibleMapCount} ${visibleMapCount === 1 ? 'Map' : 'Maps'}`
-  })
+    mapCountDisplay.textContent = `${visibleMapCount} ${visibleMapCount === 1 ? 'Map' : 'Maps'}`;
+  });
 }
 
 

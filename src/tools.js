@@ -23,7 +23,7 @@ async function loadWebhooksFromRedis() {
   }
 }
 
-function generateEmbedsFromServers(servers) {
+async function generateEmbedsFromServers(servers) {
   const allServers = sockets.getRecentServers()
   const embeds = []
 
@@ -43,10 +43,16 @@ function generateEmbedsFromServers(servers) {
       fields: [
         { name: 'Players', value: players, inline: true },
         { name: 'Map', value: server.map || 'Unknown', inline: true }
-      ]
+      ],
     })
-  }
 
+    const minimapBuffer = await redis.get(`minimap:${server.map}`)
+    if (minimapBuffer) {
+      embeds.thumbnail = {
+        url: `https://cs2d.pp.ua/minimap/${server.map}`
+      }
+    }
+  }
   return embeds
 }
 
@@ -85,7 +91,7 @@ async function sendWebhookRequest(method, url, data) {
 }
 
 async function addWebhook(webhookUrl, servers) {
-  const data = JSON.stringify({ embeds: generateEmbedsFromServers(servers) })
+  const data = JSON.stringify({ embeds: await generateEmbedsFromServers(servers) })
 
   try {
     const resData = await sendWebhookRequest('POST', webhookUrl + '?wait=true', data)

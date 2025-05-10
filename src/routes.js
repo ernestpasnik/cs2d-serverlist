@@ -1,11 +1,12 @@
+const redis = require('./utils/redis')
 const sockets = require('./sockets')
 const leaderboard = require('./leaderboard')
 const tools = require('./tools')
 const stats = require('./stats')
 const profile = require('./profile')
-const { maps } = require('./maps')
 const { formatTime, timeAgo, getEmojiByCountry } = require('./utils/utils')
 sockets.initialize()
+require('./maps')
 
 function err404(req, reply) {
   return reply.status(404).view('404', {
@@ -117,12 +118,13 @@ function routes(fastify) {
     })
   })
 
-  fastify.get('/minimap/:name', async (req, reply) => {
-    const name = req.params.name
-    if (maps.hasOwnProperty(name)) {
-      return reply.header('Content-Type', 'image/png').send(maps[name])
+  fastify.get('/minimap/:mapName', async (req, reply) => {
+    const mapName = req.params.mapName
+    const minimapBuffer = await redis.getBuffer(`minimap:${mapName}`);
+    if (minimapBuffer) {
+      return reply.header('Content-Type', 'image/png').send(minimapBuffer)
     }
-    return reply.status(404).send({ error: 'Minimap not found' })
+    return reply.err404(req, reply)
   })
 
   fastify.get('/api', async (req, reply) => {

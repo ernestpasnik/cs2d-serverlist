@@ -1,12 +1,18 @@
 const fs = require('fs')
 const path = require('path')
 const minimap = require('./maps/minimap')
-const maps = {}
+const redis = require('./utils/redis')
 
 const generateAndStoreMinimap = async (mapName, mapPath) => {
   try {
+    // Check if the minimap already exists in Redis
+    const existingMinimap = await redis.get(`minimap:${mapName}`)
+    if (existingMinimap) return
+
+    // If not in Redis, generate the minimap
     const generator = new minimap(mapPath)
-    maps[mapName] = await generator.generate()
+    const minimapImage = await generator.generate()
+    await redis.set(`minimap:${mapName}`, minimapImage)
   } catch (err) {
     console.error(mapName, err)
   }
@@ -14,20 +20,13 @@ const generateAndStoreMinimap = async (mapName, mapPath) => {
 
 const generateMinimapsForAllMaps = async (directory) => {
   try {
-    console.time('Minimaps generation completed')
     const files = fs.readdirSync(directory)
     const mapFiles = files.filter(file => path.extname(file) === '.map')
-
-    let parsedMapsCount = 0
     for (const mapFile of mapFiles) {
       const mapPath = path.join(directory, mapFile)
       const mapName = path.basename(mapFile, '.map')
       await generateAndStoreMinimap(mapName, mapPath)
-      parsedMapsCount++
     }
-
-    console.timeEnd('Minimaps generation completed')
-    console.log(`Total maps parsed: ${parsedMapsCount}`)
   } catch (err) {
     console.error(err)
   }
@@ -37,5 +36,3 @@ if (process.env.CS2D_DIRECTORY) {
   const mapsPath = path.join(process.env.CS2D_DIRECTORY, 'maps')
   generateMinimapsForAllMaps(mapsPath)
 }
-
-module.exports = { maps }

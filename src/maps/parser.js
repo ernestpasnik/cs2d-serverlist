@@ -36,7 +36,7 @@ class Parser {
     const daylightTime = b.readInt()
     header.daylightTime = daylightTime === 0 ? 0 : daylightTime - 1000
     b.offset += 28
-    header.authorName = b.readLine()
+    header.authorName = (b.readLine()).trim()
     header.programUsed = b.readLine()
     for (let i = 0; i < 8; i++) b.readLine()
     header.infoString = b.readLine()

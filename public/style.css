@@ -966,6 +966,16 @@ button:disabled {
 
 
 
+/* MAPS */
+.minimap {
+  display: block;
+  margin: 1rem auto;
+  max-width: 100%;
+  height: auto;
+}
+
+
+
 /* FOOTER */
 footer {
   padding: 1rem;

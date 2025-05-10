@@ -4,7 +4,7 @@ const leaderboard = require('./leaderboard')
 const tools = require('./tools')
 const stats = require('./stats')
 const profile = require('./profile')
-const { formatTime, timeAgo, getEmojiByCountry } = require('./utils/utils')
+const { formatTime, timeAgo, bytesToSize, getEmojiByCountry } = require('./utils/utils')
 sockets.initialize()
 require('./maps')
 
@@ -125,12 +125,15 @@ function routes(fastify) {
     }
     
     const dat = await redis.get(`map:${mapName}`)
+    if (!dat) return err404(req, reply)
+
     const obj = JSON.parse(dat)
     return reply.view('map', {
       v: obj,
       title: mapName,
       description: `Explore a variety of custom maps for intense, action-packed gameplay—whether you prefer tactical team combat, deathmatches, or creative environments, we have maps for every style.`,
       url: req.url,
+      timeAgo, bytesToSize
     })
   })
 

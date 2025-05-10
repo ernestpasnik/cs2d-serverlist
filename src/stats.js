@@ -1,4 +1,5 @@
 const { getPlayersOnline } = require('./players_online')
+const { bytesToSize } = require('./utils/utils')
 
 const stats = {
   sentBytes: 0,
@@ -52,13 +53,6 @@ const gamemodeCounts = (servers) => Object.values(servers).reduce((acc, server) 
   if (gamemode !== undefined) acc[gamemode] = (acc[gamemode] || 0) + 1
   return acc
 }, {})
-
-const bytesToSize = (b) => {
-  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-  if (b === 0) return '0 B'
-  const i = Math.floor(Math.log(b) / Math.log(1024))
-  return `${Math.round(b / Math.pow(1024, i))} ${sizes[i]}`
-}
 
 const secondsToUptime = (s) => {
   const secs = Math.round(s)

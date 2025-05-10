@@ -16,7 +16,7 @@ class Minimap {
         const colors = {
           wall: '#FFFFFF',
           obstacle: '#7D7D7D',
-          default: '#323232',
+          default: 'transparent',
           water: '#006496',
           deadly: '#FF0000'
         }

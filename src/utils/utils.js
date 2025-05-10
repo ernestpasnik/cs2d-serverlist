@@ -19,14 +19,38 @@ function formatTime(s) {
   return `${hours.toFixed(1)} h`
 }
 
-function timeAgo(ts) {
-  const s = getUnixTimestamp() - ts
-  const u = [['d', 86400], ['h', 3600], ['m', 60], ['s', 1]]
+function timeAgo(ts, full = false) {
+  let s = getUnixTimestamp() - ts
+  const uFull = [
+    ['year', 365.25 * 24 * 60 * 60],
+    ['month', 30 * 24 * 60 * 60],
+    ['day', 86400],
+    ['hour', 3600],
+    ['minute', 60],
+    ['second', 1]
+  ]
+  const uShort = [
+    ['y', 365.25 * 24 * 60 * 60],
+    ['d', 86400],
+    ['h', 3600],
+    ['m', 60],
+    ['s', 1]
+  ]
+  const u = full ? uFull : uShort
   for (const [name, sec] of u) {
     const v = Math.floor(s / sec)
-    if (v) return v + name + ' ago'
+    if (v) {
+      return v + ' ' + (full ? name : (name.length > 1 ? name[0] : name)) + (v > 1 && full ? 's' : '') + ' ago'
+    }
   }
   return 'just now'
+}
+
+const bytesToSize = (b) => {
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+  if (b === 0) return '0 B'
+  const i = Math.floor(Math.log(b) / Math.log(1024))
+  return `${Math.round(b / Math.pow(1024, i))} ${sizes[i]}`
 }
 
 function getEmojiByCountry(country) {
@@ -38,5 +62,6 @@ module.exports = {
   getMTimeUnix,
   formatTime,
   timeAgo,
+  bytesToSize,
   getEmojiByCountry
 }

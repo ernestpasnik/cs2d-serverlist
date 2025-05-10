@@ -8,30 +8,26 @@
   <% if (v.header.authorUSGN == 0) { %>
   <div>
     <span>Author</span>
-    <span><%= v.header.authorName %></span>
+    <span><%= v.header.authorName || 'N/A' %></span>
   </div>
   <% } else { %>
   <a href="https://unrealsoftware.de/profile.php?userid=<%= v.header.authorUSGN %>" target="_blank">
-    <span>Author</span>
-    <span><%= v.header.authorName %></span>
+    <span>Author/Last Modified By</span>
+    <span><%= v.header.authorName || 'N/A' %></span>
   </a>
   <% } %>
-  <div>
-    <span>Program Used</span>
-    <span><%= v.header.programUsed %></span>
-  </div>
   <div>
     <span>Width/Height</span>
     <span><%= v.header.mapWidth %>x<%= v.header.mapHeight %></span>
   </div>
   <div>
-    <span>Tileset</span>
+    <span>Tileset Image</span>
     <span><%= v.header.tilesetImage || 'N/A' %></span>
   </div>
   <div>
-    <span>Background</span>
+    <span>Background Image</span>
     <span><%= v.header.backgroundImage || 'N/A' %></span>
   </div>
 </div>
-<br>
-<img src="/minimap/<%= title %>" alt="<%= title %>">
+
+<img class="minimap" src="/minimap/<%= title %>" alt="<%= title %>">

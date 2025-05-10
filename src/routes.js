@@ -132,7 +132,6 @@ function routes(fastify) {
     return reply.view('map', {
       v: obj,
       title: mapName,
-      maps: maps.maplist,
       description: `Explore a variety of custom maps for intense, action-packed gameplay—whether you prefer tactical team combat, deathmatches, or creative environments, we have maps for every style.`,
       url: req.url
     })

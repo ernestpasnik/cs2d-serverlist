@@ -369,7 +369,7 @@ tbody>tr>td:nth-child(1) {
   color: #fff;
 }
 
-#ts, #servers {
+#ts, #servers, #map-count {
   display: inline-block;
   transition: opacity 1s ease-in-out;
   color: #ddd;
@@ -723,7 +723,7 @@ button {
   margin-bottom: .5rem;
 }
 
-#search {
+#search, #maps_filter {
   margin-top: .5rem;
 }
 
@@ -971,21 +971,29 @@ button:disabled {
   display: flex;
   flex-wrap: wrap;
   gap: .5rem;
-  margin-top: .75rem;
+  margin-top: .5rem;
+  border: 1px solid rgba(115, 130, 140, .1);
+  padding: .6rem;
+  border-radius: .25rem;
+  background-color: rgba(115, 130, 140, .05);
 }
-.map-container {
+.maplist > a {
   width: calc(25% - .5rem);
   overflow: clip;
   font-size: .875rem;
-  color: #c6d0d7;
+  color: #999;
+}
+.maplist > a:hover {
+  color: #ddd;
 }
 .minimap {
   display: block;
   margin: 0 auto;
   max-width: 100%;
   height: auto;
-  margin-top: 3rem;
-  margin-bottom: 3rem;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  padding: 0 .25rem;
 }
 .copyContent {
   overflow: clip;
@@ -1014,7 +1022,7 @@ footer>a:hover {
 
 /* MOBILE */
 @media (max-width: 916px) {
-  .map-container {
+  .maplist > a {
     width: calc(50% - .5rem);
   }
 

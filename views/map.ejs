@@ -12,12 +12,12 @@
   </div>
   <% } else { %>
   <a href="https://unrealsoftware.de/profile.php?userid=<%= v.header.authorUSGN %>" target="_blank">
-    <span>Author/Last Modified By</span>
+    <span>Author/Modified By</span>
     <span><%= v.header.authorName || 'N/A' %></span>
   </a>
   <% } %>
   <div>
-    <span>Width/Height</span>
+    <span>Map Size</span>
     <span><%= v.header.mapWidth %>x<%= v.header.mapHeight %></span>
   </div>
   <div>
@@ -28,6 +28,12 @@
     <span>Background Image</span>
     <span><%= v.header.backgroundImage || 'N/A' %></span>
   </div>
+</div>
+
+<div class="fl">
+  <div data-flag="nobuying" class="<%= v.entities.some(entity => entity.type === 11) ? 'dsbl' : 'enbl' %>">Is buying allowed?</div>
+  <div data-flag="noweapons" class="<%= v.entities.some(entity => entity.type === 12) ? 'dsbl' : 'enbl' %>">Are weapons allowed?</div>
+  <div data-flag="teleporters" class="<%= v.entities.some(entity => entity.type === 70) ? 'enbl' : 'dsbl' %>">Are there any teleporters?</div>
 </div>
 
 <div class="center">

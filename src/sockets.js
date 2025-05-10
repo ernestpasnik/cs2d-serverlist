@@ -1,6 +1,6 @@
 const dgram = require('node:dgram')
 const received = require('./received')
-const stats = require('./stats')
+const stats = require('./stats/stats')
 const { getUnixTimestamp } = require('./utils/utils')
 const { IPinfoWrapper } = require('node-ipinfo')
 const RedisCache = require('./utils/ipinfoRedisCache')

@@ -2,11 +2,11 @@ const redis = require('./utils/redis')
 const sockets = require('./sockets')
 const leaderboard = require('./leaderboard')
 const tools = require('./tools')
-const stats = require('./stats')
+const stats = require('./stats/stats')
 const profile = require('./profile')
 const { formatTime, timeAgo, bytesToSize, getEmojiByCountry } = require('./utils/utils')
 sockets.initialize()
-require('./maps')
+require('./maps/maps')
 
 function err404(req, reply) {
   return reply.status(404).view('404', {
@@ -34,6 +34,7 @@ function routes(fastify) {
       url: req.url,
       s: result,
       l: await leaderboard.getLeaderboard(req.params.address),
+      existingMap: await redis.exists(`map:${result.map}`),
       timeAgo,
       getEmojiByCountry
     })
@@ -130,8 +131,7 @@ function routes(fastify) {
       v: obj,
       title: mapName,
       description: `Explore a variety of custom maps for intense, action-packed gameplay—whether you prefer tactical team combat, deathmatches, or creative environments, we have maps for every style.`,
-      url: req.url,
-      timeAgo, bytesToSize
+      url: req.url
     })
   })
 

@@ -19,17 +19,24 @@
     <span id="p"<% if (s.players - s.bots > 0) { %> class="e" <% } %>><svg fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 16 16" class="me-1.5 size-5 text-green-400"><path d="M11.5 8A1.5 1.5 0 0 1 13 9.5v.5c0 2-1.9 4-5 4s-5-2-5-4v-.5A1.5 1.5 0 0 1 4.5 8zM8 1.5A2.7 2.7 0 1 1 8 7a2.7 2.7 0 0 1 0-5.5" fill="currentColor"></path></svg><i><%= (s.players - s.bots) %></i><% if (s.bots > 0) { %><span class="b">+<%= s.bots %></span><% } %>/<%= s.maxplayers %>
   </div>
   <div>
-    <span>Map</span>
-    <span id="map"><%= s.map %></span>
-  </div>
-  <div>
     <span>Game Mode</span>
     <span id="gm" class="<%= ['s', 'd', 't', 'c', 'z'][s.gamemode] %>"><%= ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][s.gamemode] %></span>
   </div>
+  <% if (existingMap) { %>
+  <a href="/maps/<%= s.map %>">
+    <span>Map</span>
+    <span id="map"><%= s.map %></span>
+  </a>
+  <% } else { %>
   <div>
+    <span>Map</span>
+    <span id="map"><%= s.map %></span>
+  </div>
+  <% } %>
+  <a id="copyBtn" href="#">
     <span>Address</span>
     <span id="addr"><%= s.ip %>:<%= s.port %></span>
-  </div>
+  </a>
   <% if (l != false) { %>
   <a href="/leaderboard/<%= s.ip %>:<%= s.port %>">
     <span>Leaderboard</span>

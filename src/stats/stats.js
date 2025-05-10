@@ -1,5 +1,5 @@
 const { getPlayersOnline } = require('./players_online')
-const { bytesToSize } = require('./utils/utils')
+const { bytesToSize } = require('../utils/utils')
 
 const stats = {
   sentBytes: 0,
@@ -160,5 +160,6 @@ function increaseStatsRecvBytes(bytes) {
 module.exports = {
   getStats,
   increaseStatsSentBytes,
-  increaseStatsRecvBytes
+  increaseStatsRecvBytes,
+  countServerStats
 }

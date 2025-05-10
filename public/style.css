@@ -302,7 +302,7 @@ tbody>tr>td:nth-child(1) {
   background-color: rgba(255, 255, 255, 0.04);
 }
 
-#addr:hover {
+.bar>a:hover>#addr {
   color: rgb(247, 158, 202);
 }
 
@@ -976,6 +976,7 @@ button:disabled {
 .center {
   margin: 1.5rem 0;
   text-align: center;
+  margin-top: 5rem;
 }
 
 /* FOOTER */

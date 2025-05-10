@@ -93,6 +93,7 @@ const updateUI = d => {
 
 const addr = $('#addr');
 if (addr) {
+  const copyBtn = $('#copyBtn');
   const el = document.getElementById('ts');
   const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10);
   const timeNow = Math.floor(Date.now() / 1000);
@@ -107,7 +108,7 @@ if (addr) {
   }, timeToNextUpdate * 1000);
 
   let clicked = false;
-  addr.addEventListener('click', (e) => {
+  copyBtn.addEventListener('click', (e) => {
     e.preventDefault();
     if (clicked) return;
 

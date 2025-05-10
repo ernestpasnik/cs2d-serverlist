@@ -27,7 +27,7 @@ class Minimap {
         for (let x = 0; x < mapWidth; x++) {
           for (let y = 0; y < mapHeight; y++) {
             const tile = map[x][y]
-            const tileMode = tileModes[tile] ?? 0  // Fallback to default mode if out of range
+            const tileMode = tileModes[tile] ?? 0
 
             let color
             switch (tileMode) {

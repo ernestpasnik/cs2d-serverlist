@@ -36,4 +36,8 @@
   <div data-flag="teleporters" class="<%= v.entities.some(entity => entity.type === 70) ? 'enbl' : 'dsbl' %>">Are there any teleporters?</div>
 </div>
 
-<img class="minimap" src="/maps/<%= title %>/minimap.webp" alt="<%= title %>">
+<div class="map-container">
+  <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
+  <img class="minimap" src="/maps/<%= title %>/minimap.webp" alt="<%= title %>">
+  <a href="/maps/<%= nextMap %>" class="arrow arrow-right">&#8594;</a>
+</div>

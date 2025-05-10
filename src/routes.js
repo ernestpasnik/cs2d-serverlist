@@ -126,14 +126,23 @@ function routes(fastify) {
     if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
       return reply.code(400).send({ error: 'Invalid map name' })
     }
+
     const dat = await redis.get(`map:${mapName}`)
     if (!dat) return err404(req, reply)
-    const obj = JSON.parse(dat)
+
+    const maplist = maps.maplist
+    const currentIndex = maplist.indexOf(mapName)
+    if (currentIndex === -1) return err404(req, reply)
+    const nextIndex = (currentIndex + 1) % maplist.length
+    const prevIndex = (currentIndex - 1 + maplist.length) % maplist.length
+
     return reply.view('map', {
-      v: obj,
+      v: JSON.parse(dat),
       title: mapName,
       description: `Explore a variety of custom maps for intense, action-packed gameplay—whether you prefer tactical team combat, deathmatches, or creative environments, we have maps for every style.`,
-      url: req.url
+      url: req.url,
+      nextMap: maplist[nextIndex],
+      prevMap: maplist[prevIndex]
     })
   })
 

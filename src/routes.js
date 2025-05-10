@@ -123,10 +123,8 @@ function routes(fastify) {
     if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
       return reply.code(400).send({ error: 'Invalid map name' })
     }
-    
     const dat = await redis.get(`map:${mapName}`)
     if (!dat) return err404(req, reply)
-
     const obj = JSON.parse(dat)
     return reply.view('map', {
       v: obj,
@@ -137,13 +135,13 @@ function routes(fastify) {
     })
   })
 
-  fastify.get('/minimap/:mapName', async (req, reply) => {
+  fastify.get('/maps/:mapName/minimap.png', async (req, reply) => {
     const mapName = req.params.mapName
     if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
       return reply.code(400).send({ error: 'Invalid map name' })
     }
-
     const dat = await redis.get(`map:${mapName}`)
+    if (!dat) return err404(req, reply)
     const obj = JSON.parse(dat)
     if (obj.minimap) {
       return reply.header('Content-Type', 'image/png').send(Buffer.from(obj.minimap))

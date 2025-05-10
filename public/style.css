@@ -972,11 +972,11 @@ button:disabled {
   margin: 0 auto;
   max-width: 100%;
   height: auto;
+  margin-bottom: 1.5rem;
 }
 .center {
   margin: 1.5rem 0;
   text-align: center;
-  margin-top: 5rem;
 }
 
 /* FOOTER */

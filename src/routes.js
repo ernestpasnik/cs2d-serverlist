@@ -135,7 +135,7 @@ function routes(fastify) {
     })
   })
 
-  fastify.get('/maps/:mapName/minimap.png', async (req, reply) => {
+  fastify.get('/maps/:mapName/minimap.webp', async (req, reply) => {
     const mapName = req.params.mapName
     if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
       return reply.code(400).send({ error: 'Invalid map name' })
@@ -144,7 +144,7 @@ function routes(fastify) {
     if (!dat) return err404(req, reply)
     const obj = JSON.parse(dat)
     if (obj.minimap) {
-      return reply.header('Content-Type', 'image/png').send(Buffer.from(obj.minimap))
+      return reply.header('Content-Type', 'image/webp').send(Buffer.from(obj.minimap))
     }
     return reply.err404(req, reply)
   })

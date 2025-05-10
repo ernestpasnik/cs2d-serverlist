@@ -1,24 +1,14 @@
-const fs = require('fs')
 const { createCanvas } = require('canvas')
 const { PNG } = require('pngjs')
-const CS2DMapParser = require('./parser')
 
 class Minimap {
-  constructor(mapPath) {
-    this.mapPath = mapPath
-  }
-
-  generate() {
+  generate(parsed) {
     return new Promise((resolve, reject) => {
       try {
-        const buffer = fs.readFileSync(this.mapPath)
-        const parser = new CS2DMapParser(buffer)
-        const parsed = parser.parse()
-
         const mapWidth = parsed.header.mapWidth
         const mapHeight = parsed.header.mapHeight
-        const scaledWidth = mapWidth * 3
-        const scaledHeight = mapHeight * 3
+        const scaledWidth = mapWidth * 2
+        const scaledHeight = mapHeight * 2
 
         const canvas = createCanvas(scaledWidth, scaledHeight)
         const ctx = canvas.getContext('2d')
@@ -61,7 +51,7 @@ class Minimap {
             }
 
             ctx.fillStyle = color
-            ctx.fillRect(x * 3, y * 3, 3, 3)
+            ctx.fillRect(x * 2, y * 2, 2, 2)
           }
         }
 

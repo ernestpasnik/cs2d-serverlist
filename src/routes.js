@@ -118,11 +118,32 @@ function routes(fastify) {
     })
   })
 
+  fastify.get('/maps/:mapName', async (req, reply) => {
+    const mapName = req.params.mapName
+    if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
+      return reply.code(400).send({ error: 'Invalid map name' })
+    }
+    
+    const dat = await redis.get(`map:${mapName}`)
+    const obj = JSON.parse(dat)
+    return reply.view('map', {
+      v: obj,
+      title: mapName,
+      description: `Explore a variety of custom maps for intense, action-packed gameplay—whether you prefer tactical team combat, deathmatches, or creative environments, we have maps for every style.`,
+      url: req.url,
+    })
+  })
+
   fastify.get('/minimap/:mapName', async (req, reply) => {
     const mapName = req.params.mapName
-    const minimapBuffer = await redis.getBuffer(`minimap:${mapName}`);
-    if (minimapBuffer) {
-      return reply.header('Content-Type', 'image/png').send(minimapBuffer)
+    if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
+      return reply.code(400).send({ error: 'Invalid map name' })
+    }
+
+    const dat = await redis.get(`map:${mapName}`)
+    const obj = JSON.parse(dat)
+    if (obj.minimap) {
+      return reply.header('Content-Type', 'image/png').send(Buffer.from(obj.minimap))
     }
     return reply.err404(req, reply)
   })

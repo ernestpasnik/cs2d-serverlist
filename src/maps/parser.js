@@ -1,6 +1,6 @@
 const Streams = require('../utils/streams')
 
-class CS2DMapParser {
+class Parser {
   constructor(buffer) {
     this.buffer = new Streams(buffer)
   }
@@ -141,4 +141,4 @@ class CS2DMapParser {
   }
 }
 
-module.exports = CS2DMapParser
+module.exports = Parser

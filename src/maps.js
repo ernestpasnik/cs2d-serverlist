@@ -1,18 +1,18 @@
 const fs = require('fs')
 const path = require('path')
-const minimap = require('./maps/minimap')
+const Parser = require('./maps/parser')
+const Minimap = require('./maps/minimap')
 const redis = require('./utils/redis')
 
 const generateAndStoreMinimap = async (mapName, mapPath) => {
   try {
-    // Check if the minimap already exists in Redis
-    const existingMinimap = await redis.get(`minimap:${mapName}`)
-    if (existingMinimap) return
+    const existingMap = await redis.exists(`map:${mapName}`)
+    if (existingMap) return
 
-    // If not in Redis, generate the minimap
-    const generator = new minimap(mapPath)
-    const minimapImage = await generator.generate()
-    await redis.set(`minimap:${mapName}`, minimapImage)
+    const buffer = fs.readFileSync(mapPath)
+    const parsed = new Parser(buffer).parse()
+    parsed.minimap = await new Minimap().generate(parsed)
+    await redis.set(`map:${mapName}`, JSON.stringify(parsed))
   } catch (err) {
     console.error(mapName, err)
   }

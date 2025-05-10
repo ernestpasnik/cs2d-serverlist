@@ -967,13 +967,24 @@ button:disabled {
 
 
 /* MAPS */
+.maplist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.map-container {
+  width: calc(25% - .5rem);
+  overflow: clip;
+  font-size: .875rem;
+  color: #c6d0d7;
+}
 .minimap {
   display: block;
   margin: 0 auto;
   max-width: 100%;
   height: auto;
-  margin-top: 2.5rem;
-  margin-bottom: 2.5rem;
+  margin-top: 5rem;
+  margin-bottom: 5rem;
 }
 .copyContent {
   overflow: clip;
@@ -1002,6 +1013,10 @@ footer>a:hover {
 
 /* MOBILE */
 @media (max-width: 916px) {
+  .map-container {
+    width: calc(50% - .5rem);
+  }
+
   .fl>div {
     flex: 1 18%;
   }

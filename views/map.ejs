@@ -37,3 +37,7 @@
 </div>
 
 <img class="minimap" src="/maps/<%= title %>/minimap.webp" alt="<%= title %>">
+
+<div class="maplist">
+  <% maps.forEach(map => { %><a href="/maps/<%= map %>" class="map-container"><%= map %></a><% }); %>
+</div>

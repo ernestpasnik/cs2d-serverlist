@@ -5,6 +5,8 @@ const Parser = require('./parser')
 const Minimap = require('./minimap')
 const redis = require('../utils/redis')
 
+const maplist = []
+
 const generateAndStoreMinimap = async (mapName, mapPath) => {
   try {
     // const existingMap = await redis.exists(`map:${mapName}`)
@@ -13,10 +15,8 @@ const generateAndStoreMinimap = async (mapName, mapPath) => {
     const buffer = fs.readFileSync(mapPath)
     const parsed = new Parser(buffer).parse()
 
-    // Generate minimap
     parsed.minimap = await new Minimap().generate(parsed)
 
-    // Compute SHA-256 hash
     const hash = crypto.createHash('sha256').update(buffer).digest('hex')
     parsed.sha256 = hash
 
@@ -34,13 +34,21 @@ const generateMinimapsForAllMaps = async (directory) => {
       const mapPath = path.join(directory, mapFile)
       const mapName = path.basename(mapFile, '.map')
       await generateAndStoreMinimap(mapName, mapPath)
+      maplist.push(mapName)
     }
   } catch (err) {
     console.error(err)
   }
 }
 
-if (process.env.CS2D_DIRECTORY) {
-  const mapsPath = path.join(process.env.CS2D_DIRECTORY, 'maps')
-  generateMinimapsForAllMaps(mapsPath)
+function loadMaps() {
+  if (process.env.CS2D_DIRECTORY) {
+    const mapsPath = path.join(process.env.CS2D_DIRECTORY, 'maps')
+    generateMinimapsForAllMaps(mapsPath)
+  }
+}
+
+module.exports = {
+  loadMaps,
+  maplist
 }

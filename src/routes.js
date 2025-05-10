@@ -6,7 +6,8 @@ const stats = require('./stats/stats')
 const profile = require('./profile')
 const { formatTime, timeAgo, getEmojiByCountry } = require('./utils/utils')
 sockets.initialize()
-require('./maps/maps')
+const maps = require('./maps/maps')
+maps.loadMaps()
 
 function err404(req, reply) {
   return reply.status(404).view('404', {
@@ -59,6 +60,7 @@ function routes(fastify) {
   fastify.get('/maps', async (req, reply) => {
     return reply.view('maps.ejs', {
       title: 'Maps',
+      maps: maps.maplist,
       url: req.url
     })
   })
@@ -130,6 +132,7 @@ function routes(fastify) {
     return reply.view('map', {
       v: obj,
       title: mapName,
+      maps: maps.maplist,
       description: `Explore a variety of custom maps for intense, action-packed gameplay—whether you prefer tactical team combat, deathmatches, or creative environments, we have maps for every style.`,
       url: req.url
     })

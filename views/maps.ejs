@@ -4,4 +4,6 @@
   </div>
 </div>
 
-<p>Work in Progress 🚧</p>
+<div class="maplist">
+  <% maps.forEach(map => { %><a href="/maps/<%= map %>" class="map-container"><%= map %></a><% }); %>
+</div>

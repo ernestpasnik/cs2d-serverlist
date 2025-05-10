@@ -9,8 +9,8 @@ const maplist = []
 
 const generateAndStoreMinimap = async (mapName, mapPath) => {
   try {
-    // const existingMap = await redis.exists(`map:${mapName}`)
-    // if (existingMap) return
+    const existingMap = await redis.exists(`map:${mapName}`)
+    if (existingMap) return
 
     const buffer = fs.readFileSync(mapPath)
     const parsed = new Parser(buffer).parse()

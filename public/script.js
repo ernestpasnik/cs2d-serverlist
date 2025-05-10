@@ -157,6 +157,22 @@ if (maps_filter) {
 }
 
 
+/* Map */
+const left = document.querySelector('.arrow-left');
+if (left) {
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft') {
+      if (left) window.location.href = left.href;
+    } else if (e.key === 'ArrowRight') {
+      const right = document.querySelector('.arrow-right');
+      if (right) window.location.href = right.href;
+    }
+  });
+}
+
+
+
+
 
 
 /* Tools */

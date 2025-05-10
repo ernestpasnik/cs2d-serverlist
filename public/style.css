@@ -154,7 +154,7 @@ nav>a {
   align-items: center;
   text-align: center;
   display: grid;
-  padding: 1.5rem;
+  padding: 1.3rem 1.5rem;
   gap: .2rem;
   justify-content: center;
   justify-items: center;
@@ -1010,7 +1010,7 @@ button:disabled {
   background-color: rgba(255, 255, 255, 0.02);
   color: rgba(255, 255, 255, .75);
   border: 1px solid rgba(170, 169, 169, 0.04);
-  padding: 1rem;
+  padding: .75rem;
   height: 100%;
   display: flex;
   justify-content: center;

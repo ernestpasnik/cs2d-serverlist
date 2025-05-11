@@ -1,0 +1,74 @@
+<div class="stats-container">
+  <label>Map Header Details</label>
+  <div class="stat-item">
+    <span>Scroll map like tiles?</span>
+    <span><%= v.header.scrollMap ? 'yes' : 'no' %></span>
+  </div>
+  <div class="stat-item">
+    <span>Use modifiers in this map</span>
+    <span><%= v.header.useModifiers ? 'yes' : 'no' %></span>
+  </div>
+  <div class="stat-item">
+    <span>Save tile heights with map?</span>
+    <span><%= v.header.saveTileHeights ? 'yes' : 'no' %></span>
+  </div>
+  <div class="stat-item">
+    <span>Use 64x64 pixel tiles?</span>
+    <span><%= v.header.use64pxTiles ? 'yes' : 'no' %></span>
+  </div>
+  <div class="stat-item">
+    <span>Uptime of system</span>
+    <span><%= v.header.sysUptime %></span>
+  </div>
+  <div class="stat-item">
+    <span>Map daylight time</span>
+    <span><%= v.header.daylightTime %></span>
+  </div>
+  <div class="stat-item">
+    <span>Program used</span>
+    <span><%= v.header.programUsed ? v.header.programUsed : 'N/A' %></span>
+  </div>
+  <div class="stat-item">
+    <span>Tileset image</span>
+    <span><%= v.header.tilesetImage %></span>
+  </div>
+  <div class="stat-item">
+    <span>Tile count</span>
+    <span><%= v.header.tileCount %></span>
+  </div>
+  <div class="stat-item">
+    <span>Map width</span>
+    <span><%= v.header.mapWidth %></span>
+  </div>
+
+  <div class="stat-item">
+    <span>Map height</span>
+    <span><%= v.header.mapHeight %></span>
+  </div>
+  <div class="stat-item">
+    <span>Background image</span>
+    <span><%= v.header.backgroundImage ? v.header.backgroundImage : 'N/A' %></span>
+  </div>
+  <div class="stat-item">
+    <span>Background scroll X</span>
+    <span><%= v.header.bgScrollX %></span>
+  </div>
+  <div class="stat-item">
+    <span>Background scroll Y</span>
+    <span><%= v.header.bgScrollY %></span>
+  </div>
+  <div class="stat-item">
+    <span>Background color</span>
+    <span>rgb(<%= v.header.bgColorRed %>, <%= v.header.bgColorGreen %>, <%= v.header.bgColorBlue %>)</span>
+  </div>
+</div>
+
+<div class="stats-container">
+  <label>External Resources</label>
+  <% v.resources.forEach((item, index) => { %>
+  <div class="stat-item<% if (item.bytes == 0) { %> err<% } %>">
+    <span><%= item.path %></span>
+    <span><%= item.size %></span>
+  </div>
+  <% }) %>
+</div>

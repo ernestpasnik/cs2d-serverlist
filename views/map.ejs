@@ -5,61 +5,29 @@
 </div>
 
 <div class="bar">
-  <% if (v.header.authorUSGN == 0) { %>
   <div>
-    <span>Author/Modified By</span>
+    <span>Author's / Last Modifier's Name</span>
     <span><%= v.header.authorName || 'N/A' %></span>
   </div>
-  <% } else { %>
+  <% if (v.header.authorUSGN > 0) { %>
   <a href="https://unrealsoftware.de/profile.php?userid=<%= v.header.authorUSGN %>" target="_blank">
-    <span>Author/Modified By</span>
-    <span><%= v.header.authorName || 'N/A' %></span>
+    <span>Author's / Last Modifier's USGN</span>
+    <span><%= v.header.authorUSGN %></span>
   </a>
+  <% } else { %>
+  <div>
+    <span>Author's / Last Modifier's USGN</span>
+    <span>N/A</span>
+  </div>
   <% } %>
-  <div>
-    <span>Map Size</span>
-    <span><%= v.header.mapWidth %>×<%= v.header.mapHeight %> Tiles</span>
-  </div>
-  <div>
-    <span>Tileset Image</span>
-    <span><%= v.header.tilesetImage %></span>
-  </div>
-  <a class="copyBtn" href="#">
-    <span>SHA-256 Hash</span>
-    <code class="copyContent"><%= v.sha256 %></code>
-  </a>
-</div>
-
-<div class="fl">
-  <div data-flag="nobuying" class="<%= v.nobuying ? 'dsbl' : 'enbl' %>">Is buying allowed?</div>
-  <div data-flag="noweapons" class="<%= v.noweapons ? 'dsbl' : 'enbl' %>">Are weapons allowed?</div>
-  <div data-flag="teleporters" class="<%= v.teleporters ? 'enbl' : 'dsbl' %>">Are there any teleporters?</div>
 </div>
 
 <div class="map-container">
   <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
-  <div>
     <img class="minimap" src="/maps/<%= title %>/minimap.webp" alt="<%= title %>">
-    <div class="responsive resources">
-      <table class="sortable">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>External Resource</th>
-            <th aria-sort="ascending">File Size</th>
-          </tr>
-        </thead>
-          <tbody>
-            <% v.resources.forEach((item, index) => { %>
-            <tr<% if (item.bytes == 0) { %> class="err"<% } %>>
-              <td><%= index + 1 %></td>
-              <td><%= item.path %></td>
-              <td data-sort="<%= item.bytes %>"><%= item.size %></td>
-            </tr>
-            <% }) %>
-          </tbody>
-      </table>
-    </div>
-  </div>
   <a href="/maps/<%= nextMap %>" class="arrow arrow-right">&#8594;</a>
+</div>
+
+<div class="stats map-info">
+  <%- include('map_info') %>
 </div>

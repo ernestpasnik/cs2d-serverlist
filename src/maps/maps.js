@@ -36,7 +36,7 @@ const generateAndStoreMinimap = async (mapName, mapPath) => {
         parsed.teleporters = true
       }
     })
-    parsed.resources.sort((a, b) => a.bytes - b.bytes)
+    parsed.resources.sort((a, b) => b.bytes - a.bytes)
     await redis.set(`map:${mapName}`, JSON.stringify(parsed))
   } catch (err) {
     console.error(mapName, err)

@@ -50,7 +50,7 @@ async function generateEmbedsFromServers(servers) {
     const existingMap = await redis.exists(`map:${server.map}`)
     if (existingMap) {
       embed.thumbnail = {
-        url: `https://cs2d.pp.ua/minimap/${server.map}-square.webp`
+        url: `https://cs2d.pp.ua/maps/${server.map}/minimap.webp`
       }
     }
     embeds.push(embed)

@@ -215,12 +215,8 @@ function routes(fastify) {
     const result = sockets.getServer(addr)
     if (!result) return reply.code(500).send({ error: 'No valid servers found' })
 
-    try {
-      const duration = await leaderboard.parse(result.name, addr, sort, buff)
-      return reply.send({ error: false, message: `Leaderboard parsed in ${duration} ms` })
-    } catch (error) {
-      return reply.code(500).send({ error: error.message })
-    }
+    leaderboard.parse(result.name, addr, sort, buff)
+    return reply.send({ error: false, message: 'Upload completed successfully' })
   })
 
   fastify.setNotFoundHandler(async (req, reply) => {

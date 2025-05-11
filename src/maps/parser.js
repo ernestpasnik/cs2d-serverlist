@@ -101,7 +101,10 @@ class Parser {
             } else if ((mod & 64) || !(mod & 128)) {
               b.readByte()
             } else {
-              b.readByte(); b.readByte(); b.readByte(); b.readByte()
+              b.readByte()
+              b.readByte()
+              b.readByte()
+              b.readByte()
             }
           }
         }

@@ -69,8 +69,7 @@ async function parse(serverName, addr, sort, buf) {
 
   const endTime = performance.now()
   const duration = Math.round(endTime - startTime)
-  console.log(`[${addr}] Leaderboard parsed in ${duration} ms`)
-  return duration
+  console.log(`Parsed leaderboard from ${addr} in ${duration} ms`)
 }
 
 async function getLeaderboard(addr) {

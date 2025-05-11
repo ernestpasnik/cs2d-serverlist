@@ -9,17 +9,10 @@ const maplist = []
 
 const generateAndStoreMinimap = async (mapName, mapPath) => {
   try {
-    //const existingMap = await redis.exists(`map:${mapName}`)
-    //if (existingMap) return
-
     const buffer = fs.readFileSync(mapPath)
     const parsed = new Parser(buffer).parse()
-
     parsed.minimap = await new Minimap().generate(parsed)
-
-    const hash = crypto.createHash('sha256').update(buffer).digest('hex')
-    parsed.sha256 = hash
-
+    parsed.sha256 = crypto.createHash('sha256').update(buffer).digest('hex')
     await redis.set(`map:${mapName}`, JSON.stringify(parsed))
   } catch (err) {
     console.error(mapName, err)
@@ -27,18 +20,28 @@ const generateAndStoreMinimap = async (mapName, mapPath) => {
 }
 
 const generateMinimapsForAllMaps = async (directory) => {
+  let i = 0
+  const startTime = performance.now()
   try {
     const files = fs.readdirSync(directory)
     const mapFiles = files.filter(file => path.extname(file) === '.map')
     for (const mapFile of mapFiles) {
       const mapPath = path.join(directory, mapFile)
       const mapName = path.basename(mapFile, '.map')
-      await generateAndStoreMinimap(mapName, mapPath)
       maplist.push(mapName)
+
+      // Skip generation if the map data is already cached in Redis
+      if (await redis.exists(`map:${mapName}`)) continue
+      await generateAndStoreMinimap(mapName, mapPath)
+      i++
     }
   } catch (err) {
     console.error(err)
   }
+
+  const endTime = performance.now()
+  const duration = Math.round(endTime - startTime)
+  if (i > 0) console.log(`Parsed ${i} maps in ${duration} ms`)
 }
 
 function loadMaps() {

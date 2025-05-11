@@ -794,11 +794,11 @@ button:disabled {
   font-size: .85rem;
 }
 
-.err {
+.err, .err > td {
   color: #bb5d5d;
 }
 
-.msg {
+.msg, .msg > td {
   color: #49a258;
 }
 
@@ -1002,6 +1002,18 @@ button:disabled {
   min-height: inherit;
 }
 
+.resources {
+  padding: 4rem;
+  padding-top: 1.5rem;
+  margin: 0 auto;
+}
+
+.resources > table > thead > tr > th,
+.resources > table > tbody > tr > td {
+  padding: .4rem;
+  font-size: .8rem;
+}
+
 .arrow {
   position: absolute;
   top: 50%;
@@ -1107,7 +1119,7 @@ footer>a:hover {
 
   main {
     padding: 1rem .75rem;
-    min-height: 70vh;
+    min-height: 80vh;
   }
 
   table,

@@ -31,13 +31,35 @@
 </div>
 
 <div class="fl">
-  <div data-flag="nobuying" class="<%= v.entities.some(entity => entity.type === 11) ? 'dsbl' : 'enbl' %>">Is buying allowed?</div>
-  <div data-flag="noweapons" class="<%= v.entities.some(entity => entity.type === 12) ? 'dsbl' : 'enbl' %>">Are weapons allowed?</div>
-  <div data-flag="teleporters" class="<%= v.entities.some(entity => entity.type === 70) ? 'enbl' : 'dsbl' %>">Are there any teleporters?</div>
+  <div data-flag="nobuying" class="<%= v.nobuying ? 'dsbl' : 'enbl' %>">Is buying allowed?</div>
+  <div data-flag="noweapons" class="<%= v.noweapons ? 'dsbl' : 'enbl' %>">Are weapons allowed?</div>
+  <div data-flag="teleporters" class="<%= v.teleporters ? 'enbl' : 'dsbl' %>">Are there any teleporters?</div>
 </div>
 
 <div class="map-container">
   <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
-  <img class="minimap" src="/maps/<%= title %>/minimap.webp" alt="<%= title %>">
+  <div>
+    <img class="minimap" src="/maps/<%= title %>/minimap.webp" alt="<%= title %>">
+    <div class="responsive resources">
+      <table class="sortable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>External Resource</th>
+            <th aria-sort="ascending">File Size</th>
+          </tr>
+        </thead>
+          <tbody>
+            <% v.resources.forEach((item, index) => { %>
+            <tr<% if (item.bytes == 0) { %> class="err"<% } %>>
+              <td><%= index + 1 %></td>
+              <td><%= item.path %></td>
+              <td data-sort="<%= item.bytes %>"><%= item.size %></td>
+            </tr>
+            <% }) %>
+          </tbody>
+      </table>
+    </div>
+  </div>
   <a href="/maps/<%= nextMap %>" class="arrow arrow-right">&#8594;</a>
 </div>

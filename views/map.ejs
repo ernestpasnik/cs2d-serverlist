@@ -3,7 +3,7 @@
     <h1><%= title %></h1>
   </div>
   <a class="copyBtn" href="#">
-    <code id="hash" class="copyContent" data-tippy-content="SHA-256 hash of the map file" data-tocopy="<%= v.sha256 %>"><%= v.sha256.slice(0, 8) %>...</code>
+    <code id="hash" class="copyContent" data-tippy-content="SHA-256 hash of the map file" data-tocopy="<%= v.file.hash %>"><%= v.file.hash.slice(0, 8) %>...</code>
   </a>
 </div>
 

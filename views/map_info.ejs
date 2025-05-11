@@ -1,5 +1,5 @@
 <div class="stats-container">
-  <label>Map Header Details</label>
+  <label>Header Details</label>
   <div class="stat-item">
     <span>Scroll map like tiles?</span>
     <span><%= v.header.scrollMap ? 'yes' : 'no' %></span>
@@ -17,45 +17,45 @@
     <span><%= v.header.use64pxTiles ? 'yes' : 'no' %></span>
   </div>
   <div class="stat-item">
-    <span>Uptime of system</span>
-    <span><%= v.header.sysUptime %></span>
-  </div>
-  <div class="stat-item">
     <span>Map daylight time</span>
     <span><%= v.header.daylightTime %></span>
+  </div>
+  <div class="stat-item">
+    <span>Uptime of system</span>
+    <span><%= formatUptime(v.header.sysUptime, true) %></span>
   </div>
   <div class="stat-item">
     <span>Program used</span>
     <span><%= v.header.programUsed ? v.header.programUsed : 'N/A' %></span>
   </div>
+</div>
+
+
+<div class="stats-container">
+  <label>Map Assets</label>
   <div class="stat-item">
-    <span>Tileset image</span>
-    <span><%= v.header.tilesetImage %></span>
+    <span>Map <%= v.file.name %></span>
+    <span><%= v.file.size %></span>
   </div>
   <div class="stat-item">
-    <span>Tile count</span>
+    <span>Map size</span>
+    <span><%= v.header.mapWidth %>×<%= v.header.mapHeight %></span>
+  </div>
+  <div class="stat-item">
+    <span>Tileset <%= v.header.tilesetImage %></span>
+    <span><%= v.tilesetSize.size %></span>
+  </div>
+  <div class="stat-item">
+    <span>Tileset tile count</span>
     <span><%= v.header.tileCount %></span>
   </div>
   <div class="stat-item">
-    <span>Map width</span>
-    <span><%= v.header.mapWidth %></span>
-  </div>
-
-  <div class="stat-item">
-    <span>Map height</span>
-    <span><%= v.header.mapHeight %></span>
+    <span>Background<%= v.header.backgroundImage ? ' ' + v.header.backgroundImage : '' %></span>
+    <span><%= v.backgroundSize.bytes > 0 ? v.backgroundSize.size : 'N/A' %></span>
   </div>
   <div class="stat-item">
-    <span>Background image</span>
-    <span><%= v.header.backgroundImage ? v.header.backgroundImage : 'N/A' %></span>
-  </div>
-  <div class="stat-item">
-    <span>Background scroll X</span>
-    <span><%= v.header.bgScrollX %></span>
-  </div>
-  <div class="stat-item">
-    <span>Background scroll Y</span>
-    <span><%= v.header.bgScrollY %></span>
+    <span>Background scroll X,Y</span>
+    <span><%= v.header.bgScrollX %>,<%= v.header.bgScrollY %></span>
   </div>
   <div class="stat-item">
     <span>Background color</span>

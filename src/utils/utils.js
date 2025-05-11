@@ -53,6 +53,18 @@ const bytesToSize = (b) => {
   return `${Math.round(b / Math.pow(1024, i))} ${sizes[i]}`
 }
 
+function formatUptime(uptime, ms = false) {
+  if (ms) uptime = Math.floor(uptime / 1000)
+
+  const d = Math.floor(uptime / (3600 * 24))
+  const h = String(Math.floor((uptime % (3600 * 24)) / 3600)).padStart(2, '0')
+  const m = String(Math.floor((uptime % 3600) / 60)).padStart(2, '0')
+  const s = String(uptime % 60).padStart(2, '0')
+
+  if (d > 1) return `${d}d ${h}:${m}:${s}`
+  return `${h}:${m}:${s}`
+}
+
 function getEmojiByCountry(country) {
   return flag(country)
 }
@@ -63,5 +75,6 @@ module.exports = {
   formatTime,
   timeAgo,
   bytesToSize,
+  formatUptime,
   getEmojiByCountry
 }

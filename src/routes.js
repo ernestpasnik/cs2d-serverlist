@@ -4,7 +4,7 @@ const leaderboard = require('./leaderboard')
 const tools = require('./tools')
 const stats = require('./stats/stats')
 const profile = require('./profile')
-const { formatTime, timeAgo, getEmojiByCountry } = require('./utils/utils')
+const { formatTime, timeAgo, formatUptime, getEmojiByCountry } = require('./utils/utils')
 sockets.initialize()
 const maps = require('./maps/maps')
 maps.loadMaps()
@@ -142,7 +142,8 @@ function routes(fastify) {
       description: `Explore a variety of custom maps for intense, action-packed gameplay—whether you prefer tactical team combat, deathmatches, or creative environments, we have maps for every style.`,
       url: req.url,
       nextMap: maplist[nextIndex],
-      prevMap: maplist[prevIndex]
+      prevMap: maplist[prevIndex],
+      formatUptime
     })
   })
 

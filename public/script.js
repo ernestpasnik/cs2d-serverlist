@@ -118,8 +118,10 @@ if (copyBtn) {
     e.preventDefault();
     if (clicked) return;
 
+
+    const toCopy = copyContent.getAttribute('data-tocopy');
     const originalText = copyContent.textContent;
-    navigator.clipboard.writeText(originalText).then(() => {
+    navigator.clipboard.writeText(toCopy).then(() => {
       copyContent.textContent = 'Copied to clipboard';
       clicked = true;
       setTimeout(() => {

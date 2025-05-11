@@ -35,7 +35,7 @@
   <% } %>
   <a class="copyBtn" href="#">
     <span>Address</span>
-    <span id="addr" class="copyContent"><%= s.ip %>:<%= s.port %></span>
+    <span id="addr" class="copyContent" data-tocopy="<%= s.ip %>:<%= s.port %>"><%= s.ip %>:<%= s.port %></span>
   </a>
   <% if (l != false) { %>
   <a href="/leaderboard/<%= s.ip %>:<%= s.port %>">

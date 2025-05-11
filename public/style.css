@@ -543,7 +543,7 @@ i {
 
 .stat-item>span:first-child {
   color: #ddd;
-  max-width: 200px;
+  max-width: 180px;
 }
 
 .stat-item>span:last-child {
@@ -566,7 +566,7 @@ i {
   display: flex;
   flex-direction: column;
   padding: 1rem 1.2rem;
-  font-size: .9rem;
+  font-size: .825rem;
   border: 1px solid rgba(115, 130, 140, .1);
 }
 
@@ -1017,7 +1017,7 @@ button:disabled {
 }
 
 .map-info > div {
-  max-height: 225px;
+  max-height: 215px;
   overflow: auto;
 }
 
@@ -1100,15 +1100,9 @@ footer>a:hover {
   footer,
   label,
   footer>span,
+  .stat-item,
+  .spec,
   .alert {
-    font-size: .8rem;
-  }
-
-  .stat-item {
-    font-size: .85rem;
-  }
-
-  .spec {
     font-size: .8rem;
   }
 

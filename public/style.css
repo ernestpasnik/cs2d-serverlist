@@ -554,6 +554,7 @@ small {
 .stat-item>*:last-child {
   margin-left: auto;
   text-wrap: nowrap;
+  overflow: hidden;
 }
 
 .stat-item>span {
@@ -1030,7 +1031,7 @@ button:disabled {
   color: rgba(255, 255, 255, .75);
   padding: 0 1rem;
   height: 100%;
-  width: 50%;
+  width: 25%;
   display: grid;
   align-items: center;
 }
@@ -1061,15 +1062,25 @@ footer {
 footer>a {
   font-size: .85rem;
   color: #afbcca;
+  opacity: .8;
 }
 
 footer>a:hover {
   color: #fff;
+  opacity: 1;
 }
 
 
 /* MOBILE */
 @media (max-width: 916px) {
+  .map-info > div {
+    max-height: inherit;
+  }
+
+  .stat-item > span:first-child {
+    max-width: 80%;
+  }
+
   .maplist > a {
     width: calc(50% - .5rem);
   }
@@ -1117,7 +1128,7 @@ footer>a:hover {
 
   main {
     padding: 1rem .75rem;
-    min-height: 80vh;
+    min-height: 90vh;
   }
 
   table,

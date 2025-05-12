@@ -56,9 +56,15 @@
     <span>Tileset tile count</span>
     <span><%= v.header.tileCount %></span>
   </div>
-  <div class="stat-item">
+  <div class="stat-item<% if (v.header.backgroundImage && v.backgroundSize.bytes == 0) { %> err<% } %>">
     <span>Background<%= v.header.backgroundImage ? ' ' + v.header.backgroundImage : '' %></span>
-    <span><%= v.backgroundSize.bytes > 0 ? v.backgroundSize.size : 'N/A' %></span>
+    <span>
+    <% if (!v.header.backgroundImage) { %>
+      none
+    <% } else { %>
+      <%= v.backgroundSize.bytes > 0 ? v.backgroundSize.size : 'N/A' %>
+    <% } %>
+    </span>
   </div>
   <div class="stat-item">
     <span>Background scroll X</span>

@@ -485,6 +485,11 @@ i {
   font-style: initial;
 }
 
+small {
+  color: #bbb;
+  font-size: .8rem;
+}
+
 .flex-details {
   gap: .5rem;
   margin-top: 1rem;
@@ -546,8 +551,9 @@ i {
   max-width: 180px;
 }
 
-.stat-item>span:last-child {
+.stat-item>*:last-child {
   margin-left: auto;
+  text-wrap: nowrap;
 }
 
 .stat-item>span {
@@ -987,11 +993,6 @@ button:disabled {
   color: #ddd;
 }
 
-.bar-map > div > span,
-.bar-map > a > span {
-  text-wrap: wrap;
-}
-
 .minimap {
   display: block;
   margin: 0 auto;
@@ -1006,7 +1007,7 @@ button:disabled {
   margin: 0 auto;
   width: 100%;
   height: 100%;
-  min-height: 300px;
+  min-height: 350px;
   align-content: center;
 }
 
@@ -1017,7 +1018,7 @@ button:disabled {
 }
 
 .map-info > div {
-  max-height: 215px;
+  max-height: 235px;
   overflow: auto;
 }
 

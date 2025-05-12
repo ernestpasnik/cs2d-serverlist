@@ -7,24 +7,6 @@
   </a>
 </div>
 
-<div class="bar bar-map">
-  <div>
-    <span>Author's / Last Modifier's Name</span>
-    <span><%= v.header.authorName || 'N/A' %></span>
-  </div>
-  <% if (v.header.authorUSGN > 0) { %>
-  <a href="https://unrealsoftware.de/profile.php?userid=<%= v.header.authorUSGN %>" target="_blank">
-    <span>Author's / Last Modifier's USGN</span>
-    <span><%= v.header.authorUSGN %></span>
-  </a>
-  <% } else { %>
-  <div>
-    <span>Author's / Last Modifier's USGN</span>
-    <span>N/A</span>
-  </div>
-  <% } %>
-</div>
-
 <div class="map-container">
   <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
     <img class="minimap" src="/maps/<%= title %>/minimap.webp" alt="<%= title %>">

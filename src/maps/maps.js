@@ -35,7 +35,7 @@ const generateAndStoreMinimap = async (mapName, mapPath) => {
       } else if (v.type == 12) {
         parsed.noweapons = true
       } else if ([22, 23, 28].includes(v.type)) {
-        const path = v.settings.string[0].replace(/\\/g, '/')
+        const path = v.str[0].replace(/\\/g, '/')
         if (!path) return
         if (parsed.resources.some(r => r.path === path)) return
         parsed.resources.push({

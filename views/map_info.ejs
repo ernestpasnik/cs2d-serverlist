@@ -28,8 +28,15 @@
     <span>Program used</span>
     <span><%= v.header.programUsed ? v.header.programUsed : 'N/A' %></span>
   </div>
+  <div class="stat-item">
+    <span>Created/Last updated by</span>
+    <% if (v.header.authorUSGN > 0) { %>
+    <a href="https://unrealsoftware.de/profile.php?userid=<%= v.header.authorUSGN %>" target="_blank"><%= v.header.authorName || 'N/A' %></a>
+    <% } else { %>
+    <span><%= v.header.authorName || 'N/A' %></span>
+    <% } %>
+  </div>
 </div>
-
 
 <div class="stats-container">
   <label>Map Assets</label>
@@ -54,8 +61,12 @@
     <span><%= v.backgroundSize.bytes > 0 ? v.backgroundSize.size : 'N/A' %></span>
   </div>
   <div class="stat-item">
-    <span>Background scroll X,Y</span>
-    <span><%= v.header.bgScrollX %>,<%= v.header.bgScrollY %></span>
+    <span>Background scroll X</span>
+    <span><%= v.header.bgScrollX %></span>
+  </div>
+  <div class="stat-item">
+    <span>Background scroll Y</span>
+    <span><%= v.header.bgScrollY %></span>
   </div>
   <div class="stat-item">
     <span>Background color</span>

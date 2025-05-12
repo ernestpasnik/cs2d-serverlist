@@ -37,14 +37,14 @@ class Parser {
     header.daylightTime = daylightTime === 0 ? 0 : daylightTime - 1000
     b.offset += 28
     header.authorName = (b.readLine()).trim()
-    header.programUsed = b.readLine()
+    header.programUsed = b.readLine().trim()
     for (let i = 0; i < 8; i++) b.readLine()
     header.infoString = b.readLine()
-    header.tilesetImage = b.readLine()
+    header.tilesetImage = b.readLine().trim()
     header.tileCount = b.readByte() + 1
     header.mapWidth = b.readInt() + 1
     header.mapHeight = b.readInt() + 1
-    header.backgroundImage = b.readLine()
+    header.backgroundImage = b.readLine().trim()
     header.bgScrollX = b.readInt()
     header.bgScrollY = b.readInt()
     header.bgColorRed = b.readByte()
@@ -126,15 +126,13 @@ class Parser {
         x: b.readInt(),
         y: b.readInt(),
         trigger: b.readLine(),
-        settings: {
-          integer: [],
-          string: []
-        }
+        int: [],
+        str: []
       }
 
       for (let j = 0; j < 10; j++) {
-        entity.settings.integer.push(b.readInt())
-        entity.settings.string.push(b.readLine())
+        entity.int.push(b.readInt())
+        entity.str.push(b.readLine())
       }
 
       entities.push(entity)

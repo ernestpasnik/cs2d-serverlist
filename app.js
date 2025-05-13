@@ -31,7 +31,8 @@ if (production) {
     }
   })
 } else {
-  fastify.register(require('@fastify/static'), { root: __dirname + '/public' })
+  const fastifyStatic = require('@fastify/static')
+  fastify.register(fastifyStatic, { root: __dirname + '/public',  })
 }
 
 fastify.register(require('@fastify/view'), {
@@ -41,8 +42,8 @@ fastify.register(require('@fastify/view'), {
   defaultContext: {
     production,
     description: null,
-    style: getMTimeUnix('public/style.css'),
-    script: getMTimeUnix('public/script.js')
+    style: getMTimeUnix('public/main.min.css'),
+    script: getMTimeUnix('public/main.min.js')
   },
 })
 

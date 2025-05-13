@@ -9,8 +9,7 @@ function getMTimeUnix(filepath) {
   try {
     return Math.floor(fs.statSync(filepath).mtime.getTime() / 1000)
   } catch (err) {
-    console.error(`Failed to stat file: ${filepath}`, err)
-    return 0
+    return Math.floor(Date.now() / 1000)
   }
 }
 

@@ -1,15 +1,9 @@
-/* Utils */
-const $ = s => document.querySelector(s);
-tippy('[data-tippy-content]', { allowHTML: true });
-
-
-
 /* Details */
 const update = async url => {
   try {
-    $('#timer').style.display = 'none';
-    $('#loader').style.display = 'inline-block';
-    $('#timeAgo').style.opacity = 0.5;
+    document.getElementById('timer').style.display = 'none';
+    document.getElementById('loader').style.display = 'inline-block';
+    document.getElementById('timeAgo').style.opacity = 0.5;
 
     const response = await fetch(url);
     if (!response.ok) throw new Error('Failed to fetch data');
@@ -20,9 +14,9 @@ const update = async url => {
     console.error(err);
   } finally {
     setTimeout(() => {
-      $('#loader').style.display = 'none';
-      $('#timeAgo').style.opacity = 1;
-      $('#timer').style.display = 'inline-block';
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('timeAgo').style.opacity = 1;
+      document.getElementById('timer').style.display = 'inline-block';
     }, 500);
   }
 };
@@ -39,9 +33,9 @@ const timeAgo = ts => {
 
 const updateUI = d => {
   document.title = `${d.players}/${d.maxplayers} ${d.name} - CS2D Server List`;
-  $('#ts').textContent = timeAgo(d.ts);
-  $('#name').textContent = d.name;
-  $('#map').textContent = d.map;
+  document.getElementById('ts').textContent = timeAgo(d.ts);
+  document.getElementById('name').textContent = d.name;
+  document.getElementById('map').textContent = d.map;
 
   const p = document.getElementById('p');
   if (d.players - d.bots > 0) {
@@ -56,7 +50,7 @@ const updateUI = d => {
     <i>${d.players - d.bots}</i>${d.bots > 0 ? `<span class="b">+${d.bots}</span>` : ''}/${d.maxplayers}
   `;
 
-  const gm = $('#gm');
+  const gm = document.getElementById('gm');
   gm.className = ['s', 'd', 't', 'c', 'z'][d.gamemode];
   gm.textContent = ['Standard', 'Deathmatch', 'Team Deathmatch', 'Construction', 'Zombies!'][d.gamemode];
 
@@ -68,7 +62,7 @@ const updateUI = d => {
     }
   });  
 
-  const [t, ct] = [$('#t'), $('#ct')];
+  const [t, ct] = [document.getElementById('t'), document.getElementById('ct')];
   t.innerHTML = ct.innerHTML = '';
 
   if (Array.isArray(d.playerlist) && d.playerlist.length > 0) {
@@ -86,12 +80,12 @@ const updateUI = d => {
   }
 
   const spectators = d.playerlist.filter(p => p.team === 0);
-  $('.spec').textContent = spectators.length
+  document.getElementsByClassName('spec')[0].textContent = spectators.length
     ? `Spectators: ${spectators.map(p => p.name).join(', ')}`
     : '';
 };
 
-const addr = $('#addr');
+const addr = document.getElementById('addr');
 if (addr) {
   const el = document.getElementById('ts');
   const lastTimeUpdatedTs = parseInt(el.getAttribute('data-ts'), 10);
@@ -110,9 +104,9 @@ if (addr) {
 
 
 /* Copy */
-const copyBtn = $('.copyBtn');
+const copyBtn = document.getElementsByClassName('copyBtn')[0];
 if (copyBtn) {
-  const copyContent = $('.copyContent');
+  const copyContent = document.getElementsByClassName('copyContent')[0];
   let clicked = false;
   copyBtn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -180,7 +174,7 @@ if (left) {
 /* Tools */
 const serverForm = document.getElementById('server-form');
 if (serverForm) {
-  const alertContainer = $('.alert-container');
+  const alertContainer = document.getElementsByClassName('alert-container')[0];
 
   serverForm.addEventListener('submit', async function(event) {
     event.preventDefault();
@@ -249,9 +243,9 @@ if (serverForm) {
 
 
 /* Server List */
-const searchInput = $('#search');
+const searchInput = document.getElementById('search');
 if (searchInput) {
-  const svlst = $('.svlst');
+  const svlst = document.getElementsByClassName('svlst')[0];
   const urlParams = new URLSearchParams(window.location.search);
   const searchQuery = urlParams.get('q');
   const serversCountElement = document.getElementById('servers');
@@ -325,3 +319,5 @@ if (searchInput) {
     });
   });
 }
+
+tippy('[data-tippy-content]', { allowHTML: true });

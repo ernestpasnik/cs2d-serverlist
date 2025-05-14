@@ -33,10 +33,9 @@ if (left) {
   });
 }
 
-
 function loadMap(mapData) {
   const TILE_SIZE = 32;
-  const tilesetUrl = `http://192.168.0.2:8080/`;
+  const tilesetUrl = `https://cs2d.pp.ua/`;
 
   const mapContainer = document.getElementsByClassName('map-container')[0];
   const containerWidth = mapContainer.offsetWidth;
@@ -167,9 +166,6 @@ function loadMap(mapData) {
   return config;
 }
 
-
-
-
 // Dynamically load Phaser from CDN (cdnjs)
 const phaserScript = document.createElement('script');
 phaserScript.src = 'https://cdn.jsdelivr.net/npm/phaser@v3.88.2/dist/phaser.min.js';
@@ -182,4 +178,3 @@ phaserScript.onload = () => {
   }
 };
 document.head.appendChild(phaserScript);
-

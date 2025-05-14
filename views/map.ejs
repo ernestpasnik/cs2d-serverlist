@@ -10,7 +10,7 @@
 <div class="map-container">
   <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
   <% if (v.header.backgroundImage && v.backgroundSize.bytes > 0) { %>
-  <div style="background: url('/cs2d/gfx/backgrounds/<%= v.map.backgroundImage %>')" id="map" data-mapData='<%= JSON.stringify(v) %>'></div>
+  <div style="background: url('/cs2d/gfx/backgrounds/<%= v.header.backgroundImage %>')" id="map" data-mapData='<%= JSON.stringify(v) %>'></div>
   <% } else { %>
   <div id="map" data-mapData='<%= JSON.stringify(v) %>'></div>
   <% } %>

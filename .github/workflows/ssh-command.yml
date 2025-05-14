@@ -1,29 +1,31 @@
-name: SSH Command Execution
+name: Deploy to cs2d.pp.ua
 
 on:
   push:
-    branches:
-      - main
+    branches: [ master ]
 
 jobs:
-  ssh-job:
+  deploy:
     runs-on: ubuntu-latest
-
+    env:
+      NODE_ENV: production
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4.2.2
-
-      - name: Execute SSH Commands
-        uses: appleboy/ssh-action@v1.1.0
+      - uses: actions/checkout@v3
         with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
-            cd /usr/share/nginx/cs2d-serverlist
-            git reset --hard HEAD
-            git clean -fd
-            git pull origin main
-            npm install
-            pm2 restart ecosystem.config.js --env production
+          submodules: 'recursive'
+          fetch-depth: 0
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }} 
+          known_hosts: unnecessary
+          
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy with rsync
+        run: rsync --exclude={'public/cs2d','node_modules','.git','.github','.env'} -avzP . ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/usr/share/nginx/cs2d-serverlist --delete-after
+
+      - name: Restart PM2
+        run: |
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "pm2 restart app"

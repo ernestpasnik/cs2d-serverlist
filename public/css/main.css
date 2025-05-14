@@ -1073,6 +1073,10 @@ input:not([type="checkbox"]),
   top: 88%;
 }
 
+.cs2d {
+  cursor: help;
+}
+
 .arrow {
   position: absolute;
   top: 50%;

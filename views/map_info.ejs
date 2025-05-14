@@ -84,7 +84,8 @@
   <label>External Resources</label>
   <% v.resources.forEach((item, index) => { %>
   <div class="stat-item<% if (item.bytes == 0) { %> err<% } %>">
-    <span><%= item.path %></span>
+    <% const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path) %>
+    <span<% if (item.bytes > 0 && isImage) { %> class="cs2d"<% } %>><%= item.path %></span>
     <span><%= item.size %></span>
   </div>
   <% }) %>

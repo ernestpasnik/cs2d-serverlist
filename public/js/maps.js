@@ -35,6 +35,27 @@ if (left) {
 
 const imageContainer = document.getElementById('image-container');
 if (imageContainer) {
+
+  tippy('.cs2d', {
+    onShow(instance) {
+      const target = instance.reference
+      const originalContent = target.innerHTML
+      fetch('/cs2d/' + originalContent)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const url = URL.createObjectURL(blob);
+          const image = new Image();
+
+          image.style.display = 'block';
+          image.src = url;
+          instance.setContent(image);
+        })
+        .catch((error) => {
+          instance.setContent(`Request failed. ${error}`);
+        });
+    },
+  });
+
   const bg = imageContainer.dataset.bg;
   if (bg) imageContainer.style.backgroundImage = `url('/cs2d/gfx/backgrounds/${bg}')`;
   const rgb = imageContainer.dataset.rgb;

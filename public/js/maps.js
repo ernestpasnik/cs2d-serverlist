@@ -36,8 +36,8 @@ if (left) {
 const imageContainer = document.getElementById('image-container');
 if (imageContainer) {
   const bg = imageContainer.dataset.bg;
+  if (bg) imageContainer.style.backgroundImage = `url('/cs2d/gfx/backgrounds/${bg}')`;
   const rgb = imageContainer.dataset.rgb;
-  imageContainer.style.backgroundImage = `url('/cs2d/gfx/backgrounds/${bg}')`;
   imageContainer.style.backgroundColor = rgb;
   const image = document.getElementById('image');
   const zoomInButton = document.getElementById('zoom-in');

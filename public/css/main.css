@@ -715,7 +715,7 @@ li {
 }
 
 input:not([type="checkbox"]),
-button {
+#server-form > button {
   background-color: rgba(115, 130, 140, .05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: .6rem .75rem;
@@ -730,7 +730,7 @@ button {
   margin-top: .5rem;
 }
 
-button {
+#server-form > button {
   background-color: rgb(47, 113, 58);
   cursor: pointer;
   width: auto;
@@ -744,12 +744,12 @@ button {
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
-button:not(:disabled):hover {
+#server-form > button:not(:disabled):hover {
   background-color: rgb(72, 147, 84);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-button:disabled {
+#server-form > button:disabled {
   cursor: initial;
 }
 
@@ -1028,6 +1028,8 @@ button:disabled {
   height: 480px;
   margin: 0 auto;
   border: 1px solid rgba(115, 130, 140, .1);
+  background-color: #000;
+  color: transparent;
 }
 
 #image {
@@ -1043,26 +1045,32 @@ button:disabled {
 .zoom-btn {
   position: absolute;
   top: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
+  background-color: transparent;
+  color: rgba(255, 255, 255, .75);
   padding: 10px;
   border: none;
+  font-weight: 500;
   cursor: pointer;
   font-size: 20px;
+  text-shadow: 0 0 5px #000;
+}
+
+.zoom-btn:hover {
+  color: #fff;
 }
 
 #zoom-in {
-  height: 3rem;
-  width: 3rem;
-  left: 42%;
-  top: 75%;
+  height: 9%;
+  width: 5%;
+  left: 47%;
+  top: 79%;
 }
 
 #zoom-out {
-  height: 3rem;
-  width: 3rem;
-  left: 42%;
-  top: 85%;
+  height: 9%;
+  width: 5%;
+  left: 47%;
+  top: 88%;
 }
 
 .arrow {
@@ -1073,10 +1081,11 @@ button:disabled {
   color: rgba(255, 255, 255, .75);
   padding: 0 1rem;
   height: 100%;
-  width: 7%;
+  width: 10%;
   display: grid;
   align-items: center;
   z-index: 1;
+  text-shadow: 0 0 5px #000;
 }
 
 .arrow-left {

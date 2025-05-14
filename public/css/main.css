@@ -44,7 +44,7 @@ body {
   background-repeat: no-repeat;
 }
 
-form {
+#server-form {
   margin: 2rem auto;
   width: 50%;
 }
@@ -1175,7 +1175,7 @@ footer>a:hover {
     font-size: .8rem;
   }
 
-  form {
+  #server-form {
     width: 100%;
   }
 

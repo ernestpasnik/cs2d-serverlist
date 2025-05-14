@@ -25,9 +25,7 @@ jobs:
             git reset --hard HEAD
             git clean -fd
             git pull origin main
-            cat public/css/*.css > /tmp/main.css && rm -rf public/css
-            minhtml /tmp/main.css -o public/main.min.css
             cat public/js/*.js > /tmp/main.js && rm -rf public/js
-            minhtml /tmp/main.js -o public/main.min.js
+            minhtml /tmp/main.js -o public/main.js
             npm install
             pm2 restart ecosystem.config.js --env production

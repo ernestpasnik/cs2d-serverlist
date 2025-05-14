@@ -46,7 +46,7 @@ function loadMap(mapData) {
     width: containerWidth,
     height: 430,
     backgroundColor: '#000',
-    parent: 'map',
+    parent: 'phaser',
     pixelArt: true,
     transparent: true,
     scene: {
@@ -171,9 +171,9 @@ const phaserScript = document.createElement('script');
 phaserScript.src = 'https://cdn.jsdelivr.net/npm/phaser@v3.88.2/dist/phaser.min.js';
 phaserScript.onload = () => {
   console.log('Phaser has been loaded from CDN');
-  const mapDiv = document.getElementById('map');
-  if (mapDiv && mapDiv.getAttribute('data-mapData')) {
-    const mapDataJson = JSON.parse(mapDiv.getAttribute('data-mapData'));
+  const mapDiv = document.getElementById('phaser');
+  if (mapDiv && mapDiv.getAttribute('data-mapdata')) {
+    const mapDataJson = JSON.parse(mapDiv.getAttribute('data-mapdata'));
     new Phaser.Game(loadMap(mapDataJson));
   }
 };

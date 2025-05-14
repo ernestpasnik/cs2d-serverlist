@@ -1023,13 +1023,13 @@ button:disabled {
   overflow: auto;
 }
 
-#map {
+#phaser {
   border-radius: 4px;
   cursor: move;
   height: 420px;
 }
 
-#map > canvas {
+#phaser > canvas {
   border-radius: 4px;
   height: 420px;
 }

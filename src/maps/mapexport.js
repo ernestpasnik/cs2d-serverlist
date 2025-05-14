@@ -153,7 +153,7 @@ async function renderMap(mapName) {
 
 
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(2)
-    console.log(`[✓] ${mapName} rendered in ${elapsed}s`)
+    console.log(`[✓] ${baseName}.webp rendered in ${elapsed}s`)
   } catch (e) {
     console.error(`[!] Failed to render ${mapName}:`, e.message)
   }
@@ -161,7 +161,12 @@ async function renderMap(mapName) {
 
 async function main() {
   for (const mapFile of mapFiles) {
-    await renderMap(mapFile)
+    const parsed = path.parse(mapFile)
+    const webpPath = path.join(mapsDir, `${parsed.name}.webp`)
+
+    if (!fs.existsSync(webpPath)) {
+      await renderMap(mapFile)
+    }
   }
 }
 

@@ -5,6 +5,7 @@ const Parser = require('./parser')
 const Minimap = require('./minimap')
 const redis = require('../utils/redis')
 const { bytesToSize } = require('../utils/utils')
+require('./mapexport')
 
 const maplist = []
 

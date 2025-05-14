@@ -9,10 +9,10 @@ class Parser {
     const header = this.#readHeader()
     const tileModes = this.#readTileModes(header.tileCount)
     const tileHeights = this.#readTileHeights(header.saveTileHeights, header.tileCount)
-    const map = this.#readMap(header.mapWidth, header.mapHeight, header.useModifiers)
+    const [map, modifiers] = this.#readMap(header.mapWidth, header.mapHeight, header.useModifiers);
     const entities = this.#readEntities()
 
-    return { header, tileModes, tileHeights, map, entities }
+    return { header, tileModes, tileHeights, map, modifiers, entities }
   }
 
   #readHeader() {
@@ -84,6 +84,8 @@ class Parser {
   #readMap(width, height, useModifiers) {
     const b = this.buffer
     const map = Array.from({ length: width }, () => new Array(height))
+    const modifiers = Array.from({ length: width }, () => new Array(height).fill(0))
+
 
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
@@ -95,6 +97,7 @@ class Parser {
       for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
           const mod = b.readByte()
+          modifiers[x][y] = mod
           if ((mod & 64) || (mod & 128)) {
             if ((mod & 64) && (mod & 128)) {
               b.readLine()
@@ -111,7 +114,7 @@ class Parser {
       }
     }
 
-    return map
+    return [map, modifiers]
   }
 
   #readEntities() {

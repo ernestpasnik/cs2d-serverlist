@@ -1023,6 +1023,17 @@ button:disabled {
   overflow: auto;
 }
 
+#map {
+  border-radius: 4px;
+  cursor: move;
+  height: 420px;
+}
+
+#map > canvas {
+  border-radius: 4px;
+  height: 420px;
+}
+
 .arrow {
   position: absolute;
   top: 50%;
@@ -1031,7 +1042,7 @@ button:disabled {
   color: rgba(255, 255, 255, .75);
   padding: 0 1rem;
   height: 100%;
-  width: 50%;
+  width: 10%;
   display: grid;
   align-items: center;
 }

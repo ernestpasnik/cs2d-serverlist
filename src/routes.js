@@ -7,7 +7,6 @@ const profile = require('./profile')
 const { formatTime, timeAgo, formatUptime, getEmojiByCountry } = require('./utils/utils')
 sockets.initialize()
 const maps = require('./maps/maps')
-maps.loadMaps()
 
 function err404(req, reply) {
   return reply.status(404).view('404', {
@@ -145,20 +144,6 @@ function routes(fastify) {
       prevMap: maplist[prevIndex],
       formatUptime
     })
-  })
-
-  fastify.get('/maps/:mapName/minimap.webp', async (req, reply) => {
-    const mapName = req.params.mapName
-    if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
-      return reply.code(400).send({ error: 'Invalid map name' })
-    }
-    const dat = await redis.get(`map:${mapName}`)
-    if (!dat) return err404(req, reply)
-    const obj = JSON.parse(dat)
-    if (obj.minimap) {
-      return reply.header('Content-Type', 'image/webp').send(Buffer.from(obj.minimap))
-    }
-    return reply.err404(req, reply)
   })
 
   fastify.get('/api', async (req, reply) => {

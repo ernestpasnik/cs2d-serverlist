@@ -550,7 +550,7 @@ small {
 .stat-item>*:last-child {
   margin-left: auto;
   text-wrap: nowrap;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .stat-item>span {

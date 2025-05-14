@@ -18,9 +18,21 @@ const generateAndStoreMinimap = async (mapName, mapPath) => {
   try {
     const buffer = fs.readFileSync(mapPath)
     const parsed = new Parser(buffer).parse()
-    parsed.minimap = await new Minimap().generate(parsed)
-    parsed.resources = []
 
+    const minimapPath = path.join(mapsDir, `${mapName}-minimap.webp`)
+    if (!fs.existsSync(minimapPath)) {
+      try {
+        const startTime = Date.now()
+        const webpBuffer = await new Minimap().generate(parsed)
+        fs.writeFileSync(minimapPath, webpBuffer)
+        const elapsed = ((Date.now() - startTime) / 1000).toFixed(2)
+        console.log(`[✓] ${mapName}-minimap.webp rendered in ${elapsed}s`)
+      } catch (e) {
+        console.error(`[!] Failed to render ${mapName}-minimap.webp:`, e.message)
+      }
+    }
+
+    parsed.resources = []
     parsed.tilesetSize = getSize(`${process.env.CS2D_DIRECTORY}/gfx/tiles/${parsed.header.tilesetImage}`)
     parsed.backgroundSize = getSize(`${process.env.CS2D_DIRECTORY}/gfx/backgrounds/${parsed.header.backgroundImage}`)
     parsed.file = {
@@ -28,7 +40,6 @@ const generateAndStoreMinimap = async (mapName, mapPath) => {
       ...getSize(`${process.env.CS2D_DIRECTORY}/maps/${mapName}.map`),
       hash: crypto.createHash('sha256').update(buffer).digest('hex')
     }
-
     parsed.entities.forEach(v => {
       if (v.type == 11) {
         parsed.nobuying = true
@@ -78,14 +89,11 @@ const generateMinimapsForAllMaps = async (directory) => {
   if (i > 0) console.log(`Parsed ${i} maps in ${duration} ms`)
 }
 
-function loadMaps() {
-  if (process.env.CS2D_DIRECTORY) {
-    const mapsPath = path.join(process.env.CS2D_DIRECTORY, 'maps')
-    generateMinimapsForAllMaps(mapsPath)
-  }
-}
+const cs2dPath = process.env.CS2D_DIRECTORY || 'public/cs2d'
+const mapsDir = path.join(cs2dPath, 'maps')
+fs.mkdirSync(mapsDir, { recursive: true })
+generateMinimapsForAllMaps(mapsDir)
 
 module.exports = {
-  loadMaps,
   maplist
 }

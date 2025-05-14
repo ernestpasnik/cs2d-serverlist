@@ -4,7 +4,7 @@ const sharp = require('sharp')
 const { createCanvas, loadImage } = require('canvas')
 const Parser = require('./parser')
 
-const cs2dPath = 'C:\\Users\\Admin\\Documents\\GitHub\\cs2d-serverlist\\public\\cs2d'
+const cs2dPath = process.env.CS2D_DIRECTORY || 'public/cs2d'
 const mapsDir = path.join(cs2dPath, 'maps')
 fs.mkdirSync(mapsDir, { recursive: true })
 

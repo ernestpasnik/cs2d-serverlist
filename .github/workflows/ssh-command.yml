@@ -29,4 +29,4 @@ jobs:
 
       - name: Restart PM2
         run: |
-          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "pm2 restart app"
+          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "pm2 restart cs2d-serverlist"

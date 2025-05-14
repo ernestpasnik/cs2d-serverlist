@@ -715,7 +715,7 @@ li {
 }
 
 input:not([type="checkbox"]),
-#server-form > button {
+#timeAgo > button {
   background-color: rgba(115, 130, 140, .05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: .6rem .75rem;
@@ -730,7 +730,7 @@ input:not([type="checkbox"]),
   margin-top: .5rem;
 }
 
-#server-form > button {
+#timeAgo > button {
   background-color: rgb(47, 113, 58);
   cursor: pointer;
   width: auto;
@@ -744,12 +744,12 @@ input:not([type="checkbox"]),
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
-#server-form > button:not(:disabled):hover {
+#timeAgo > button:not(:disabled):hover {
   background-color: rgb(72, 147, 84);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-#server-form > button:disabled {
+#timeAgo > button:disabled {
   cursor: initial;
 }
 
@@ -1071,10 +1071,6 @@ input:not([type="checkbox"]),
   width: 5%;
   left: 47%;
   top: 88%;
-}
-
-.cs2d {
-  cursor: help;
 }
 
 .arrow {

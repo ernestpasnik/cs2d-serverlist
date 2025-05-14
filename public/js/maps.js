@@ -33,148 +33,124 @@ if (left) {
   });
 }
 
-function loadMap(mapData) {
-  const TILE_SIZE = 32;
-  const tilesetUrl = `https://cs2d.pp.ua/`;
+const imageContainer = document.getElementById('image-container');
+if (imageContainer) {
+  const bg = imageContainer.dataset.bg;
+  const rgb = imageContainer.dataset.rgb;
+  imageContainer.style.backgroundImage = `url('/cs2d/gfx/backgrounds/${bg}')`;
+  imageContainer.style.backgroundColor = rgb;
+  const image = document.getElementById('image');
+  const zoomInButton = document.getElementById('zoom-in');
+  const zoomOutButton = document.getElementById('zoom-out');
 
-  const mapContainer = document.getElementsByClassName('map-container')[0];
-  const containerWidth = mapContainer.offsetWidth;
-  const containerHeight = mapContainer.offsetHeight;
+  let scale = 1;
+  let offsetX = 0, offsetY = 0;
+  const scaleFactor = 0.5;
+  const minScale = 1;
+  let maxScale = 4;
+  let isDragging = false;
+  let startX, startY;
 
-  const config = {
-    type: Phaser.AUTO,
-    width: containerWidth,
-    height: 430,
-    backgroundColor: '#000',
-    parent: 'phaser',
-    pixelArt: true,
-    transparent: true,
-    scene: {
-      preload: function() {
-        this.load.setBaseURL(tilesetUrl);
-        this.load.image('tileset', `cs2d/gfx/tiles/${mapData.header.tilesetImage}`);
-      },
-      create: function() {
-        const tilesetImage = this.textures.get('tileset').getSourceImage();
-        
-        // Create an offscreen canvas to manipulate the image
-        const canvas = document.createElement('canvas');
-        canvas.width = tilesetImage.width;
-        canvas.height = tilesetImage.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(tilesetImage, 0, 0);
+  function updateMaxScale() {
+    const width = image.naturalWidth;
+    const height = image.naturalHeight;
 
-        // Loop through the pixels and change pink (#f0f) to transparent
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        const targetRed = 255;
-        const targetGreen = 0;
-        const targetBlue = 255;
-
-        for (let i = 0; i < data.length; i += 4) {
-          if (data[i] === targetRed && data[i + 1] === targetGreen && data[i + 2] === targetBlue) {
-            data[i + 3] = 0; // Make it transparent
-          }
-        }
-
-        ctx.putImageData(imageData, 0, 0);
-
-        // Add the processed canvas as a new texture
-        this.textures.addCanvas('transparent-tileset', canvas);
-
-        // Use the transparent tileset in your map creation
-        const map = this.make.tilemap({
-          width: mapData.header.mapWidth,
-          height: mapData.header.mapHeight,
-          tileWidth: TILE_SIZE,
-          tileHeight: TILE_SIZE
-        });
-
-        const tiles = map.addTilesetImage('transparent-tileset');
-        const floor = map.createBlankLayer('floor', tiles);
-        const obstacle = map.createBlankLayer('obstacle', tiles);
-        const walls = map.createBlankLayer('walls', tiles);
-
-        // Loop through the map data and place the tiles
-        for (let x = 0; x < mapData.header.mapHeight; x++) {
-          for (let y = 0; y < mapData.header.mapWidth; y++) {
-            const tileIndex = mapData.map[y][x];
-            if (tileIndex >= 0 && tileIndex < tiles.total) {
-              let tile;
-              const mode = mapData.tileModes[tileIndex];
-
-              if (mode === 1) {
-                floor.putTileAt(tileIndex, y, x);
-                const shadow = this.add.graphics();
-                shadow.fillStyle(0x000000, 0.5);
-                shadow.fillRect(y * TILE_SIZE + 8, x * TILE_SIZE + 8, TILE_SIZE, TILE_SIZE);
-                shadow.setDepth(0.5);
-                tile = walls.putTileAt(tileIndex, y, x);
-                walls.setDepth(1);
-              } else if (mode === 2) {
-                floor.putTileAt(tileIndex, y, x);
-                const shadow = this.add.graphics();
-                shadow.fillStyle(0x222222, 0.20);
-                shadow.fillRect(y * TILE_SIZE + 8, x * TILE_SIZE + 8, TILE_SIZE, TILE_SIZE);
-                shadow.setDepth(0.5);
-                tile = obstacle.putTileAt(tileIndex, y, x);
-                obstacle.setDepth(1);
-              } else {
-                tile = floor.putTileAt(tileIndex, y, x);
-                floor.setDepth(0);
-              }
-
-              const mod = mapData.modifiers?.[y]?.[x] ?? 0;
-              if (mod === 1) tile.rotation = Phaser.Math.DegToRad(90);
-              else if (mod === 2) tile.rotation = Phaser.Math.DegToRad(180);
-              else if (mod === 3) tile.rotation = Phaser.Math.DegToRad(270);
-            }
-          }
-        }
-
-        // Mouse interaction for moving the map
-        let isDragging = false;
-        let startX, startY;
-
-        this.input.on('pointerdown', (pointer) => {
-          isDragging = true;
-          startX = pointer.x;
-          startY = pointer.y;
-        });
-
-        this.input.on('pointermove', (pointer) => {
-          if (isDragging) {
-            const deltaX = pointer.x - startX;
-            const deltaY = pointer.y - startY;
-            let camera = this.cameras.main;
-
-            camera.scrollX -= deltaX * camera.zoom; // Move the camera
-            camera.scrollY -= deltaY * camera.zoom;
-
-            startX = pointer.x;
-            startY = pointer.y;
-          }
-        });
-
-        this.input.on('pointerup', () => {
-          isDragging = false;
-        });
-      }
+    if (width > 3000 || height > 3000) {
+      maxScale = 8;
+    } else if (width > 2500 || height > 2500) {
+      maxScale = 7;
+    } else if (width > 2000 || height > 2000) {
+      maxScale = 6;
+    } else if (width > 1500 || height > 1500) {
+      maxScale = 5;
+    } else if (width > 1000 || height > 1000) {
+      maxScale = 4;
+    } else if (width > 500 || height > 500) {
+      maxScale = 3;
+    } else {
+      maxScale = 2;
     }
+  }
+
+  image.onload = function () {
+    updateMaxScale();
   };
 
-  return config;
-}
+  imageContainer.addEventListener('wheel', (event) => {
+    event.preventDefault();
+    if (event.deltaY < 0) {
+      scale = Math.min(scale + scaleFactor, maxScale);
+    } else {
+      scale = Math.max(scale - scaleFactor, minScale);
+    }
+    image.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+  });
 
-// Dynamically load Phaser from CDN (cdnjs)
-const phaserScript = document.createElement('script');
-phaserScript.src = 'https://cdn.jsdelivr.net/npm/phaser@v3.88.2/dist/phaser.min.js';
-phaserScript.onload = () => {
-  console.log('Phaser has been loaded from CDN');
-  const mapDiv = document.getElementById('phaser');
-  if (mapDiv && mapDiv.getAttribute('data-mapdata')) {
-    const mapDataJson = JSON.parse(mapDiv.getAttribute('data-mapdata'));
-    new Phaser.Game(loadMap(mapDataJson));
-  }
-};
-document.head.appendChild(phaserScript);
+  image.addEventListener('mousedown', (event) => {
+    if (event.button !== 0) return;
+    isDragging = true;
+    startX = event.clientX - offsetX;
+    startY = event.clientY - offsetY;
+    image.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', (event) => {
+    if (isDragging) {
+      const moveX = event.clientX - startX;
+      const moveY = event.clientY - startY;
+      offsetX += (moveX - offsetX) * 0.03;
+      offsetY += (moveY - offsetY) * 0.03;
+      image.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+    image.style.cursor = 'grab';
+  });
+
+  image.addEventListener('contextmenu', (event) => {
+    event.preventDefault();
+  });
+
+  image.addEventListener('dragstart', (event) => {
+    event.preventDefault();
+  });
+
+  imageContainer.addEventListener('touchstart', (event) => {
+    if (event.touches.length === 1) {
+      isDragging = true;
+      startX = event.touches[0].clientX - offsetX;
+      startY = event.touches[0].clientY - offsetY;
+      image.style.cursor = 'grabbing';
+    }
+  });
+
+  imageContainer.addEventListener('touchmove', (event) => {
+    event.preventDefault();
+    if (isDragging && event.touches.length === 1) {
+      const moveX = event.touches[0].clientX - startX;
+      const moveY = event.touches[0].clientY - startY;
+      offsetX += (moveX - offsetX) * 0.03;
+      offsetY += (moveY - offsetY) * 0.03;
+      image.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+    }
+  });
+
+  document.addEventListener('touchend', (event) => {
+    if (event.touches.length === 0) {
+      isDragging = false;
+      image.style.cursor = 'grab';
+    }
+  });
+
+  zoomInButton.addEventListener('click', () => {
+    scale = Math.min(scale + scaleFactor * 2, maxScale);
+    image.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+  });
+
+  zoomOutButton.addEventListener('click', () => {
+    scale = Math.max(scale - scaleFactor * 2, minScale);
+    image.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+  });
+}

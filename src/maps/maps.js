@@ -102,6 +102,19 @@ async function loadAndRender(cs2dDir) {
 
     obj.resources.sort((a, b) => a.size - b.size)
 
+
+    obj.tm = Array.from({ length: obj.header.mapWidth }, () => new Array(obj.header.mapHeight).fill(0))
+    for (let x = 0; x < obj.header.mapWidth; x++) {
+      for (let y = 0; y < obj.header.mapHeight; y++) {
+        const tileId = obj.map[x][y]
+        const mode = obj.tileModes[tileId] ?? 0
+        if (mode > 2) {
+          obj.tm[x][y] = 0
+        } else {
+          obj.tm[x][y] = mode
+        }
+      }
+    }
     await redis.set(`map:${mapName}`, JSON.stringify(obj))
 
     const minimapPath = path.join(minimaps, `${mapName}.webp`)
@@ -113,6 +126,7 @@ async function loadAndRender(cs2dDir) {
       files++
     }
 
+    /*
     const mapexportPath = path.join(mapexports, `${mapName}.webp`)
     try {
       await fs.access(mapexportPath)
@@ -121,6 +135,7 @@ async function loadAndRender(cs2dDir) {
       await fs.writeFile(mapexportPath, content)
       files++
     }
+    */
   }))
 
   await Promise.all(tasks)

@@ -33,14 +33,24 @@ if (left) {
   });
 }
 
-const imageContainer = document.getElementById('image-container');
+const imageContainer = document.getElementById('map-preview');
 if (imageContainer) {
 
   tippy('.cs2d', {
     onShow(instance) {
       const target = instance.reference
-      const originalContent = target.innerHTML
-      fetch('/cs2d/' + originalContent)
+
+      // Get the href of the <a>
+      const href = target.querySelector('a')?.getAttribute('href')
+
+      // Get the text inside the span excluding the <a> element (only text nodes)
+      const textNodes = Array.from(target.childNodes)
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .map(node => node.textContent.trim())
+        .filter(text => text.length > 0)
+
+      const text = textNodes.join(' ')  // "gfx/sprites/de_vantage/humvee.png"
+      fetch('/cs2d/' + text)
         .then((response) => response.blob())
         .then((blob) => {
           const url = URL.createObjectURL(blob);
@@ -56,122 +66,314 @@ if (imageContainer) {
     },
   });
 
-  const bg = imageContainer.dataset.bg;
-  if (bg) imageContainer.style.backgroundImage = `url('/cs2d/gfx/backgrounds/${bg}')`;
-  const rgb = imageContainer.dataset.rgb;
-  imageContainer.style.backgroundColor = rgb;
-  const image = document.getElementById('image');
-  const zoomInButton = document.getElementById('zoom-in');
-  const zoomOutButton = document.getElementById('zoom-out');
-
-  let scale = 1;
-  let offsetX = 0, offsetY = 0;
-  const scaleFactor = 0.5;
-  const minScale = 1;
-  let maxScale = 4;
-  let isDragging = false;
-  let startX, startY;
-
-  function updateMaxScale() {
-    const width = image.naturalWidth;
-    const height = image.naturalHeight;
-
-    if (width > 3000 || height > 3000) {
-      maxScale = 8;
-    } else if (width > 2500 || height > 2500) {
-      maxScale = 7;
-    } else if (width > 2000 || height > 2000) {
-      maxScale = 6;
-    } else if (width > 1500 || height > 1500) {
-      maxScale = 5;
-    } else if (width > 1000 || height > 1000) {
-      maxScale = 4;
-    } else if (width > 500 || height > 500) {
-      maxScale = 3;
-    } else {
-      maxScale = 2;
+  const TILE_FLOOR = 0
+  const TILE_WALL = 1
+  const TILE_OBSTACLE = 2
+  const map = {
+    combinations: [
+      [TILE_FLOOR, TILE_FLOOR, TILE_FLOOR, null],
+      [TILE_FLOOR, TILE_FLOOR, TILE_OBSTACLE, { col: 1, row: 4 }],
+      [TILE_FLOOR, TILE_FLOOR, TILE_WALL, { col: 0, row: 4 }],
+      [TILE_FLOOR, TILE_OBSTACLE, TILE_FLOOR, { col: 1, row: 1 }],
+      [TILE_FLOOR, TILE_OBSTACLE, TILE_OBSTACLE, { col: 1, row: 6 }],
+      [TILE_FLOOR, TILE_OBSTACLE, TILE_WALL, { col: 0, row: 6 }],
+      [TILE_FLOOR, TILE_WALL, TILE_FLOOR, { col: 0, row: 1 }],
+      [TILE_FLOOR, TILE_WALL, TILE_OBSTACLE, { col: 1, row: 5 }],
+      [TILE_FLOOR, TILE_WALL, TILE_WALL, { col: 0, row: 5 }],
+      [TILE_WALL, TILE_FLOOR, TILE_FLOOR, { col: 0, row: 2 }],
+      [TILE_WALL, TILE_FLOOR, TILE_OBSTACLE, { col: 1, row: 7 }],
+      [TILE_WALL, TILE_FLOOR, TILE_WALL, { col: 0, row: 3 }],
+      [TILE_WALL, TILE_WALL, TILE_FLOOR, { col: 0, row: 0 }],
+      [TILE_WALL, TILE_WALL, TILE_OBSTACLE, { col: 1, row: 5 }],
+      [TILE_WALL, TILE_WALL, TILE_WALL, { col: 0, row: 5 }],
+      [TILE_WALL, TILE_OBSTACLE, TILE_FLOOR, { col: 1, row: 8 }],
+      [TILE_WALL, TILE_OBSTACLE, TILE_OBSTACLE, { col: 1, row: 6 }],
+      [TILE_WALL, TILE_OBSTACLE, TILE_WALL, { col: 0, row: 6 }],
+      [TILE_OBSTACLE, TILE_FLOOR, TILE_FLOOR, { col: 1, row: 2 }],
+      [TILE_OBSTACLE, TILE_FLOOR, TILE_OBSTACLE, { col: 1, row: 3 }],
+      [TILE_OBSTACLE, TILE_FLOOR, TILE_WALL, { col: 0, row: 7 }],
+      [TILE_OBSTACLE, TILE_WALL, TILE_FLOOR, { col: 0, row: 8 }],
+      [TILE_OBSTACLE, TILE_WALL, TILE_OBSTACLE, { col: 1, row: 5 }],
+      [TILE_OBSTACLE, TILE_WALL, TILE_WALL, { col: 0, row: 5 }],
+      [TILE_OBSTACLE, TILE_OBSTACLE, TILE_FLOOR, { col: 1, row: 0 }],
+      [TILE_OBSTACLE, TILE_OBSTACLE, TILE_WALL, { col: 0, row: 6 }],
+      [TILE_OBSTACLE, TILE_OBSTACLE, TILE_OBSTACLE, { col: 1, row: 6 }],
+    ],
+    get tilesetCols() {
+      return Math.floor(this.tilesetWidth / this.tsize)
+    },
+    get tilesetRows() {
+      return Math.floor(this.tilesetHeight / this.tsize)
+    },
+    getTile(col, row) {
+      if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) return 0
+      return this.tiles[col][row]
+    },
+    getTileMode(col, row) {
+      if (row < 0 || row >= this.rows || col < 0 || col >= this.cols) return 0
+      return this.tilemodes[col][row]
+    },
+    getShadowTile(leftTopTile, topTile, leftTile) {
+      for (const [lt, t, l, shadow] of this.combinations) {
+        if (leftTopTile === lt && topTile === t && leftTile === l) return shadow
+      }
+      return null
     }
   }
 
-  image.onload = function () {
-    updateMaxScale();
-  };
-
-  imageContainer.addEventListener('wheel', (event) => {
-    event.preventDefault();
-    if (event.deltaY < 0) {
-      scale = Math.min(scale + scaleFactor, maxScale);
-    } else {
-      scale = Math.max(scale - scaleFactor, minScale);
+  const Loader = {
+    images: new Map(),
+    loadImage(key, src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.onload = () => {
+          this.images.set(key, img)
+          resolve(img)
+        }
+        img.onerror = () => reject(`Could not load image: ${src}`)
+        img.src = src
+      })
+    },
+    getImage(key) {
+      return this.images.get(key) || null
     }
-    image.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
-  });
+  }
 
-  image.addEventListener('mousedown', (event) => {
-    if (event.button !== 0) return;
-    isDragging = true;
-    startX = event.clientX - offsetX;
-    startY = event.clientY - offsetY;
-    image.style.cursor = 'grabbing';
-  });
-
-  document.addEventListener('mousemove', (event) => {
-    if (isDragging) {
-      const moveX = event.clientX - startX;
-      const moveY = event.clientY - startY;
-      offsetX += (moveX - offsetX) * 0.03;
-      offsetY += (moveY - offsetY) * 0.03;
-      image.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
+  class Camera {
+    constructor(map, width, height) {
+      this.x = 0
+      this.y = 0
+      this.width = width
+      this.height = height
+      this.maxX = map.cols * map.tsize - width
+      this.maxY = map.rows * map.tsize - height
     }
-  });
+  }
 
-  document.addEventListener('mouseup', () => {
-    isDragging = false;
-    image.style.cursor = 'grab';
-  });
+  const Game = {
+    async run(ctx, canvas) {
+      this.ctx = ctx
+      this.canvas = canvas
+      this.width = canvas.width
+      this.height = canvas.height
+      this._previousElapsed = 0
+      this.loadMapDataFromCanvas()
+      await Promise.all(this.load())
+      this.init()
+      requestAnimationFrame(this.tick.bind(this))
+    },
 
-  image.addEventListener('contextmenu', (event) => {
-    event.preventDefault();
-  });
+    loadMapDataFromCanvas() {
+      const canvas = this.canvas
+      map.tiles = JSON.parse(canvas.dataset.tiles)
+      map.modifiers = JSON.parse(canvas.dataset.modifiers)
+      map.tilemodes = JSON.parse(canvas.dataset.tilemodes)
+      map.tsize = parseInt(canvas.dataset.tilesize, 10)
+      map.cols = parseInt(canvas.dataset.mapwidth, 10)
+      map.rows = parseInt(canvas.dataset.mapheight, 10)
+      map.tilesetImageSrc = canvas.dataset.tilesetimage
+      map.tilesetWidth = 0
+      map.tilesetHeight = 0
+      canvas.style.backgroundColor = canvas.dataset.backgroundcolor
+      if (canvas.dataset.backgroundimage) {
+        this.canvas.style.backgroundImage = `url("/cs2d/gfx/backgrounds/${canvas.dataset.backgroundimage}"`
+      }
+    },
 
-  image.addEventListener('dragstart', (event) => {
-    event.preventDefault();
-  });
+    load() {
+      return [
+        Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tilesetImageSrc}`),
+        Loader.loadImage('shadowmap', '/shadowmap.png')
+      ]
+    },
 
-  imageContainer.addEventListener('touchstart', (event) => {
-    if (event.touches.length === 1) {
-      isDragging = true;
-      startX = event.touches[0].clientX - offsetX;
-      startY = event.touches[0].clientY - offsetY;
-      image.style.cursor = 'grabbing';
+    init() {
+      this.isDragging = false
+      this.mouse = { x: 0, y: 0, lastX: 0, lastY: 0 }
+      this.canvas.addEventListener('mousedown', e => {
+        if (e.button === 0) {
+          this.isDragging = true
+          this.mouse.x = e.offsetX
+          this.mouse.y = e.offsetY
+          this.mouse.lastX = e.offsetX
+          this.mouse.lastY = e.offsetY
+          this.canvas.style.cursor = 'grabbing'
+        }
+      })
+
+      this.canvas.addEventListener('mousemove', e => {
+        this.mouse.x = e.offsetX
+        this.mouse.y = e.offsetY
+      })
+
+      this.canvas.addEventListener('mouseup', e => {
+        if (e.button === 0) {
+          this.isDragging = false
+          this.canvas.style.cursor = 'grab'
+        }
+      })
+
+      this.canvas.addEventListener('mouseleave', () => {
+        this.isDragging = false
+        this.canvas.style.cursor = 'grab'
+      })
+
+      this.camera = new Camera(map, this.canvas.width, this.canvas.height)
+      
+
+
+
+
+let tilesImg = Loader.getImage('tiles')
+
+const tempCanvas = document.createElement('canvas')
+tempCanvas.width = tilesImg.width
+tempCanvas.height = tilesImg.height
+
+const tempCtx = tempCanvas.getContext('2d')
+tempCtx.drawImage(tilesImg, 0, 0)
+
+const imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height)
+const data = imgData.data
+
+for (let i = 0; i < data.length; i += 4) {
+  if (data[i] === 255 && data[i + 1] === 0 && data[i + 2] === 255) {
+    data[i + 3] = 0 // Set alpha to 0 for magenta
+  }
+}
+
+tempCtx.putImageData(imgData, 0, 0)
+
+// Optional: replace original with transparent version
+this.tileAtlas = tempCanvas
+
+
+
+
+
+
+
+
+
+      this.shadowMap = Loader.getImage('shadowmap')
+      map.tilesetWidth = this.tileAtlas.width
+      map.tilesetHeight = this.tileAtlas.height
+    },
+
+    update(delta) {
+      if (this.isDragging) {
+        const dx = this.mouse.lastX - this.mouse.x
+        const dy = this.mouse.lastY - this.mouse.y
+
+        this.camera.x = Math.max(0, Math.min(this.camera.x + dx, this.camera.maxX))
+        this.camera.y = Math.max(0, Math.min(this.camera.y + dy, this.camera.maxY))
+
+        this.mouse.lastX = this.mouse.x
+        this.mouse.lastY = this.mouse.y
+      }
+    },
+
+render() {
+
+
+
+  let startCol = Math.floor(this.camera.x / map.tsize);
+  let endCol = Math.ceil((this.camera.x + this.camera.width) / map.tsize);
+  let startRow = Math.floor(this.camera.y / map.tsize);
+  let endRow = Math.ceil((this.camera.y + this.camera.height) / map.tsize);
+  let offsetX = -this.camera.x + startCol * map.tsize;
+  let offsetY = -this.camera.y + startRow * map.tsize;
+
+  for (let r = startRow; r <= endRow; r++) {
+    for (let c = startCol; c <= endCol; c++) {
+      const tile = map.getTile(c, r);
+      if (tile === 0) continue;
+
+      // Draw tiles
+      const sx = (tile % map.tilesetCols) * map.tsize;
+      const sy = Math.floor(tile / map.tilesetCols) * map.tsize;
+      const x = Math.round((c - startCol) * map.tsize + offsetX);
+      const y = Math.round((r - startRow) * map.tsize + offsetY);
+      const rotation = (() => {
+        switch (map.modifiers?.[c]?.[r]) {
+          case 1: return Math.PI / 2;
+          case 2: return Math.PI;
+          case 3: return -Math.PI / 2;
+          default: return 0;
+        }
+      })();
+      this.ctx.save();
+      this.ctx.translate(Math.round(x + map.tsize / 2), Math.round(y + map.tsize / 2));
+      this.ctx.rotate(rotation);
+      this.ctx.drawImage(
+        this.tileAtlas,
+        sx, sy, map.tsize, map.tsize,
+        -map.tsize / 2, -map.tsize / 2, map.tsize, map.tsize
+      );
+      this.ctx.restore();
+
+      // Draw shadows
+      if (map.tilemodes?.[c]?.[r] === 0) {
+        const leftTopTile = map.getTileMode(c - 1, r - 1);
+        const topTile = map.getTileMode(c, r - 1);
+        const leftTile = map.getTileMode(c - 1, r);
+        if (!(leftTopTile === 0 && topTile === 0 && leftTile === 0)) {
+          const shadowTile = map.getShadowTile(leftTopTile, topTile, leftTile);
+          if (shadowTile) {
+            const sxShadow = shadowTile.col * 32;
+            const syShadow = shadowTile.row * 32;
+            this.ctx.save();
+            this.ctx.globalAlpha = 0.8;
+            this.ctx.globalCompositeOperation = 'multiply';
+            this.ctx.drawImage(
+              this.shadowMap,
+              sxShadow,
+              syShadow,
+              map.tsize,
+              map.tsize,
+              Math.round((c - startCol) * map.tsize + offsetX),
+              Math.round((r - startRow) * map.tsize + offsetY),
+              map.tsize,
+              map.tsize
+            );
+            this.ctx.restore();
+          }
+        }
+      }
     }
-  });
+  }
 
-  imageContainer.addEventListener('touchmove', (event) => {
-    event.preventDefault();
-    if (isDragging && event.touches.length === 1) {
-      const moveX = event.touches[0].clientX - startX;
-      const moveY = event.touches[0].clientY - startY;
-      offsetX += (moveX - offsetX) * 0.03;
-      offsetY += (moveY - offsetY) * 0.03;
-      image.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
-    }
-  });
+},
 
-  document.addEventListener('touchend', (event) => {
-    if (event.touches.length === 0) {
-      isDragging = false;
-      image.style.cursor = 'grab';
-    }
-  });
 
-  zoomInButton.addEventListener('click', () => {
-    scale = Math.min(scale + scaleFactor * 2, maxScale);
-    image.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
-  });
 
-  zoomOutButton.addEventListener('click', () => {
-    scale = Math.max(scale - scaleFactor * 2, minScale);
-    image.style.transform = `scale(${scale}) translate(${offsetX}px, ${offsetY}px)`;
-  });
+
+tick(elapsed) {
+  requestAnimationFrame(this.tick.bind(this))
+
+  this.ctx.clearRect(0, 0, this.width, this.height)
+
+  let delta = (elapsed - this._previousElapsed) / 1000.0
+  delta = Math.min(delta, 0.25)
+  this._previousElapsed = elapsed
+
+  this.update(delta)
+  this.render()
+},
+
+
+
+
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('map-preview')
+    const ctx = canvas.getContext('2d')
+  const parent = canvas.parentElement
+  canvas.width = parent.clientWidth
+  canvas.height = parent.clientHeight
+
+  canvas.style.cursor = 'grab'
+    Game.run(ctx, canvas)
+  })
 }

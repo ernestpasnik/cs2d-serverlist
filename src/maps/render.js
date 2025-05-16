@@ -41,8 +41,8 @@ class Render {
 
           let color
           switch (tileMode) {
-            case 1:  color = colors.wall; break
-            case 2:  color = colors.obstacle; break
+            case 1: color = colors.wall; break
+            case 2: color = colors.obstacle; break
             case 14: color = colors.water; break
             case 50:
             case 51:
@@ -93,7 +93,34 @@ class Render {
   async mapexport(dat, mapName, cs2dDir) {
     try {
       const TILE_SIZE = dat.header.use64pxTiles === 1 ? 64 : 32
-      const { floor, walls, obstacles } = this._generateLayers(dat.map, dat.tileModes)
+      const { floor, walls, obstacles, zdr } = this._generateLayers(dat.map, dat.tileModes)
+
+
+
+
+
+      const shadowSheet = await loadImage(`${cs2dDir}/gfx/shadowmap.png`)
+      const shadowCanvas = createCanvas(shadowSheet.width, shadowSheet.height)
+      const shadowCtx = shadowCanvas.getContext('2d')
+      shadowCtx.drawImage(shadowSheet, 0, 0)
+      const imgData2 = shadowCtx.getImageData(0, 0, shadowCanvas.width, shadowCanvas.height)
+      shadowCtx.putImageData(imgData2, 0, 0)
+
+
+      function drawShadow(col, row, x, y) {
+        const sx = col * TILE_SIZE
+        const sy = row * TILE_SIZE
+        ctx.save()
+        ctx.globalAlpha = 0.8
+        ctx.globalCompositeOperation = 'multiply'
+        ctx.drawImage(
+          shadowCanvas,
+          sx, sy, TILE_SIZE, TILE_SIZE,
+          x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE
+        )
+        ctx.restore()
+      }
+
 
       const width = floor[0].length * TILE_SIZE
       const height = floor.length * TILE_SIZE
@@ -148,36 +175,71 @@ class Render {
         }
       }
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'
-      for (let y = 0; y < walls.length; y++) {
-        for (let x = 0; x < walls[y].length; x++) {
-          if (x + 1 < floor[y].length && floor[y][x + 1] == -1) continue
-          if (y + 1 < floor.length && x + 1 < floor[y + 1].length && floor[y + 1][x + 1] == -1) continue
-          if (y + 1 < floor.length && floor[y + 1][x] == -1) continue
-          if (walls[y][x]) ctx.fillRect(x * TILE_SIZE + 8, y * TILE_SIZE + 8, TILE_SIZE, TILE_SIZE)
+      function getShadowTile(leftTopTile, topTile, leftTile) {
+        for (const [lt, t, l, shadow] of combinations) {
+          if (leftTopTile === lt && topTile === t && leftTile === l) return shadow
+        }
+        return null
+      }
+
+
+      let leftTopTile
+      let topTile
+      let leftTile
+
+      //leftTop, top, left
+      const TILE_FLOOR = 0
+      const TILE_WALL = 1
+      const TILE_OBSTACLE = 2
+      const combinations = [
+        [TILE_FLOOR, TILE_FLOOR, TILE_FLOOR, null],
+        [TILE_FLOOR, TILE_FLOOR, TILE_OBSTACLE, { col: 1, row: 4 }],
+        [TILE_FLOOR, TILE_FLOOR, TILE_WALL, { col: 0, row: 4 }],
+        [TILE_FLOOR, TILE_OBSTACLE, TILE_FLOOR, { col: 1, row: 1 }],
+        [TILE_FLOOR, TILE_OBSTACLE, TILE_OBSTACLE, { col: 1, row: 6 }],
+        [TILE_FLOOR, TILE_OBSTACLE, TILE_WALL, { col: 0, row: 6 }],
+        [TILE_FLOOR, TILE_WALL, TILE_FLOOR, { col: 0, row: 1 }],
+        [TILE_FLOOR, TILE_WALL, TILE_OBSTACLE, { col: 1, row: 5 }],
+        [TILE_FLOOR, TILE_WALL, TILE_WALL, { col: 0, row: 5 }],
+        [TILE_WALL, TILE_FLOOR, TILE_FLOOR, { col: 0, row: 2 }],
+        [TILE_WALL, TILE_FLOOR, TILE_OBSTACLE, { col: 1, row: 7 }],
+        [TILE_WALL, TILE_FLOOR, TILE_WALL, { col: 0, row: 3 }],
+        [TILE_WALL, TILE_WALL, TILE_FLOOR, { col: 0, row: 0 }],
+        [TILE_WALL, TILE_WALL, TILE_OBSTACLE, { col: 1, row: 5 }],
+        [TILE_WALL, TILE_WALL, TILE_WALL, { col: 0, row: 5 }],
+        [TILE_WALL, TILE_OBSTACLE, TILE_FLOOR, { col: 1, row: 8 }],
+        [TILE_WALL, TILE_OBSTACLE, TILE_OBSTACLE, { col: 1, row: 6 }],
+        [TILE_WALL, TILE_OBSTACLE, TILE_WALL, { col: 0, row: 6 }],
+        [TILE_OBSTACLE, TILE_FLOOR, TILE_FLOOR, { col: 1, row: 2 }],
+        [TILE_OBSTACLE, TILE_FLOOR, TILE_OBSTACLE, { col: 1, row: 3 }],
+        [TILE_OBSTACLE, TILE_FLOOR, TILE_WALL, { col: 0, row: 7 }],
+        [TILE_OBSTACLE, TILE_WALL, TILE_FLOOR, { col: 0, row: 8 }],
+        [TILE_OBSTACLE, TILE_WALL, TILE_OBSTACLE, { col: 1, row: 5 }],
+        [TILE_OBSTACLE, TILE_WALL, TILE_WALL, { col: 0, row: 5 }],
+        [TILE_OBSTACLE, TILE_OBSTACLE, TILE_FLOOR, { col: 1, row: 0 }],
+        [TILE_OBSTACLE, TILE_OBSTACLE, TILE_WALL, { col: 0, row: 6 }],
+        [TILE_OBSTACLE, TILE_OBSTACLE, TILE_OBSTACLE, { col: 1, row: 6 }],
+      ]
+
+      for (let y = 1; y < floor.length; y++) {
+        for (let x = 1; x < floor[y].length; x++) {
+          if (floor[y][x] == -1) continue;
+          leftTopTile = zdr[y - 1]?.[x - 1] ?? 0
+          topTile = zdr[y - 1]?.[x] ?? 0
+          leftTile = zdr[y]?.[x - 1] ?? 0
+          if (leftTopTile == 0 && topTile == 0 && leftTile == 0) continue;
+          const shadowTile = getShadowTile(leftTopTile, topTile, leftTile)
+          if (shadowTile) {
+            drawShadow(shadowTile.col, shadowTile.row, x, y)
+          }
         }
       }
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'
-      for (let y = 0; y < obstacles.length; y++) {
-        for (let x = 0; x < obstacles[y].length; x++) {
-          if (x + 1 < floor[y].length && floor[y][x + 1] == -1) continue
-          if (y + 1 < floor.length && x + 1 < floor[y + 1].length && floor[y + 1][x + 1] == -1) continue
-          if (y + 1 < floor.length && floor[y + 1][x] == -1) continue
-          if (obstacles[y][x]) ctx.fillRect(x * TILE_SIZE + 8, y * TILE_SIZE + 8, TILE_SIZE, TILE_SIZE)
-        }
-      }
-
       for (let y = 0; y < walls.length; y++) {
         for (let x = 0; x < walls[y].length; x++) {
-          const id = walls[y][x]
+          let id = walls[y][x]
           if (id) await drawTile(id, x, y)
-        }
-      }
-
-      for (let y = 0; y < obstacles.length; y++) {
-        for (let x = 0; x < obstacles[y].length; x++) {
-          const id = obstacles[y][x]
+          id = obstacles[y][x]
           if (id) await drawTile(id, x, y)
         }
       }
@@ -202,25 +264,29 @@ class Render {
     const floor = Array.from({ length: height }, () => Array(width).fill(0))
     const walls = Array.from({ length: height }, () => Array(width).fill(0))
     const obstacles = Array.from({ length: height }, () => Array(width).fill(0))
+    const zdr = Array.from({ length: height }, () => Array(width).fill(0))
 
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const tileId = map[x][y]
         const mode = tileModes[tileId]
-
         if (tileId == 0) {
           floor[y][x] = -1
+          zdr[y][x] = 0
         } else if (mode == 1) {
           walls[y][x] = tileId
+          zdr[y][x] = 1
         } else if (mode == 2) {
           obstacles[y][x] = tileId
+          zdr[y][x] = 2
         } else {
           floor[y][x] = tileId
+          zdr[y][x] = 0
         }
       }
     }
 
-    return { floor, walls, obstacles }
+    return { floor, walls, obstacles, zdr }
   }
 }
 

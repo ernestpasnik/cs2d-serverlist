@@ -136,7 +136,9 @@ async function loadAndRender(cs2dDir) {
 
 async function getAllMapNames() {
   const keys = await redis.keys('map:*')
-  return keys.map(key => key.replace('map:', ''))
+  return keys
+    .map(key => key.replace('map:', ''))
+    .sort((a, b) => a.localeCompare(b))
 }
 
 async function getMap(name) {

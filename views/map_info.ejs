@@ -41,28 +41,28 @@
 <div class="stats-container">
   <label>Map Assets</label>
   <div class="stat-item">
-    <span>Map <%= v.file.name %></span>
-    <span><%= v.file.size %></span>
+    <span>Map <%= title %></span>
+    <span><%= v.mapSize %></span>
   </div>
   <div class="stat-item">
     <span>Map size</span>
     <span><%= v.header.mapWidth %>×<%= v.header.mapHeight %></span>
   </div>
-  <div class="stat-item">
+  <div class="stat-item<% if (v.header.tilesetImage && v.tilesetSize == 0) { %> err<% } %>">
     <span>Tileset <%= v.header.tilesetImage %></span>
-    <span><%= v.tilesetSize.size %></span>
+    <span><%= v.tilesetSize %></span>
   </div>
   <div class="stat-item">
     <span>Tileset tile count</span>
     <span><%= v.header.tileCount %></span>
   </div>
-  <div class="stat-item<% if (v.header.backgroundImage && v.backgroundSize.bytes == 0) { %> err<% } %>">
+  <div class="stat-item<% if (v.header.backgroundImage && v.bgSize == 0) { %> err<% } %>">
     <span>Background<%= v.header.backgroundImage ? ' ' + v.header.backgroundImage : '' %></span>
     <span>
     <% if (!v.header.backgroundImage) { %>
       none
     <% } else { %>
-      <%= v.backgroundSize.bytes > 0 ? v.backgroundSize.size : 'N/A' %>
+      <%= v.bgSize > 0 ? bytesToSize(v.bgSize) : 'Not Found' %>
     <% } %>
     </span>
   </div>
@@ -83,14 +83,14 @@
 <div class="stats-container">
   <label>External Resources</label>
   <% v.resources.forEach((item, index) => { %>
-  <div class="stat-item<% if (item.bytes == 0) { %> err<% } %>">
-    <% if (item.bytes > 0) { %>
+  <div class="stat-item<% if (item.size == 0) { %> err<% } %>">
+    <% if (item.size > 0) { %>
     <% const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path) %>
     <a href="/cs2d/<%= item.path %>" target="_blank"<% if (isImage) { %> class="cs2d"<% } %>><%= item.path %></a>
     <% } else { %>
     <span><%= item.path %></span>
     <% } %>
-    <span><%= item.size %></span>
+    <span><%= item.size > 0 ? bytesToSize(item.size) : 'Not Found' %></span>
   </div>
   <% }) %>
 </div>

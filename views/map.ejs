@@ -3,14 +3,14 @@
     <h1><%= title %></h1>
   </div>
   <a class="copyBtn" href="#">
-    <code id="hash" class="copyContent" data-tippy-content="SHA-256 hash of the map file" data-tocopy="<%= v.file.hash %>"><%= v.file.hash.slice(0, 8) %>...</code>
+    <code id="hash" class="copyContent" data-tippy-content="SHA-256 hash of the map file" data-tocopy="<%= v.mapHash %>"><%= v.mapHash.slice(0, 8) %>...</code>
   </a>
 </div>
 
 <div class="map-container">
   <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
   <div id="image-container" data-bg="<%= v.header.backgroundImage %>" data-rgb="rgb(<%= v.header.bgColorRed %>, <%= v.header.bgColorGreen %>, <%= v.header.bgColorBlue %>)">
-    <img id="image" src="/cs2d/maps/<%= title %>.webp" alt="<%= title %>">
+    <img id="image" src="/cs2d/mapexports/<%= title %>.webp" alt="<%= title %>">
     <button id="zoom-in" class="zoom-btn">+</button>
     <button id="zoom-out" class="zoom-btn">-</button>
   </div>

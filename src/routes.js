@@ -4,9 +4,12 @@ const leaderboard = require('./leaderboard')
 const tools = require('./tools')
 const stats = require('./stats/stats')
 const profile = require('./profile')
-const { formatTime, timeAgo, formatUptime, getEmojiByCountry } = require('./utils/utils')
+const { formatTime, timeAgo, formatUptime, getEmojiByCountry, bytesToSize } = require('./utils/utils')
 sockets.initialize()
+
+const cs2dDir = process.env.CS2D_DIRECTORY || 'public/cs2d'
 const maps = require('./maps/maps')
+maps.loadAndRender(cs2dDir)
 
 function err404(req, reply) {
   return reply.status(404).view('404', {
@@ -59,7 +62,7 @@ function routes(fastify) {
   fastify.get('/maps', async (req, reply) => {
     return reply.view('maps.ejs', {
       title: 'Maps',
-      maps: maps.maplist,
+      maps: await maps.getAllMapNames(),
       url: req.url
     })
   })
@@ -129,7 +132,7 @@ function routes(fastify) {
     const dat = await redis.get(`map:${mapName}`)
     if (!dat) return err404(req, reply)
 
-    const maplist = maps.maplist
+    const maplist = await maps.getAllMapNames()
     const currentIndex = maplist.indexOf(mapName)
     if (currentIndex === -1) return err404(req, reply)
     const nextIndex = (currentIndex + 1) % maplist.length
@@ -142,7 +145,8 @@ function routes(fastify) {
       url: req.url,
       nextMap: maplist[nextIndex],
       prevMap: maplist[prevIndex],
-      formatUptime
+      formatUptime,
+      bytesToSize
     })
   })
 

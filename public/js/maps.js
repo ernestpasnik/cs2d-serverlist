@@ -366,14 +366,12 @@ tick(elapsed) {
 
   }
 
-  window.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('map-preview')
-    const ctx = canvas.getContext('2d')
+  const canvas = document.getElementById('map-preview')
+  const ctx = canvas.getContext('2d')
   const parent = canvas.parentElement
   canvas.width = parent.clientWidth
   canvas.height = parent.clientHeight
 
   canvas.style.cursor = 'grab'
-    Game.run(ctx, canvas)
-  })
+  Game.run(ctx, canvas)
 }

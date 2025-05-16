@@ -2,6 +2,23 @@ const sharp = require('sharp')
 const { createCanvas, loadImage } = require('canvas')
 
 class Render {
+  constructor() {
+    this.shadowCanvas = null
+  }
+
+  async ensureShadowCanvas() {
+    if (this.shadowCanvas === null) {
+      console.log('loading shadow canvas...')
+      const shadowSheet = await loadImage('public/shadowmap.png')
+      this.shadowCanvas = createCanvas(shadowSheet.width, shadowSheet.height)
+      const ctx = this.shadowCanvas.getContext('2d')
+      ctx.drawImage(shadowSheet, 0, 0)
+
+      const imgData = ctx.getImageData(0, 0, this.shadowCanvas.width, this.shadowCanvas.height)
+      ctx.putImageData(imgData, 0, 0)
+    }
+  }
+
   async minimap(dat, mapName) {
     try {
       const mapWidth = dat.header.mapWidth
@@ -95,31 +112,22 @@ class Render {
       const TILE_SIZE = dat.header.use64pxTiles === 1 ? 64 : 32
       const { floor, walls, obstacles, zdr } = this._generateLayers(dat.map, dat.tileModes)
 
+      await this.ensureShadowCanvas()
 
-
-
-
-      const shadowSheet = await loadImage(`${cs2dDir}/gfx/shadowmap.png`)
-      const shadowCanvas = createCanvas(shadowSheet.width, shadowSheet.height)
-      const shadowCtx = shadowCanvas.getContext('2d')
-      shadowCtx.drawImage(shadowSheet, 0, 0)
-      const imgData2 = shadowCtx.getImageData(0, 0, shadowCanvas.width, shadowCanvas.height)
-      shadowCtx.putImageData(imgData2, 0, 0)
-
-
-      function drawShadow(col, row, x, y) {
+      const drawShadow = (col, row, x, y) => {
         const sx = col * TILE_SIZE
         const sy = row * TILE_SIZE
         ctx.save()
         ctx.globalAlpha = 0.8
         ctx.globalCompositeOperation = 'multiply'
         ctx.drawImage(
-          shadowCanvas,
+          this.shadowCanvas,
           sx, sy, TILE_SIZE, TILE_SIZE,
           x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE
         )
         ctx.restore()
       }
+
 
 
       const width = floor[0].length * TILE_SIZE

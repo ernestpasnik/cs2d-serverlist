@@ -20,8 +20,7 @@ if (searchInput) {
   document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
       e.preventDefault();
-      const searchInput = document.getElementById('search');
-      if (searchInput) searchInput.focus();
+      searchInput.focus();
     }
   });
 

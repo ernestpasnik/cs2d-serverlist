@@ -36,7 +36,7 @@ jobs:
             uglifyjs --version > /dev/null 2>&1 || npm install -g uglify-js
             uglifycss public/css/main.css > public/styles.css
             rm -rf public/css
-            uglifyjs public/js/*.js -o public/script.js
+            uglifyjs public/js/*.js -o public/scripts.js
             rm -rf public/js
             pm2 restart cs2d-serverlist
           EOF

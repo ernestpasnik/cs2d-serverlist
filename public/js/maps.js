@@ -3,6 +3,13 @@ if (maps_filter) {
   const mapLinks = document.querySelectorAll('.maplist a');
   const mapCountDisplay = document.getElementById('map-count');
 
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      maps_filter.focus();
+    }
+  });
+
   maps_filter.addEventListener('input', function () {
     const filterText = maps_filter.value.toLowerCase();
     let visibleMapCount = 0;
@@ -347,7 +354,7 @@ if (left) {
   const ctx = canvas.getContext('2d');
   const parent = canvas.parentElement;
   canvas.width = parent.clientWidth;
-  canvas.height = parent.clientHeight;
+  canvas.height = 448;
   canvas.style.cursor = 'grab';
   Game.run(ctx, canvas);
 };

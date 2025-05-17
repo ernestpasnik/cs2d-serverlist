@@ -1025,7 +1025,7 @@ input:not([type="checkbox"]),
 }
 
 .map-info > div {
-  max-height: 235px;
+  max-height: 236px;
   overflow: auto;
 }
 

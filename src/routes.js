@@ -4,7 +4,7 @@ const leaderboard = require('./leaderboard')
 const tools = require('./tools')
 const stats = require('./stats/stats')
 const profile = require('./profile')
-const { formatTime, timeAgo, formatUptime, getEmojiByCountry, bytesToSize } = require('./utils/utils')
+const { formatTime, timeAgo, getEmojiByCountry, bytesToSize } = require('./utils/utils')
 sockets.initialize()
 
 const cs2dDir = process.env.CS2D_DIRECTORY || 'public/cs2d'

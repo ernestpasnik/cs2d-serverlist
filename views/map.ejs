@@ -11,7 +11,7 @@
   <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
   <% if (v.header.tilesetImage && v.tilesetSize > 0) { %>
   <canvas
-    id="map-preview" height="444"
+    id="map-preview" height="448"
     data-tilesetimage="<%= v.header.tilesetImage %>"
     data-backgroundimage="<%= v.header.backgroundImage && v.bgSize > 0 ? v.header.backgroundImage : '' %>"
     data-backgroundcolor="rgb(<%= v.header.bgColorRed %>, <%= v.header.bgColorGreen %>, <%= v.header.bgColorBlue %>)"

@@ -42,8 +42,8 @@ fastify.register(require('@fastify/view'), {
   defaultContext: {
     production,
     description: null,
-    style: getMTimeUnix('public/style.css'),
-    script: getMTimeUnix('public/script.js')
+    style: getMTimeUnix('public/styles.css'),
+    script: getMTimeUnix('public/scripts.js')
   },
 })
 

@@ -32,25 +32,11 @@ jobs:
           ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
             cd /usr/share/nginx/cs2d-serverlist
-
-            # Install uglifycss if missing
             uglifycss --version > /dev/null 2>&1 || npm install -g uglifycss
-
-            # Install uglify-js if missing
             uglifyjs --version > /dev/null 2>&1 || npm install -g uglify-js
-
-            # Minify CSS if exists
-            if [ -f public/css/main.css ]; then
-              uglifycss public/css/main.css > public/css/main.min.css
-              rm public/css/main.css
-            fi
-
-            # Minify JS if any exist
-            if compgen -G "public/js/*.js" > /dev/null; then
-              uglifyjs public/js/*.js -o public/js/main.min.js
-              find public/js -type f -name "*.js" ! -name "*.min.js" -delete
-            fi
-
-            # Restart the app
+            uglifycss public/css/main.css > public/styles.css
+            rm -rf public/css
+            uglifyjs public/js/*.js -o public/script.js
+            rm -rf public/js
             pm2 restart cs2d-serverlist
           EOF

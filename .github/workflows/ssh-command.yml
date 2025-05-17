@@ -30,6 +30,7 @@ jobs:
       - name: Restart PM2
         run: |
           ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "
+            cd /usr/share/nginx/cs2d-serverlist &&
             uglifycss --version > /dev/null 2>&1 || npm install -g uglifycss &&
             uglifyjs --version > /dev/null 2>&1 || npm install -g uglify-js &&
             uglifycss public/css/main.css > public/css/main.min.css && rm public/css/main.css &&

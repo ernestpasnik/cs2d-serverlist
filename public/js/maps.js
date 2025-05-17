@@ -35,16 +35,9 @@ if (left) {
 tippy('.cs2d', {
   onShow(instance) {
     const target = instance.reference
-
-    // Find the <a> inside the .cs2d span
     const link = target.querySelector('a')
     const href = link?.getAttribute('href')
-
-    if (!href) {
-      instance.setContent('No download link found.')
-      return
-    }
-
+    if (!href) return
     fetch(href)
       .then((response) => response.blob())
       .then((blob) => {
@@ -140,10 +133,8 @@ tippy('.cs2d', {
       this.height = height
       this.maxX = map.cols * map.tsize - width
       this.maxY = map.rows * map.tsize - height
-
       const initialX = (map.camera[0] * map.tsize - width) + (width / 2)
       const initialY = (map.camera[1] * map.tsize - height) + (height / 2)
-
       this.x = Math.max(0, Math.min(initialX, this.maxX))
       this.y = Math.max(0, Math.min(initialY, this.maxY))
     }
@@ -227,6 +218,7 @@ tippy('.cs2d', {
 
       this.camera = new Camera(map, this.canvas.width, this.canvas.height)
 
+      // Load tiles
       let tilesImg = Loader.getImage('tiles')
       const tempCanvas = document.createElement('canvas')
       tempCanvas.width = tilesImg.width
@@ -248,10 +240,21 @@ tippy('.cs2d', {
       tempCtx.putImageData(imgData, 0, 0)
       this.tileAtlas = tempCanvas
 
+      // Load shadows
       this.shadowMap = Loader.getImage('shadowmap')
+      if (map.tsize === 64) {
+        const canvas = document.createElement('canvas')
+        canvas.width = this.shadowMap.width * 2
+        canvas.height = this.shadowMap.height * 2
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(this.shadowMap, 0, 0, canvas.width, canvas.height)
+        const scaled = new Image()
+        scaled.src = canvas.toDataURL()
+        this.shadowMap = scaled
+      }
+
       map.tilesetWidth = this.tileAtlas.width
       map.tilesetHeight = this.tileAtlas.height
-
       if (map.bg) {
         this.bgimg = Loader.getImage('bg')
       }
@@ -319,8 +322,8 @@ tippy('.cs2d', {
             if (!(leftTopTile === 0 && topTile === 0 && leftTile === 0)) {
               const shadowTile = map.getShadowTile(leftTopTile, topTile, leftTile);
               if (shadowTile) {
-                const sxShadow = shadowTile.col * 32;
-                const syShadow = shadowTile.row * 32;
+                const sxShadow = shadowTile.col * map.tsize;
+                const syShadow = shadowTile.row * map.tsize;
                 this.ctx.save();
                 this.ctx.globalAlpha = 0.8;
                 this.ctx.globalCompositeOperation = 'multiply';

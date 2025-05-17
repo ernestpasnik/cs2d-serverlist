@@ -45,16 +45,12 @@ async function loadAndRender(cs2dDir) {
   }
 
   const minimaps = 'public/cs2d/minimaps'
-  const mapexports = 'public/cs2d/mapexports'
-
   await fs.mkdir(minimaps, { recursive: true })
-  await fs.mkdir(mapexports, { recursive: true })
 
   const allFiles = await fs.readdir(mapsDir)
   const mapFiles = allFiles.filter(file => file.endsWith('.map'))
 
   const limit = pLimit(4)
-
   const tasks = mapFiles.map(mapFile => limit(async () => {
     const mapPath = path.join(mapsDir, mapFile)
     const mapName = path.parse(mapFile).name
@@ -128,17 +124,6 @@ async function loadAndRender(cs2dDir) {
       await fs.writeFile(minimapPath, content)
       files++
     }
-
-    /*
-    const mapexportPath = path.join(mapexports, `${mapName}.webp`)
-    try {
-      await fs.access(mapexportPath)
-    } catch {
-      const content = await render.mapexport(obj, mapName, cs2dDir)
-      await fs.writeFile(mapexportPath, content)
-      files++
-    }
-    */
   }))
 
   await Promise.all(tasks)

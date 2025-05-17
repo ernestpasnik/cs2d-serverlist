@@ -32,28 +32,34 @@ if (left) {
     }
   });
 
-  tippy('.cs2d', {
-    onShow(instance) {
-      const target = instance.reference
-      const textNodes = Array.from(target.childNodes)
-        .filter(node => node.nodeType === Node.TEXT_NODE)
-        .map(node => node.textContent.trim())
-        .filter(text => text.length > 0)
-      const text = textNodes.join(' ')
-      fetch('/cs2d/' + text)
-        .then((response) => response.blob())
-        .then((blob) => {
-          const url = URL.createObjectURL(blob);
-          const image = new Image();
-          image.style.display = 'block';
-          image.src = url;
-          instance.setContent(image);
-        })
-        .catch((error) => {
-          instance.setContent(`Request failed. ${error}`);
-        });
-    },
-  });
+tippy('.cs2d', {
+  onShow(instance) {
+    const target = instance.reference
+
+    // Find the <a> inside the .cs2d span
+    const link = target.querySelector('a')
+    const href = link?.getAttribute('href')
+
+    if (!href) {
+      instance.setContent('No download link found.')
+      return
+    }
+
+    fetch(href)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(blob)
+        const image = new Image()
+        image.style.display = 'block'
+        image.src = url
+        instance.setContent(image)
+      })
+      .catch((error) => {
+        instance.setContent(`Request failed. ${error}`)
+      })
+  }
+})
+;
 
   const TILE_FLOOR = 0
   const TILE_WALL = 1

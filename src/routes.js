@@ -145,7 +145,6 @@ function routes(fastify) {
       url: req.url,
       nextMap: maplist[nextIndex],
       prevMap: maplist[prevIndex],
-      formatUptime,
       bytesToSize
     })
   })

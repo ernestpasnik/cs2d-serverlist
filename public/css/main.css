@@ -97,8 +97,10 @@ li {
   font-size: .8rem;
   font-style: italic;
   color: #a2a6ae;
-  line-height: 1.5;
-  margin-top: .75rem;
+}
+
+.no-external {
+  text-align: center;
 }
 
 .development_mode {
@@ -556,7 +558,7 @@ small {
 
 .stat-item>span:first-child {
   color: #ddd;
-  max-width: 180px;
+  max-width: 200px;
 }
 
 .stat-item>*:last-child {
@@ -580,8 +582,8 @@ small {
 .stats-container {
   display: flex;
   flex-direction: column;
-  padding: 1rem 1.2rem;
-  font-size: .825rem;
+  padding: 1rem 1.25rem;
+  font-size: .875rem;
   border: 1px solid rgba(115, 130, 140, .1);
 }
 
@@ -593,7 +595,7 @@ small {
   width: 100%;
   background-color: rgba(115, 130, 140, .05);
   border-radius: 4px;
-  gap: .4rem;
+  gap: .35rem;
 }
 
 .stats>div>label {
@@ -1012,7 +1014,7 @@ input:not([type="checkbox"]),
   margin: 0 auto;
   width: 100%;
   height: 100%;
-  min-height: 424px;
+  min-height: 448px;
   align-content: center;
 }
 
@@ -1025,6 +1027,10 @@ input:not([type="checkbox"]),
 .map-info > div {
   max-height: 235px;
   overflow: auto;
+}
+
+.map-info > div > div > span {
+  max-width: initial !important;
 }
 
 .arrow {

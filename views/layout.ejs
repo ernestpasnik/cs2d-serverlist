@@ -65,17 +65,17 @@
     <a href="https://github.com/ernestpasnik/cs2d-serverlist/" target="_blank">GitHub</a>
   </footer>
   <% if (!production) { %>
-    <script defer src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
-    <script defer src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
   <% } else { %>
-    <script defer src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js"></script>
   <% } %>
-  <script defer async src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@4.0.1/dist/sortable.min.js"></script>
-  <script defer async src="/js/details.js?v=<%= script %>"></script>
-  <script defer async src="/js/main.js?v=<%= script %>"></script>
-  <script defer async src="/js/maps.js?v=<%= script %>"></script>
-  <script defer async src="/js/servers.js?v=<%= script %>"></script>
-  <script defer async src="/js/tools.js?v=<%= script%>"></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@4.0.1/dist/sortable.min.js"></script>
+  <script defer src="/js/details.js?v=<%= script %>"></script>
+  <script defer src="/js/main.js?v=<%= script %>"></script>
+  <script defer src="/js/maps.js?v=<%= script %>"></script>
+  <script defer src="/js/servers.js?v=<%= script %>"></script>
+  <script defer src="/js/tools.js?v=<%= script%>"></script>
 </body>
 </html>

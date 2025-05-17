@@ -11,21 +11,21 @@
   <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
 
 
-  <% const bgImage = v.header.backgroundImage; %>
-<% const bgColor = `rgb(${v.header.bgColorRed}, ${v.header.bgColorGreen}, ${v.header.bgColorBlue})`; %>
-
+  <% if (v.header.tilesetImage && v.tilesetSize > 0) { %>
   <canvas
     id="map-preview" height="420"
     data-tilesetimage="<%= v.header.tilesetImage %>"
-    data-backgroundimage="<%= bgImage %>"
-    data-backgroundColor="<%= bgColor %>"
+    data-backgroundimage="<%= v.header.backgroundImage && v.bgSize > 0 ? v.header.backgroundImage : '' %>"
+    data-backgroundcolor="rgb(<%= v.header.bgColorRed %>, <%= v.header.bgColorGreen %>, <%= v.header.bgColorBlue %>)"
     data-tilesize="<%= v.header.use64pxTiles === 1 ? 64 : 32 %>"
     data-mapwidth="<%= v.header.mapWidth %>"
     data-mapheight="<%= v.header.mapHeight %>"
     data-tiles='<%- JSON.stringify(v.map) %>'
     data-modifiers='<%- JSON.stringify(v.modifiers) %>'
-    data-tilemodes='<%- JSON.stringify(v.tm) %>'>
+    data-tilemodes='<%- JSON.stringify(v.tm) %>'
+    data-camera='<%- JSON.stringify(v.camera) %>'>
   </canvas>
+  <% } %>
 
   <a href="/maps/<%= nextMap %>" class="arrow arrow-right">&#8594;</a>
 </div>

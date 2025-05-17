@@ -84,7 +84,10 @@ async function loadAndRender(cs2dDir) {
     }
 
     obj.resources = []
-    for (const { type, str } of obj.entities) {
+    for (const { type, x, y, str } of obj.entities) {
+      if (type == 0) {
+        obj.camera = [x, y]
+      }
       if (![22, 23, 28].includes(type)) continue
       const resourcePath = str[0]?.replace(/\\/g, '/')
       if (!resourcePath || obj.resources.some(r => r.path === resourcePath)) continue

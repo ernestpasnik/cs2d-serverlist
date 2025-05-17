@@ -31,31 +31,20 @@ if (left) {
       if (right) window.location.href = right.href;
     }
   });
-}
-
-const imageContainer = document.getElementById('map-preview');
-if (imageContainer) {
 
   tippy('.cs2d', {
     onShow(instance) {
       const target = instance.reference
-
-      // Get the href of the <a>
-      const href = target.querySelector('a')?.getAttribute('href')
-
-      // Get the text inside the span excluding the <a> element (only text nodes)
       const textNodes = Array.from(target.childNodes)
         .filter(node => node.nodeType === Node.TEXT_NODE)
         .map(node => node.textContent.trim())
         .filter(text => text.length > 0)
-
-      const text = textNodes.join(' ')  // "gfx/sprites/de_vantage/humvee.png"
+      const text = textNodes.join(' ')
       fetch('/cs2d/' + text)
         .then((response) => response.blob())
         .then((blob) => {
           const url = URL.createObjectURL(blob);
           const image = new Image();
-
           image.style.display = 'block';
           image.src = url;
           instance.setContent(image);
@@ -141,12 +130,16 @@ if (imageContainer) {
 
   class Camera {
     constructor(map, width, height) {
-      this.x = 0
-      this.y = 0
       this.width = width
       this.height = height
       this.maxX = map.cols * map.tsize - width
       this.maxY = map.rows * map.tsize - height
+
+      const initialX = (map.camera[0] * map.tsize - width) + (width / 2)
+      const initialY = (map.camera[1] * map.tsize - height) + (height / 2)
+
+      this.x = Math.max(0, Math.min(initialX, this.maxX))
+      this.y = Math.max(0, Math.min(initialY, this.maxY))
     }
   }
 
@@ -171,20 +164,28 @@ if (imageContainer) {
       map.tsize = parseInt(canvas.dataset.tilesize, 10)
       map.cols = parseInt(canvas.dataset.mapwidth, 10)
       map.rows = parseInt(canvas.dataset.mapheight, 10)
+      map.bg = canvas.dataset.backgroundimage
       map.tilesetImageSrc = canvas.dataset.tilesetimage
       map.tilesetWidth = 0
       map.tilesetHeight = 0
-      canvas.style.backgroundColor = canvas.dataset.backgroundcolor
-      if (canvas.dataset.backgroundimage) {
-        this.canvas.style.backgroundImage = `url("/cs2d/gfx/backgrounds/${canvas.dataset.backgroundimage}"`
-      }
+      map.rgb = canvas.dataset.backgroundcolor
+      map.camera = JSON.parse(canvas.dataset.camera)
     },
 
     load() {
-      return [
-        Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tilesetImageSrc}`),
-        Loader.loadImage('shadowmap', '/shadowmap.png')
-      ]
+      if (map.bg) {
+        return [
+          Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tilesetImageSrc}`),
+          Loader.loadImage('shadowmap', '/shadowmap.png'),
+          Loader.loadImage('bg', `/cs2d/gfx/backgrounds/${map.bg}`)
+        ]
+      } else {
+        return [
+          Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tilesetImageSrc}`),
+          Loader.loadImage('shadowmap', '/shadowmap.png')
+        ]
+      }
+
     },
 
     init() {
@@ -219,45 +220,35 @@ if (imageContainer) {
       })
 
       this.camera = new Camera(map, this.canvas.width, this.canvas.height)
-      
 
-
-
-
-let tilesImg = Loader.getImage('tiles')
-
-const tempCanvas = document.createElement('canvas')
-tempCanvas.width = tilesImg.width
-tempCanvas.height = tilesImg.height
-
-const tempCtx = tempCanvas.getContext('2d')
-tempCtx.drawImage(tilesImg, 0, 0)
-
-const imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height)
-const data = imgData.data
-
-for (let i = 0; i < data.length; i += 4) {
-  if (data[i] === 255 && data[i + 1] === 0 && data[i + 2] === 255) {
-    data[i + 3] = 0 // Set alpha to 0 for magenta
-  }
-}
-
-tempCtx.putImageData(imgData, 0, 0)
-
-// Optional: replace original with transparent version
-this.tileAtlas = tempCanvas
-
-
-
-
-
-
-
-
+      let tilesImg = Loader.getImage('tiles')
+      const tempCanvas = document.createElement('canvas')
+      tempCanvas.width = tilesImg.width
+      tempCanvas.height = tilesImg.height
+      const tempCtx = tempCanvas.getContext('2d')
+      tempCtx.drawImage(tilesImg, 0, 0)
+      const imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height)
+      const data = imgData.data
+      function isCloseToMagenta(r, g, b, tolerance = 75) {
+        return Math.abs(r - 255) < tolerance &&
+              Math.abs(g - 0) < tolerance &&
+              Math.abs(b - 255) < tolerance
+      }
+      for (let i = 0; i < data.length; i += 4) {
+        if (isCloseToMagenta(data[i], data[i + 1], data[i + 2])) {
+          data[i + 3] = 0
+        }
+      }
+      tempCtx.putImageData(imgData, 0, 0)
+      this.tileAtlas = tempCanvas
 
       this.shadowMap = Loader.getImage('shadowmap')
       map.tilesetWidth = this.tileAtlas.width
       map.tilesetHeight = this.tileAtlas.height
+
+      if (map.bg) {
+        this.bgimg = Loader.getImage('bg')
+      }
     },
 
     update(delta) {
@@ -273,97 +264,91 @@ this.tileAtlas = tempCanvas
       }
     },
 
-render() {
+    render() {
+      ctx.fillStyle = map.rgb
+      if (map.bg) {
+        ctx.fillStyle = ctx.createPattern(this.bgimg, 'repeat')
+      }
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
+      let startCol = Math.floor(this.camera.x / map.tsize);
+      let endCol = Math.ceil((this.camera.x + this.camera.width) / map.tsize);
+      let startRow = Math.floor(this.camera.y / map.tsize);
+      let endRow = Math.ceil((this.camera.y + this.camera.height) / map.tsize);
+      let offsetX = -this.camera.x + startCol * map.tsize;
+      let offsetY = -this.camera.y + startRow * map.tsize;
 
+      for (let r = startRow; r <= endRow; r++) {
+        for (let c = startCol; c <= endCol; c++) {
+          const tile = map.getTile(c, r);
+          // Draw tiles
+          const sx = (tile % map.tilesetCols) * map.tsize;
+          const sy = Math.floor(tile / map.tilesetCols) * map.tsize;
+          const x = Math.round((c - startCol) * map.tsize + offsetX);
+          const y = Math.round((r - startRow) * map.tsize + offsetY);
+          const rotation = (() => {
+            switch (map.modifiers?.[c]?.[r]) {
+              case 1: return Math.PI / 2;
+              case 2: return Math.PI;
+              case 3: return -Math.PI / 2;
+              default: return 0;
+            }
+          })();
+          this.ctx.save();
+          this.ctx.translate(Math.round(x + map.tsize / 2), Math.round(y + map.tsize / 2));
+          this.ctx.rotate(rotation);
+          this.ctx.drawImage(
+            this.tileAtlas,
+            sx, sy, map.tsize, map.tsize,
+            -map.tsize / 2, -map.tsize / 2, map.tsize, map.tsize
+          );
+          this.ctx.restore();
 
-  let startCol = Math.floor(this.camera.x / map.tsize);
-  let endCol = Math.ceil((this.camera.x + this.camera.width) / map.tsize);
-  let startRow = Math.floor(this.camera.y / map.tsize);
-  let endRow = Math.ceil((this.camera.y + this.camera.height) / map.tsize);
-  let offsetX = -this.camera.x + startCol * map.tsize;
-  let offsetY = -this.camera.y + startRow * map.tsize;
-
-  for (let r = startRow; r <= endRow; r++) {
-    for (let c = startCol; c <= endCol; c++) {
-      const tile = map.getTile(c, r);
-      if (tile === 0) continue;
-
-      // Draw tiles
-      const sx = (tile % map.tilesetCols) * map.tsize;
-      const sy = Math.floor(tile / map.tilesetCols) * map.tsize;
-      const x = Math.round((c - startCol) * map.tsize + offsetX);
-      const y = Math.round((r - startRow) * map.tsize + offsetY);
-      const rotation = (() => {
-        switch (map.modifiers?.[c]?.[r]) {
-          case 1: return Math.PI / 2;
-          case 2: return Math.PI;
-          case 3: return -Math.PI / 2;
-          default: return 0;
-        }
-      })();
-      this.ctx.save();
-      this.ctx.translate(Math.round(x + map.tsize / 2), Math.round(y + map.tsize / 2));
-      this.ctx.rotate(rotation);
-      this.ctx.drawImage(
-        this.tileAtlas,
-        sx, sy, map.tsize, map.tsize,
-        -map.tsize / 2, -map.tsize / 2, map.tsize, map.tsize
-      );
-      this.ctx.restore();
-
-      // Draw shadows
-      if (map.tilemodes?.[c]?.[r] === 0) {
-        const leftTopTile = map.getTileMode(c - 1, r - 1);
-        const topTile = map.getTileMode(c, r - 1);
-        const leftTile = map.getTileMode(c - 1, r);
-        if (!(leftTopTile === 0 && topTile === 0 && leftTile === 0)) {
-          const shadowTile = map.getShadowTile(leftTopTile, topTile, leftTile);
-          if (shadowTile) {
-            const sxShadow = shadowTile.col * 32;
-            const syShadow = shadowTile.row * 32;
-            this.ctx.save();
-            this.ctx.globalAlpha = 0.8;
-            this.ctx.globalCompositeOperation = 'multiply';
-            this.ctx.drawImage(
-              this.shadowMap,
-              sxShadow,
-              syShadow,
-              map.tsize,
-              map.tsize,
-              Math.round((c - startCol) * map.tsize + offsetX),
-              Math.round((r - startRow) * map.tsize + offsetY),
-              map.tsize,
-              map.tsize
-            );
-            this.ctx.restore();
+          // Draw shadows
+          if (tile === 0) continue;
+          if (map.tilemodes?.[c]?.[r] === 0) {
+            const leftTopTile = map.getTileMode(c - 1, r - 1);
+            const topTile = map.getTileMode(c, r - 1);
+            const leftTile = map.getTileMode(c - 1, r);
+            if (!(leftTopTile === 0 && topTile === 0 && leftTile === 0)) {
+              const shadowTile = map.getShadowTile(leftTopTile, topTile, leftTile);
+              if (shadowTile) {
+                const sxShadow = shadowTile.col * 32;
+                const syShadow = shadowTile.row * 32;
+                this.ctx.save();
+                this.ctx.globalAlpha = 0.8;
+                this.ctx.globalCompositeOperation = 'multiply';
+                this.ctx.drawImage(
+                  this.shadowMap,
+                  sxShadow,
+                  syShadow,
+                  map.tsize,
+                  map.tsize,
+                  Math.round((c - startCol) * map.tsize + offsetX),
+                  Math.round((r - startRow) * map.tsize + offsetY),
+                  map.tsize,
+                  map.tsize
+                );
+                this.ctx.restore();
+              }
+            }
           }
         }
       }
-    }
-  }
+    },
 
-},
+    tick(elapsed) {
+      requestAnimationFrame(this.tick.bind(this))
 
+      this.ctx.clearRect(0, 0, this.width, this.height)
 
+      let delta = (elapsed - this._previousElapsed) / 1000.0
+      delta = Math.min(delta, 0.25)
+      this._previousElapsed = elapsed
 
-
-tick(elapsed) {
-  requestAnimationFrame(this.tick.bind(this))
-
-  this.ctx.clearRect(0, 0, this.width, this.height)
-
-  let delta = (elapsed - this._previousElapsed) / 1000.0
-  delta = Math.min(delta, 0.25)
-  this._previousElapsed = elapsed
-
-  this.update(delta)
-  this.render()
-},
-
-
-
-
+      this.update(delta)
+      this.render()
+    },
   }
 
   const canvas = document.getElementById('map-preview')
@@ -371,7 +356,6 @@ tick(elapsed) {
   const parent = canvas.parentElement
   canvas.width = parent.clientWidth
   canvas.height = parent.clientHeight
-
   canvas.style.cursor = 'grab'
   Game.run(ctx, canvas)
 }

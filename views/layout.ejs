@@ -10,7 +10,11 @@
   <meta name="theme-color" content="#1a2837">
   <title><%= title %><% if (title) { %> - CS2D Server List<% } else { %>CS2D Server List<% } %></title>
   <link rel="icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/css/main.css?v=<%= style %>">
+  <% if (!production) { %>
+    <link rel="stylesheet" href="/css/main.css?v=<%= style %>">
+  <% } else { %>
+    <link rel="stylesheet" href="/css/main.min.css?v=<%= style %>">
+  <% } %>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/inter-ui@4.1.0/inter.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
   <link rel="canonical" href="https://cs2d.pp.ua<%= url %>">
@@ -64,18 +68,19 @@
     <a href="#">Scroll To Top</a>
     <a href="https://github.com/ernestpasnik/cs2d-serverlist/" target="_blank">GitHub</a>
   </footer>
+  <script defer src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@4.0.1/dist/sortable.min.js"></script>
   <% if (!production) { %>
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+    <script defer src="/js/details.js?v=<%= script %>"></script>
+    <script defer src="/js/main.js?v=<%= script %>"></script>
+    <script defer src="/js/maps.js?v=<%= script %>"></script>
+    <script defer src="/js/servers.js?v=<%= script %>"></script>
+    <script defer src="/js/tools.js?v=<%= script%>"></script>
   <% } else { %>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js"></script>
+    <script defer src="/js/main.min.js?v=<%= script%>"></script>
   <% } %>
-  <script defer src="https://cdn.jsdelivr.net/gh/tofsjonas/sortable@4.0.1/dist/sortable.min.js"></script>
-  <script defer src="/js/details.js?v=<%= script %>"></script>
-  <script defer src="/js/main.js?v=<%= script %>"></script>
-  <script defer src="/js/maps.js?v=<%= script %>"></script>
-  <script defer src="/js/servers.js?v=<%= script %>"></script>
-  <script defer src="/js/tools.js?v=<%= script%>"></script>
 </body>
 </html>

@@ -260,8 +260,10 @@ if (left) {
         })
         initTippy();
         await Game.loadMapDataFromCanvas(d);
+        Game.start();
       } catch (err) {
         console.error('Error fetching JSON:', err);
+        Game.start();
       }
     },
 

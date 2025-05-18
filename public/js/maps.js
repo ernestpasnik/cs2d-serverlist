@@ -309,7 +309,7 @@ if (left) {
       this.width = canvas.width;
       this.height = canvas.height;
       const data = JSON.parse(canvas.getAttribute('data-canvas'));
-      await Loader.loadImage('shadowmap', '/shadowmap.png');
+      await Loader.loadImage('shadows', '/img/shadows.png');
       this.loadMapDataFromCanvas(data);
     },
 
@@ -387,7 +387,7 @@ if (left) {
       this.tileAtlas = tempCanvas;
 
       // Load shadows
-      this.shadowMap = Loader.getImage('shadowmap');
+      this.shadowMap = Loader.getImage('shadows');
       if (map.tileSize === 64) {
         const canvas = document.createElement('canvas');
         canvas.width = this.shadowMap.width * 2;

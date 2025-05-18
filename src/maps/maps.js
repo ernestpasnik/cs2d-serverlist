@@ -1,9 +1,8 @@
-const fs = require('fs').promises
+const fs = require('fs')
 const crypto = require('crypto')
 const redis = require('../utils/redis')
 const Parser = require('./parser')
 const Render = require('./render')
-const { parse } = require('path')
 const render = new Render()
 
 function pLimit(concurrency) {
@@ -61,20 +60,18 @@ async function loadAndRender() {
     obj.mapWidth = parsed.header.mapWidth
     obj.mapHeight = parsed.header.mapHeight
     obj.tileImg = parsed.header.tileImg
-    try {
-      const stat = await fs.stat(`public/cs2d/gfx/tiles/${parsed.header.tileImg}`)
-      obj.tilesetSize = stat.size
-    } catch {
+    if (existsSync(`public/cs2d/gfx/tiles/${parsed.header.tileImg}`)) {
+      obj.tilesetSize = statSync(`public/cs2d/gfx/tiles/${parsed.header.tileImg}`).size
+    } else {
       obj.tilesetSize = 0
       console.warn(`Tileset Image ${parsed.header.tileImg} doesnt exist for ${mapName}`)
       return;
     }
     obj.tileCount = parsed.header.tileCount
     obj.bgImg = parsed.header.bgImg
-    try {
-      const stat = await fs.stat(`public/cs2d/gfx/backgrounds/${parsed.header.bgImg}`)
-      obj.bgSize = stat.size
-    } catch {
+    if (existsSync(`public/cs2d/gfx/backgrounds/${parsed.header.bgImg}`)) {
+      obj.bgSize = statSync(`public/cs2d/gfx/backgrounds/${parsed.header.bgImg}`).size
+    } else {
       obj.bgSize = 0
     }
     obj.bgColor = `rgb(${parsed.header.bgRed}, ${parsed.header.bgGreen}, ${parsed.header.bgBlue})`

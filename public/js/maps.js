@@ -179,7 +179,7 @@ if (left) {
     },
 
     async sendJsonRequest(url) {
-      
+      tippy.hideAll();
       Game.isRunning = false;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       try {
@@ -190,7 +190,7 @@ if (left) {
         });
         if (!response.ok) throw new Error('Request failed');
         const d = await response.json();
-        
+
         history.pushState(null, '', `/maps/${d.name}`);
         document.title = `${d.name} - CS2D Server List`;
         document.getElementById('name').textContent = d.name;
@@ -204,17 +204,35 @@ if (left) {
         item[0].children[1].textContent = bytesToSize(d.mapSize);
         item[1].children[1].textContent = `${d.mapWidth}×${d.mapHeight}`;
         item[2].children[0].textContent = `Tileset ${d.tileImg}`;
+        item[2].children[0].setAttribute('data-href', `/cs2d/gfx/tiles/${d.tileImg}`);
         item[2].children[1].textContent = bytesToSize(d.tileFileSize);
         item[3].children[1].textContent = d.tileCount;
         item[4].children[0].textContent = `Background ${d.bgImg || ''}`;
+        if (item[4].children[0]) {
+          item[4].children[0].remove()
+        }
+        const newEl = document.createElement('span')
+        newEl.textContent = 'Background ' + (d.bgImg || '')
+        if (d.bgImg) {
+          const isImage = /\.(png|bmp|jpe?g)$/i.test(d.bgImg)
+          if (isImage) {
+            newEl.classList.add('cs2d')
+            newEl.setAttribute('data-href', '/cs2d/gfx/backgrounds/' + d.bgImg)
+          }
+        }
+        item[4].insertBefore(newEl, item[4].children[0] || null)
         if (d.bgImg) {
           if (d.bgSize > 0) {
-            item[4].children[1].textContent = bytesToSize(d.bgSize);
+            item[4].children[1].textContent = bytesToSize(d.bgSize)
+            item[4].classList.remove('err')
           } else {
-            item[4].children[1].textContent = 'Not Found';
+            item[4].children[1].textContent = 'Not Found'
+            item[4].classList.add('err')
           }
         } else {
-          item[4].children[1].textContent = 'none';
+          newEl.textContent = 'Background'
+          item[4].children[1].textContent = 'none'
+          item[4].classList.remove('err')
         }
         item[5].children[1].textContent = d.bgColor;
         item[6].children[1].textContent = d.programUsed || 'N/A';

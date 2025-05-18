@@ -28,8 +28,8 @@
       <span>Map size in tiles</span>
       <span><%= v.mapWidth %>×<%= v.mapHeight %></span>
     </div>
-    <div class="stat-item<% if (v.tileImg && v.tileFileSize == 0) { %> err<% } %>">
-      <span>Tileset <%= v.tileImg %></span>
+    <div class="stat-item">
+      <span data-href="/cs2d/gfx/tiles/<%= v.tileImg %>" class="cs2d">Tileset <%= v.tileImg %></span>
       <span><%= bytesToSize(v.tileFileSize) %></span>
     </div>
     <div class="stat-item">
@@ -37,7 +37,17 @@
       <span><%= v.tileCount %></span>
     </div>
     <div class="stat-item<% if (v.bgImg && v.bgSize == 0) { %> err<% } %>">
-      <span>Background<%= v.bgImg ? ' ' + v.bgImg : '' %></span>
+      <% const isImage = /\.(png|bmp|jpe?g)$/i.test(v.bgImg) %>
+      <span
+        <% if (isImage && v.bgSize > 0) { %>
+          class="cs2d"
+          data-href="/cs2d/gfx/backgrounds/<%= v.bgImg %>"
+        <% } else if (isImage) { %>
+          class="cs2d"
+        <% } %>
+      >
+        Background<%= v.bgImg ? ' ' + v.bgImg : '' %>
+      </span>
       <span>
       <% if (v.bgImg) { %>
         <% if (v.bgSize > 0) { %>

@@ -1,8 +1,17 @@
-const bytesToSize = (b) => {
-  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-  if (b === 0) return '0 B';
-  const i = Math.floor(Math.log(b) / Math.log(1024));
-  return `${Math.round(b / Math.pow(1024, i))} ${sizes[i]}`;
+const bytesToSize = (b, colors = false) => {
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+  if (b === 0) return colors ? `<span style="color: rgb(96, 255, 95)">0 B</span>` : '0 B'
+  const i = Math.floor(Math.log(b) / Math.log(1024))
+  const size = Math.round(b / Math.pow(1024, i))
+  const str = `${size} ${sizes[i]}`
+  if (!colors) return str
+  const max = 3 * 1024 * 1024
+  const ratio = Math.min(b / max, 1)
+  const r = Math.round(96 + (255 - 96) * ratio)
+  const g = Math.round(255 - 255 * ratio)
+  const bCol = Math.round(95 - 95 * ratio)
+  const color = `rgb(${r}, ${g}, ${bCol})`
+  return `<span style="color: ${color}">${str}</span>`
 }
 
 const maps_filter = document.getElementById('maps_filter');
@@ -224,15 +233,15 @@ if (left) {
         if (d.bgImg) {
           if (d.bgSize > 0) {
             item[4].children[1].textContent = bytesToSize(d.bgSize)
-            item[4].classList.remove('err')
+            item[4].children[1].classList.remove('err')
           } else {
             item[4].children[1].textContent = 'Not Found'
-            item[4].classList.add('err')
+            item[4].children[1].classList.add('err')
           }
         } else {
           newEl.textContent = 'Background'
           item[4].children[1].textContent = 'none'
-          item[4].classList.remove('err')
+          item[4].children[1].classList.remove('err')
         }
         item[5].children[1].textContent = d.bgColor;
         item[6].children[1].textContent = d.programUsed || 'N/A';
@@ -264,7 +273,6 @@ if (left) {
           resources.forEach(item => {
             const div = document.createElement('div')
             div.className = 'stat-item'
-            if (item.size === 0) div.classList.add('err')
             if (item.size > 0) {
               const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path)
               const span = document.createElement('span')
@@ -278,8 +286,9 @@ if (left) {
               div.appendChild(spanPath)
             }
             const spanSize = document.createElement('span')
-            spanSize.textContent = item.size > 0 ? bytesToSize(item.size) : 'Not Found'
+            spanSize.innerHTML = item.size > 0 ? bytesToSize(item.size, true) : 'Not Found'
             div.appendChild(spanSize)
+            if (item.size === 0) spanSize.classList.add('err')
             resourcesContainer.appendChild(div)
           })
         }

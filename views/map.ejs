@@ -36,7 +36,7 @@
       <span>Tileset tile count</span>
       <span><%= v.tileCount %></span>
     </div>
-    <div class="stat-item<% if (v.bgImg && v.bgSize == 0) { %> err<% } %>">
+    <div class="stat-item">
 <% const isImage = /\.(png|bmp|jpe?g)$/i.test(v.bgImg) %>
 <span
   <% if (isImage && v.bgSize > 0) { %>
@@ -47,7 +47,7 @@
   Background<%= v.bgImg ? ' ' + v.bgImg : '' %>
 </span>
 
-      <span>
+      <span<% if (v.bgImg && v.bgSize == 0) { %> class="err"<% } %>>
       <% if (v.bgImg) { %>
         <% if (v.bgSize > 0) { %>
           <%= bytesToSize(v.bgSize) %>
@@ -79,14 +79,14 @@
   <div class="stats-container">
     <label>External Resources</label>
     <% v.resources.forEach((item, index) => { %>
-    <div class="stat-item<% if (item.size == 0) { %> err<% } %>">
+    <div class="stat-item">
       <% if (item.size > 0) { %>
       <% const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path) %>
       <span data-href="/cs2d/<%= item.path %>"<% if (isImage) { %> class="cs2d"<% } %>><%= item.path %></span>
       <% } else { %>
       <span><%= item.path %></span>
       <% } %>
-      <span><%= item.size > 0 ? bytesToSize(item.size) : 'Not Found' %></span>
+      <span<% if (item.size == 0) { %> class="err"<% } %>><%- item.size > 0 ? bytesToSize(item.size, true) : 'Not Found' %></span>
     </div>
     <% }) %>
     <% if (v.resources.length === 0) {%>

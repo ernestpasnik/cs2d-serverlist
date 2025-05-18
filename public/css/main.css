@@ -25,6 +25,7 @@ canvas {
 a {
   text-decoration: none;
   color: #ddd;
+  font-weight: 500;
 }
 
 a:hover {
@@ -161,6 +162,8 @@ code {
 }
 
 .cs2d {
+  font-weight: 500;
+  color: #ddd;
   cursor: pointer;
 }
 

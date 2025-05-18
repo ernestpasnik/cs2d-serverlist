@@ -45,11 +45,20 @@ function timeAgo(ts, full = false) {
   return 'just now'
 }
 
-const bytesToSize = (b) => {
+const bytesToSize = (b, colors = false) => {
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-  if (b === 0) return '0 B'
+  if (b === 0) return colors ? `<span style="color: rgb(96, 255, 95)">0 B</span>` : '0 B'
   const i = Math.floor(Math.log(b) / Math.log(1024))
-  return `${Math.round(b / Math.pow(1024, i))} ${sizes[i]}`
+  const size = Math.round(b / Math.pow(1024, i))
+  const str = `${size} ${sizes[i]}`
+  if (!colors) return str
+  const max = 3 * 1024 * 1024
+  const ratio = Math.min(b / max, 1)
+  const r = Math.round(96 + (255 - 96) * ratio)
+  const g = Math.round(255 - 255 * ratio)
+  const bCol = Math.round(95 - 95 * ratio)
+  const color = `rgb(${r}, ${g}, ${bCol})`
+  return `<span style="color: ${color}">${str}</span>`
 }
 
 function formatUptime(uptime, ms = false) {

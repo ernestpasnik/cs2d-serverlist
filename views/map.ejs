@@ -37,17 +37,16 @@
       <span><%= v.tileCount %></span>
     </div>
     <div class="stat-item<% if (v.bgImg && v.bgSize == 0) { %> err<% } %>">
-      <% const isImage = /\.(png|bmp|jpe?g)$/i.test(v.bgImg) %>
-      <span
-        <% if (isImage && v.bgSize > 0) { %>
-          class="cs2d"
-          data-href="/cs2d/gfx/backgrounds/<%= v.bgImg %>"
-        <% } else if (isImage) { %>
-          class="cs2d"
-        <% } %>
-      >
-        Background<%= v.bgImg ? ' ' + v.bgImg : '' %>
-      </span>
+<% const isImage = /\.(png|bmp|jpe?g)$/i.test(v.bgImg) %>
+<span
+  <% if (isImage && v.bgSize > 0) { %>
+    class="cs2d"
+    data-href="/cs2d/gfx/backgrounds/<%= v.bgImg %>"
+  <% } %>
+>
+  Background<%= v.bgImg ? ' ' + v.bgImg : '' %>
+</span>
+
       <span>
       <% if (v.bgImg) { %>
         <% if (v.bgSize > 0) { %>

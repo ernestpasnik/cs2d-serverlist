@@ -215,7 +215,7 @@ if (left) {
         newEl.textContent = 'Background ' + (d.bgImg || '')
         if (d.bgImg) {
           const isImage = /\.(png|bmp|jpe?g)$/i.test(d.bgImg)
-          if (isImage) {
+          if (isImage && d.bgSize > 0) {
             newEl.classList.add('cs2d')
             newEl.setAttribute('data-href', '/cs2d/gfx/backgrounds/' + d.bgImg)
           }

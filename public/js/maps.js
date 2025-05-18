@@ -1,3 +1,10 @@
+const bytesToSize = (b) => {
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  if (b === 0) return '0 B';
+  const i = Math.floor(Math.log(b) / Math.log(1024));
+  return `${Math.round(b / Math.pow(1024, i))} ${sizes[i]}`;
+}
+
 const maps_filter = document.getElementById('maps_filter');
 if (maps_filter) {
   const mapLinks = document.querySelectorAll('.maplist a');
@@ -28,17 +35,7 @@ if (maps_filter) {
   });
 }
 
-const left = document.querySelector('.arrow-left');
-if (left) {
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'ArrowLeft') {
-      if (left) window.location.href = left.href;
-    } else if (e.key === 'ArrowRight') {
-      const right = document.querySelector('.arrow-right');
-      if (right) window.location.href = right.href;
-    }
-  });
-
+function initTippy() {
   tippy('.cs2d', {
     onShow(instance) {
       const target = instance.reference;
@@ -55,6 +52,19 @@ if (left) {
         .catch((error) => {
           instance.setContent(`Request failed. ${error}`);
         });
+    }
+  });
+}
+
+const left = document.querySelector('.arrow-left');
+if (left) {
+  initTippy();
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') {
+      if (left) Game.sendJsonRequest(left.href);
+    } else if (e.key === 'ArrowRight') {
+      const right = document.querySelector('.arrow-right');
+      if (right) Game.sendJsonRequest(right.href);
     }
   });
 
@@ -135,45 +145,142 @@ if (left) {
   }
 
   const Game = {
+    isRunning: false,
+    animationFrameId: null,
+    arrowRight: document.querySelector('a.arrow-right'),
+    arrowLeft: document.querySelector('a.arrow-left'),
+
+    handleArrowClick(e) {
+      e.preventDefault()
+      if (e.currentTarget === Game.arrowRight) {
+        Game.sendJsonRequest(document.querySelector('a.arrow-right').href)
+        Game.arrowRight.removeEventListener('click', Game.handleArrowClick)
+      }
+      else if (e.currentTarget === Game.arrowLeft) {
+        Game.sendJsonRequest(document.querySelector('a.arrow-left').href)
+        Game.arrowLeft.removeEventListener('click', Game.handleArrowClick)
+      }
+    },
+
+    async sendJsonRequest(url) {
+      try {
+        const response = await fetch(url, {
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        if (!response.ok) throw new Error('Request failed');
+        const d = await response.json();
+        Game.stop();
+        Game.loadMapDataFromCanvas(d);
+        history.pushState(null, '', `/maps/${d.name}`);
+        document.title = `${d.name} - CS2D Server List`;
+        document.getElementById('name').textContent = d.name;
+        const hash = document.getElementById('hash');
+        hash.textContent = d.mapHash.slice(0, 8) + '...';
+        hash.setAttribute('data-tocopy', d.mapHash)
+        document.querySelector('a.arrow-left').href = d.prevMap;
+        document.querySelector('a.arrow-right').href = d.nextMap;
+        const item = document.querySelectorAll('.stats-container .stat-item')
+        item[0].children[0].textContent = `Map ${d.name}.map`
+        item[0].children[1].textContent = bytesToSize(d.mapSize);
+        item[1].children[1].textContent = `${d.mapWidth}×${d.mapHeight}`;
+        item[2].children[0].textContent = `Tileset ${d.tileImg}`;
+        item[2].children[1].textContent = bytesToSize(d.tilesetSize);
+        item[3].children[1].textContent = d.tileCount;
+        item[4].children[0].textContent = `Background ${d.bgImg || ''}`;
+        if (d.bgImg) {
+          if (d.bgSize === 0) {
+            item[4].children[1].textContent = 'Not Found';
+          } else {
+            item[4].children[1].textContent = bytesToSize(d.bgSize);
+          }
+        } else {
+          item[4].children[1].textContent = 'none';
+        }
+        item[5].children[1].textContent = d.bgColor;
+        item[6].children[1].textContent = d.programUsed || 'N/A';
+        const containerAuthor = item[7].children[1]
+        containerAuthor.innerHTML = ''
+        if (d.authorUSGN > 0) {
+          const link = document.createElement('a')
+          link.href = `https://unrealsoftware.de/profile.php?userid=${d.authorUSGN}`
+          link.target = '_blank'
+          link.textContent = d.authorName || 'N/A'
+          containerAuthor.appendChild(link)
+        } else {
+          const span = document.createElement('span')
+          span.textContent = d.authorName || 'N/A'
+          containerAuthor.appendChild(span)
+        }
+        const resources = d.resources;
+        const resourcesContainer = document.querySelector('.stats-container:nth-child(2)');
+        const resourcesEl = document.querySelectorAll('.stats-container:nth-child(2) .stat-item');
+        resourcesEl.forEach(element => {
+          element.remove();
+        });
+        if (resources.length === 0) {
+          const note = document.createElement('span')
+          note.className = 'stat-item no-external'
+          note.textContent = 'No external resources needed.'
+          resourcesContainer.appendChild(note)
+          return
+        }
+        resources.forEach(item => {
+          const div = document.createElement('div')
+          div.className = 'stat-item'
+          if (item.size === 0) div.classList.add('err')
+          if (item.size > 0) {
+            const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path)
+            const a = document.createElement('a')
+            a.href = '/cs2d/' + item.path
+            if (isImage) a.classList.add('cs2d')
+            a.textContent = item.path
+            div.appendChild(a)
+          } else {
+            const spanPath = document.createElement('span')
+            spanPath.textContent = item.path
+            div.appendChild(spanPath)
+          }
+          const spanSize = document.createElement('span')
+          spanSize.textContent = item.size > 0 ? bytesToSize(item.size) : 'Not Found'
+          div.appendChild(spanSize)
+          resourcesContainer.appendChild(div)
+        })
+        initTippy();
+      } catch (err) {
+        console.error('Error fetching JSON:', err);
+      }
+    },
+
     async run(ctx, canvas) {
+      this.arrowRight.addEventListener('click', this.handleArrowClick.bind(this))
+      this.arrowLeft.addEventListener('click', this.handleArrowClick.bind(this))
       this.ctx = ctx;
       this.canvas = canvas;
       this.width = canvas.width;
       this.height = canvas.height;
-      this.loadMapDataFromCanvas();
-      await Promise.all(this.load());
+      const data = JSON.parse(canvas.getAttribute('data-canvas'));
+      await Loader.loadImage('shadowmap', '/shadowmap.png');
+      await this.loadMapDataFromCanvas(data);
+      this.start();
+    },
+
+    async loadMapDataFromCanvas(d) {
+      map.map = d.map;
+      map.mapWidth = d.mapWidth;
+      map.mapHeight = d.mapHeight;
+      map.mapModifiers = d.mapModifiers;
+      map.tileImg = d.tileImg;
+      map.tileMode = d.tileMode;
+      map.tileSize = d.tileSize;
+      map.bgImg = d.bgImg;
+      map.bgColor = d.bgColor;
+      map.cam = d.cam;
+      await Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tileImg}`)
+      if (map.bgImg) await Loader.loadImage('bg', `/cs2d/gfx/backgrounds/${map.bgImg}`)
       this.init();
-      requestAnimationFrame(this.tick.bind(this));
-    },
-
-    loadMapDataFromCanvas() {
-      const canvas = this.canvas
-      const data = JSON.parse(canvas.getAttribute('data-canvas'))
-      map.map = data.map
-      map.mapWidth = data.mapWidth
-      map.mapHeight = data.mapHeight
-      map.mapModifiers = data.mapModifiers
-      map.tileImg = data.tileImg
-      map.tileMode = data.tileMode
-      map.tileSize = data.tileSize
-      map.bgImg = data.bgImg
-      map.bgRGB = data.bgRGB
-      map.cam = data.cam
-    },
-
-    load() {
-      if (map.bgImg) {
-        return [
-          Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tileImg}`),
-          Loader.loadImage('shadowmap', '/shadowmap.png'),
-          Loader.loadImage('bg', `/cs2d/gfx/backgrounds/${map.bgImg}`)
-        ];
-      } else {
-        return [
-          Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tileImg}`),
-          Loader.loadImage('shadowmap', '/shadowmap.png')
-        ];
-      }
+      this.start();
     },
 
     init() {
@@ -249,6 +356,7 @@ if (left) {
       if (map.bgImg) {
         map.bgImg = Loader.getImage('bg');
       }
+      requestAnimationFrame(this.tick.bind(this));
     },
 
     update() {
@@ -266,7 +374,7 @@ if (left) {
       if (map.bgImg) {
         ctx.fillStyle = ctx.createPattern(map.bgImg, 'repeat');
       } else {
-        ctx.fillStyle = map.bgRGB;
+        ctx.fillStyle = map.bgColor;
       }
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -335,12 +443,30 @@ if (left) {
       }
     },
 
-    tick() {
-      requestAnimationFrame(this.tick.bind(this));
-      this.ctx.clearRect(0, 0, this.width, this.height);
-      this.update();
-      this.render();
+    start() {
+      if (!this.isRunning) {
+        this.isRunning = true
+        this.tick()
+      }
     },
+
+    stop() {
+      if (this.isRunning) {
+        this.isRunning = false
+        if (this.animationFrameId !== null) {
+          cancelAnimationFrame(this.animationFrameId)
+          this.animationFrameId = null
+        }
+      }
+    },
+
+    tick() {
+      if (!this.isRunning) return
+      this.update()
+      this.render()
+      this.animationFrameId = requestAnimationFrame(this.tick.bind(this))
+    },
+
   };
 
   const canvas = document.getElementById('map-preview');

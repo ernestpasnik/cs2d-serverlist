@@ -1,6 +1,6 @@
 <div class="flex">
   <div>
-    <h1><%= title %></h1>
+    <h1 id="name"><%= title %></h1>
   </div>
   <a class="copyBtn" href="#">
     <code id="hash" class="copyContent" data-tippy-content="SHA-256 hash of the map file" data-tocopy="<%= v.mapHash %>"><%= v.mapHash.slice(0, 8) %>...</code>
@@ -9,7 +9,7 @@
 
 <div class="map-container">
   <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
-  <canvas id="map-preview" data-canvas='<%- JSON.stringify(v.canvas) %>'></canvas>
+  <canvas id="map-preview" data-canvas='<%- JSON.stringify(v) %>'></canvas>
   <a href="/maps/<%= nextMap %>" class="arrow arrow-right">&#8594;</a>
 </div>
 
@@ -22,12 +22,12 @@
     </div>
     <div class="stat-item">
       <span>Map size in tiles</span>
-      <span><%= v.header.mapWidth %>×<%= v.header.mapHeight %></span>
+      <span><%= v.mapWidth %>×<%= v.mapHeight %></span>
     </div>
-    <div class="stat-item<% if (v.header.tileImg && v.tilesetSize == 0) { %> err<% } %>">
-      <span>Tileset <%= v.header.tileImg %></span>
+    <div class="stat-item<% if (v.tileImg && v.tilesetSize == 0) { %> err<% } %>">
+      <span>Tileset <%= v.tileImg %></span>
       <span>
-      <% if (!v.header.tileImg) { %>
+      <% if (!v.tileImg) { %>
         none
       <% } else { %>
         <%= v.tilesetSize > 0 ? bytesToSize(v.tilesetSize) : 'Not Found' %>
@@ -36,12 +36,12 @@
     </div>
     <div class="stat-item">
       <span>Tileset tile count</span>
-      <span><%= v.header.tileCount %></span>
+      <span><%= v.tileCount %></span>
     </div>
-    <div class="stat-item<% if (v.header.bgImg && v.bgSize == 0) { %> err<% } %>">
-      <span>Background<%= v.header.bgImg ? ' ' + v.header.bgImg : '' %></span>
+    <div class="stat-item<% if (v.bgImg && v.bgSize == 0) { %> err<% } %>">
+      <span>Background<%= v.bgImg ? ' ' + v.bgImg : '' %></span>
       <span>
-      <% if (!v.header.bgImg) { %>
+      <% if (!v.bgImg) { %>
         none
       <% } else { %>
         <%= v.bgSize > 0 ? bytesToSize(v.bgSize) : 'Not Found' %>
@@ -50,22 +50,21 @@
     </div>
     <div class="stat-item">
       <span>Background color</span>
-      <span>rgb(<%= v.header.bgRed %>, <%= v.header.bgGreen %>, <%= v.header.bgBlue %>)</span>
+      <span><%= v.bgColor %></span>
     </div>
     <div class="stat-item">
       <span>Program used to save</span>
-      <span><%= v.header.programUsed ? v.header.programUsed : 'N/A' %></span>
+      <span><%= v.programUsed ? v.programUsed : 'N/A' %></span>
     </div>
     <div class="stat-item">
       <span>Created/Last updated by</span>
-      <% if (v.header.authorUSGN > 0) { %>
-      <a href="https://unrealsoftware.de/profile.php?userid=<%= v.header.authorUSGN %>" target="_blank"><%= v.header.authorName || 'N/A' %></a>
+      <% if (v.authorUSGN > 0) { %>
+      <a href="https://unrealsoftware.de/profile.php?userid=<%= v.authorUSGN %>" target="_blank"><%= v.authorName || 'N/A' %></a>
       <% } else { %>
-      <span><%= v.header.authorName || 'N/A' %></span>
+      <span><%= v.authorName || 'N/A' %></span>
       <% } %>
     </div>
   </div>
-
   <div class="stats-container">
     <label>External Resources</label>
     <% v.resources.forEach((item, index) => { %>
@@ -80,7 +79,7 @@
     </div>
     <% }) %>
     <% if (v.resources.length === 0) {%>
-    <span class="note no-external">No external resources needed.</span>
+    <span class="stat-item no-external">No external resources needed.</span>
     <% } %>
   </div>
 </div>

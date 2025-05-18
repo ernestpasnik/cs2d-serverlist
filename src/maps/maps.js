@@ -3,6 +3,7 @@ const crypto = require('crypto')
 const redis = require('../utils/redis')
 const Parser = require('./parser')
 const Render = require('./render')
+const { parse } = require('path')
 const render = new Render()
 
 function pLimit(concurrency) {
@@ -51,36 +52,43 @@ async function loadAndRender() {
   const limit = pLimit(4)
   const tasks = mapFiles.map(mapFile => limit(async () => {
     const mapName = mapFile.slice(0, -4)
-    const buf = await fs.readFile(`public/cs2d/maps/${mapName}.map`)
-    const obj = new Parser(buf).parse()
-    obj.mapHash = crypto.createHash('sha256').update(buf).digest('hex')
-    obj.mapSize = buf.length
-
+    const buffer = await fs.readFile(`public/cs2d/maps/${mapName}.map`)
+    const parsed = new Parser(buffer).parse()
+    const obj = {}
+    obj.name = mapName
+    obj.mapHash = crypto.createHash('sha256').update(buffer).digest('hex')
+    obj.mapSize = buffer.length
+    obj.mapWidth = parsed.header.mapWidth
+    obj.mapHeight = parsed.header.mapHeight
+    obj.tileImg = parsed.header.tileImg
     try {
-      const stat = await fs.stat(`public/cs2d/gfx/tiles/${obj.header.tileImg}`)
+      const stat = await fs.stat(`public/cs2d/gfx/tiles/${parsed.header.tileImg}`)
       obj.tilesetSize = stat.size
     } catch {
       obj.tilesetSize = 0
-      console.warn(`Tileset Image ${obj.header.tileImg} doesnt exist for ${mapName}`)
+      console.warn(`Tileset Image ${parsed.header.tileImg} doesnt exist for ${mapName}`)
       return;
     }
-
+    obj.tileCount = parsed.header.tileCount
+    obj.bgImg = parsed.header.bgImg
     try {
-      const stat = await fs.stat(`public/cs2d/gfx/backgrounds/${obj.header.bgImg}`)
+      const stat = await fs.stat(`public/cs2d/gfx/backgrounds/${parsed.header.bgImg}`)
       obj.bgSize = stat.size
     } catch {
       obj.bgSize = 0
     }
-
+    obj.bgColor = `rgb(${parsed.header.bgRed}, ${parsed.header.bgGreen}, ${parsed.header.bgBlue})`
+    obj.programUsed = parsed.header.programUsed
+    obj.authorName = parsed.header.authorName
+    obj.authorUSGN = parsed.header.authorUSGN
     obj.resources = []
-    for (const { type, x, y, str } of obj.entities) {
+    for (const { type, x, y, str } of parsed.entities) {
       if (type == 0) {
         obj.cam = [x, y]
       }
       if (![22, 23, 28].includes(type)) continue
-      const resourcePath = str[0]?.replace(/\\/g, '/')
+      const resourcePath = str[0]?.trim().replace(/\\/g, '/')
       if (!resourcePath || obj.resources.some(r => r.path === resourcePath)) continue
-
       let size = 0
       try {
         const stat = await fs.stat(`public/cs2d/${resourcePath}`)
@@ -93,32 +101,21 @@ async function loadAndRender() {
 
     obj.resources.sort((a, b) => a.size - b.size)
 
-
-    obj.tm = Array.from({ length: obj.header.mapWidth }, () => new Array(obj.header.mapHeight).fill(0))
-    for (let x = 0; x < obj.header.mapWidth; x++) {
-      for (let y = 0; y < obj.header.mapHeight; y++) {
-        const tileId = obj.map[x][y]
-        const mode = obj.tileMode[tileId] ?? 0
+    obj.map = parsed.map
+    obj.tileMode = Array.from({ length: parsed.header.mapWidth }, () => new Array(parsed.header.mapHeight).fill(0))
+    for (let x = 0; x < parsed.header.mapWidth; x++) {
+      for (let y = 0; y < parsed.header.mapHeight; y++) {
+        const tileId = parsed.map[x][y]
+        const mode = parsed.tileMode[tileId] ?? 0
         if (mode > 2) {
-          obj.tm[x][y] = 0
+          obj.tileMode[x][y] = 0
         } else {
-          obj.tm[x][y] = mode
+          obj.tileMode[x][y] = mode
         }
       }
     }
-
-    obj.canvas = {
-      map: obj.map,
-      mapWidth: obj.header.mapWidth,
-      mapHeight: obj.header.mapHeight,
-      mapModifiers: obj.mapModifiers,
-      tileSize: obj.header.use64pxTiles === 1 ? 64 : 32,
-      tileMode: obj.tm,
-      tileImg: obj.header.tileImg || '',
-      bgImg: obj.bgSize > 0 && obj.header.bgImg ? obj.header.bgImg : null,
-      bgRGB: `rgb(${obj.header.bgRed},${obj.header.bgGreen},${obj.header.bgBlue})`,
-      cam: obj.cam || []
-    }
+    obj.mapModifiers = parsed.mapModifiers
+    obj.tileSize = parsed.header.use64pxTiles === 1 ? 64 : 32
     await redis.set(`map:${mapName}`, JSON.stringify(obj))
 
     const minimapPath = `public/cs2d/minimaps/${mapName}.webp`

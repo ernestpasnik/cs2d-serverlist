@@ -97,6 +97,7 @@ li {
 
 .no-external {
   text-align: center;
+  display: block !important;
 }
 
 .development_mode {
@@ -169,7 +170,7 @@ nav>a {
 }
 
 nav>a>i {
-  font-size: 1.25rem;
+  font-size: 1rem;
 }
 
 nav>a:hover svg {

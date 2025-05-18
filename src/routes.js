@@ -131,23 +131,26 @@ function routes(fastify) {
     if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
       return reply.code(400).send({ error: 'Invalid map name' })
     }
-
     const dat = await redis.get(`map:${mapName}`)
     if (!dat) return err404(req, reply)
-
     const maplist = await maps.getAllMapNames()
-    const currentIndex = maplist.indexOf(mapName)
-    if (currentIndex === -1) return err404(req, reply)
-    const nextIndex = (currentIndex + 1) % maplist.length
-    const prevIndex = (currentIndex - 1 + maplist.length) % maplist.length
+    const index = maplist.indexOf(mapName)
+    if (index === -1) return err404(req, reply)
 
+    const mapData = JSON.parse(dat)
+    const nextMap = maplist[(index + 1) % maplist.length]
+    const prevMap = maplist[(index - 1 + maplist.length) % maplist.length]
+    const accepts = req.headers.accept || ''
+    if (accepts.includes('application/json')) {
+      return reply.send({ ...mapData, nextMap, prevMap })
+    }
     return reply.view('map', {
-      v: JSON.parse(dat),
+      v: mapData,
       title: mapName,
       description: `Explore a variety of custom maps for intense, action-packed gameplay—whether you prefer tactical team combat, deathmatches, or creative environments, we have maps for every style.`,
       url: req.url,
-      nextMap: maplist[nextIndex],
-      prevMap: maplist[prevIndex],
+      nextMap: maplist[(index + 1) % maplist.length],
+      prevMap: maplist[(index - 1 + maplist.length) % maplist.length],
       bytesToSize
     })
   })

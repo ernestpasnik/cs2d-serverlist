@@ -135,22 +135,15 @@ function routes(fastify) {
     if (!dat) return err404(req, reply)
     const maplist = await maps.getAllMapNames()
     const index = maplist.indexOf(mapName)
-    if (index === -1) return err404(req, reply)
-
-    const mapData = JSON.parse(dat)
     const nextMap = maplist[(index + 1) % maplist.length]
     const prevMap = maplist[(index - 1 + maplist.length) % maplist.length]
-    const accepts = req.headers.accept || ''
-    if (accepts.includes('application/json')) {
-      return reply.send({ ...mapData, nextMap, prevMap })
-    }
+    if (index === -1) return err404(req, reply)
     return reply.view('map', {
-      v: mapData,
+      v: { ...JSON.parse(dat), nextMap, prevMap },
       title: mapName,
       description: `Explore a variety of custom maps for intense, action-packed gameplay—whether you prefer tactical team combat, deathmatches, or creative environments, we have maps for every style.`,
       url: req.url,
-      nextMap: maplist[(index + 1) % maplist.length],
-      prevMap: maplist[(index - 1 + maplist.length) % maplist.length],
+      nextMap, prevMap,
       bytesToSize
     })
   })
@@ -177,6 +170,22 @@ function routes(fastify) {
     }
 
     return reply.send(successfulResults)
+  })
+
+  fastify.get('/api/maps/:mapName', async (req, reply) => {
+    const mapName = req.params.mapName
+    if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
+      return reply.code(400).send({ error: 'Invalid map name' })
+    }
+    const dat = await redis.get(`map:${mapName}`)
+    if (!dat) return err404(req, reply)
+    const maplist = await maps.getAllMapNames()
+    const index = maplist.indexOf(mapName)
+    if (index === -1) return err404(req, reply)
+    const mapData = JSON.parse(dat)
+    const nextMap = maplist[(index + 1) % maplist.length]
+    const prevMap = maplist[(index - 1 + maplist.length) % maplist.length]
+    return reply.send({ ...mapData, nextMap, prevMap })
   })
 
   fastify.post('/api/upload', async (req, reply) => {

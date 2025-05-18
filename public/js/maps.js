@@ -61,10 +61,15 @@ if (left) {
   initTippy();
   document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowLeft') {
-      if (left) Game.sendJsonRequest(left.href);
+      const href = document.querySelector('a.arrow-left').href
+      const url = new URL(href)
+      const pathOnly = url.pathname + url.search + url.hash
+      Game.sendJsonRequest('/api' + pathOnly)
     } else if (e.key === 'ArrowRight') {
-      const right = document.querySelector('.arrow-right');
-      if (right) Game.sendJsonRequest(right.href);
+      const href = document.querySelector('a.arrow-right').href
+      const url = new URL(href)
+      const pathOnly = url.pathname + url.search + url.hash
+      Game.sendJsonRequest('/api' + pathOnly)
     }
   });
 
@@ -153,17 +158,24 @@ if (left) {
     handleArrowClick(e) {
       e.preventDefault()
       if (e.currentTarget === Game.arrowRight) {
-        Game.sendJsonRequest(document.querySelector('a.arrow-right').href)
+        const href = document.querySelector('a.arrow-right').href
+        const url = new URL(href)
+        const pathOnly = url.pathname + url.search + url.hash
+        Game.sendJsonRequest('/api' + pathOnly)
         Game.arrowRight.removeEventListener('click', Game.handleArrowClick)
       }
       else if (e.currentTarget === Game.arrowLeft) {
-        Game.sendJsonRequest(document.querySelector('a.arrow-left').href)
+        const href = document.querySelector('a.arrow-left').href
+        const url = new URL(href)
+        const pathOnly = url.pathname + url.search + url.hash
+        Game.sendJsonRequest('/api' + pathOnly)
         Game.arrowLeft.removeEventListener('click', Game.handleArrowClick)
       }
     },
 
     async sendJsonRequest(url) {
       try {
+        Game.stop();
         const response = await fetch(url, {
           headers: {
             'Accept': 'application/json'
@@ -171,8 +183,7 @@ if (left) {
         });
         if (!response.ok) throw new Error('Request failed');
         const d = await response.json();
-        Game.stop();
-        Game.loadMapDataFromCanvas(d);
+        
         history.pushState(null, '', `/maps/${d.name}`);
         document.title = `${d.name} - CS2D Server List`;
         document.getElementById('name').textContent = d.name;
@@ -248,6 +259,7 @@ if (left) {
           resourcesContainer.appendChild(div)
         })
         initTippy();
+        await Game.loadMapDataFromCanvas(d);
       } catch (err) {
         console.error('Error fetching JSON:', err);
       }
@@ -263,7 +275,6 @@ if (left) {
       const data = JSON.parse(canvas.getAttribute('data-canvas'));
       await Loader.loadImage('shadowmap', '/shadowmap.png');
       await this.loadMapDataFromCanvas(data);
-      this.start();
     },
 
     async loadMapDataFromCanvas(d) {
@@ -278,9 +289,8 @@ if (left) {
       map.bgColor = d.bgColor;
       map.cam = d.cam;
       await Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tileImg}`)
-      if (map.bgImg) await Loader.loadImage('bg', `/cs2d/gfx/backgrounds/${map.bgImg}`)
+      if (map.bgSize > 0) await Loader.loadImage('bg', `/cs2d/gfx/backgrounds/${map.bgImg}`)
       this.init();
-      this.start();
     },
 
     init() {
@@ -357,6 +367,7 @@ if (left) {
         map.bgImg = Loader.getImage('bg');
       }
       requestAnimationFrame(this.tick.bind(this));
+      Game.start();
     },
 
     update() {
@@ -371,7 +382,7 @@ if (left) {
     },
 
     render() {
-      if (map.bgImg) {
+      if (map.bgSize > 0) {
         ctx.fillStyle = ctx.createPattern(map.bgImg, 'repeat');
       } else {
         ctx.fillStyle = map.bgColor;

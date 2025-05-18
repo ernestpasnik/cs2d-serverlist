@@ -346,8 +346,20 @@ if (left) {
       });
 
       this.canvas.addEventListener('mousemove', e => {
-        this.mouse.x = e.offsetX;
-        this.mouse.y = e.offsetY;
+        this.mouse.x = e.offsetX
+        this.mouse.y = e.offsetY
+
+        const worldX = this.mouse.x + this.camera.x
+        const worldY = this.mouse.y + this.camera.y
+        const tileX = Math.floor(worldX / map.tileSize)
+        const tileY = Math.floor(worldY / map.tileSize)
+
+        if (tileX >= 0 && tileX < map.mapWidth && tileY >= 0 && tileY < map.mapHeight) {
+          const tileId = map.getTile(tileX, tileY)
+          this.hoveredTile = { x: tileX, y: tileY, id: tileId }
+        } else {
+          this.hoveredTile = null
+        }
       });
 
       this.canvas.addEventListener('mouseup', e => {
@@ -490,6 +502,25 @@ if (left) {
           }
         }
       }
+      if (this.hoveredTile) {
+        const text = `Tile Position ${this.hoveredTile.x}|${this.hoveredTile.y} - Tile #${this.hoveredTile.id}`
+        this.ctx.save()
+        this.ctx.font = '14px Inter'
+        this.ctx.textBaseline = 'top'
+        const padding = 5
+        const textWidth = this.ctx.measureText(text).width
+        const textHeight = 12
+        const x = 0
+        const y = this.canvas.height - (textHeight + padding * 2)
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+        this.ctx.fillRect(x, y, textWidth + padding * 2, textHeight + padding * 2)
+        this.ctx.fillStyle = 'white'
+        this.ctx.fillText(text, x + padding, y + padding)
+        this.ctx.restore()
+      }
+
+
+
     },
 
     start() {

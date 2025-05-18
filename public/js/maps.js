@@ -174,7 +174,9 @@ if (left) {
     },
 
     async sendJsonRequest(url) {
+      
       Game.isRunning = false;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       try {
         const response = await fetch(url, {
           headers: {
@@ -235,31 +237,31 @@ if (left) {
           note.className = 'stat-item no-external'
           note.textContent = 'No external resources needed.'
           resourcesContainer.appendChild(note)
-          return
+        } else {
+          resources.forEach(item => {
+            const div = document.createElement('div')
+            div.className = 'stat-item'
+            if (item.size === 0) div.classList.add('err')
+            if (item.size > 0) {
+              const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path)
+              const a = document.createElement('a')
+              a.href = '/cs2d/' + item.path
+              if (isImage) a.classList.add('cs2d')
+              a.textContent = item.path
+              div.appendChild(a)
+            } else {
+              const spanPath = document.createElement('span')
+              spanPath.textContent = item.path
+              div.appendChild(spanPath)
+            }
+            const spanSize = document.createElement('span')
+            spanSize.textContent = item.size > 0 ? bytesToSize(item.size) : 'Not Found'
+            div.appendChild(spanSize)
+            resourcesContainer.appendChild(div)
+          })
         }
-        resources.forEach(item => {
-          const div = document.createElement('div')
-          div.className = 'stat-item'
-          if (item.size === 0) div.classList.add('err')
-          if (item.size > 0) {
-            const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path)
-            const a = document.createElement('a')
-            a.href = '/cs2d/' + item.path
-            if (isImage) a.classList.add('cs2d')
-            a.textContent = item.path
-            div.appendChild(a)
-          } else {
-            const spanPath = document.createElement('span')
-            spanPath.textContent = item.path
-            div.appendChild(spanPath)
-          }
-          const spanSize = document.createElement('span')
-          spanSize.textContent = item.size > 0 ? bytesToSize(item.size) : 'Not Found'
-          div.appendChild(spanSize)
-          resourcesContainer.appendChild(div)
-        })
         initTippy();
-        await Game.loadMapDataFromCanvas(d);
+        Game.loadMapDataFromCanvas(d);
         Game.isRunning = true;
       } catch (err) {
         console.error('Error fetching JSON:', err);
@@ -276,7 +278,7 @@ if (left) {
       this.height = canvas.height;
       const data = JSON.parse(canvas.getAttribute('data-canvas'));
       await Loader.loadImage('shadowmap', '/shadowmap.png');
-      await this.loadMapDataFromCanvas(data);
+      this.loadMapDataFromCanvas(data);
     },
 
     async loadMapDataFromCanvas(d) {

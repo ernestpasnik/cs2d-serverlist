@@ -14,6 +14,11 @@ async function loadAndRender() {
   const minimaps = 'public/cs2d/minimaps'
   fs.mkdirSync(minimaps, { recursive: true })
 
+  const keys = await redis.keys('map:*')
+  if (keys.length) {
+    await redis.del(...keys)
+  }
+
 
   let parsedFiles = 0
   const start = performance.now()
@@ -22,6 +27,10 @@ async function loadAndRender() {
   const mapFiles = allFiles.filter(file => file.endsWith('.map'))
   for (const mapFile of mapFiles) {
     const mapName = mapFile.slice(0, -4)
+    if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
+      console.warn(`Skipping ${mapName} invalid name`)
+      continue
+    }
     const buffer = fs.readFileSync(`public/cs2d/maps/${mapName}.map`)
     const parsed = new Parser(buffer).parse()
     const obj = {}

@@ -1,5 +1,4 @@
 const fs = require('fs').promises
-const path = require('path')
 const crypto = require('crypto')
 const redis = require('../utils/redis')
 const Parser = require('./parser')
@@ -32,15 +31,14 @@ function pLimit(concurrency) {
   })
 }
 
-async function loadAndRender(cs2dDir) {
+async function loadAndRender() {
   let files = 0
   const startTime = Date.now()
-  const mapsDir = path.join(cs2dDir, 'maps')
-
+  const mapsDir = 'public/cs2d/maps'
   try {
-    await fs.access(cs2dDir)
     await fs.access(mapsDir)
   } catch {
+    console.warn(`Maps directory "${mapsDir}" does not exist, skipping loading maps`)
     return
   }
 
@@ -52,28 +50,23 @@ async function loadAndRender(cs2dDir) {
 
   const limit = pLimit(4)
   const tasks = mapFiles.map(mapFile => limit(async () => {
-    const mapPath = path.join(mapsDir, mapFile)
-    const mapName = path.parse(mapFile).name
-
-    const buf = await fs.readFile(mapPath)
+    const mapName = mapFile.slice(0, -4)
+    const buf = await fs.readFile(`public/cs2d/maps/${mapName}.map`)
     const obj = new Parser(buf).parse()
-
     obj.mapHash = crypto.createHash('sha256').update(buf).digest('hex')
+    obj.mapSize = buf.length
 
-    const mapStats = await fs.stat(mapPath)
-    obj.mapSize = mapStats.size
-
-    let fullPath = path.join(cs2dDir, 'gfx', 'tiles', obj.header.tilesetImage)
     try {
-      const stat = await fs.stat(fullPath)
+      const stat = await fs.stat(`public/cs2d/gfx/tiles/${obj.header.tileImg}`)
       obj.tilesetSize = stat.size
     } catch {
       obj.tilesetSize = 0
+      console.warn(`Tileset Image ${obj.header.tileImg} doesnt exist for ${mapName}`)
+      return;
     }
 
-    fullPath = path.join(cs2dDir, 'gfx', 'backgrounds', obj.header.backgroundImage)
     try {
-      const stat = await fs.stat(fullPath)
+      const stat = await fs.stat(`public/cs2d/gfx/backgrounds/${obj.header.bgImg}`)
       obj.bgSize = stat.size
     } catch {
       obj.bgSize = 0
@@ -82,16 +75,15 @@ async function loadAndRender(cs2dDir) {
     obj.resources = []
     for (const { type, x, y, str } of obj.entities) {
       if (type == 0) {
-        obj.camera = [x, y]
+        obj.cam = [x, y]
       }
       if (![22, 23, 28].includes(type)) continue
       const resourcePath = str[0]?.replace(/\\/g, '/')
       if (!resourcePath || obj.resources.some(r => r.path === resourcePath)) continue
 
-      fullPath = path.join(cs2dDir, resourcePath)
       let size = 0
       try {
-        const stat = await fs.stat(fullPath)
+        const stat = await fs.stat(`public/cs2d/${resourcePath}`)
         size = stat.size
       } catch {
         size = 0
@@ -106,7 +98,7 @@ async function loadAndRender(cs2dDir) {
     for (let x = 0; x < obj.header.mapWidth; x++) {
       for (let y = 0; y < obj.header.mapHeight; y++) {
         const tileId = obj.map[x][y]
-        const mode = obj.tileModes[tileId] ?? 0
+        const mode = obj.tileMode[tileId] ?? 0
         if (mode > 2) {
           obj.tm[x][y] = 0
         } else {
@@ -114,9 +106,22 @@ async function loadAndRender(cs2dDir) {
         }
       }
     }
+
+    obj.canvas = {
+      map: obj.map,
+      mapWidth: obj.header.mapWidth,
+      mapHeight: obj.header.mapHeight,
+      mapModifiers: obj.mapModifiers,
+      tileSize: obj.header.use64pxTiles === 1 ? 64 : 32,
+      tileMode: obj.tm,
+      tileImg: obj.header.tileImg || '',
+      bgImg: obj.bgSize > 0 && obj.header.bgImg ? obj.header.bgImg : null,
+      bgRGB: `rgb(${obj.header.bgRed},${obj.header.bgGreen},${obj.header.bgBlue})`,
+      cam: obj.cam || []
+    }
     await redis.set(`map:${mapName}`, JSON.stringify(obj))
 
-    const minimapPath = path.join(minimaps, `${mapName}.webp`)
+    const minimapPath = `public/cs2d/minimaps/${mapName}.webp`
     try {
       await fs.access(minimapPath)
     } catch {
@@ -134,7 +139,7 @@ async function loadAndRender(cs2dDir) {
   const minutes = Math.floor(elapsed / 60)
   const seconds = (elapsed % 60).toFixed(2)
   const time = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`
-  console.log(`Successfully rendered ${files} files in ${time}`)
+  console.log(`Successfully rendered ${files} minimaps in ${time}`)
 }
 
 async function getAllMapNames() {

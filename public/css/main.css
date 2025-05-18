@@ -22,10 +22,6 @@ canvas {
   border-radius: 4px;
 }
 
-.cs2d {
-  cursor: help;
-}
-
 a {
   text-decoration: none;
   color: #ddd;
@@ -1002,10 +998,6 @@ input:not([type="checkbox"]),
 }
 .maplist > a:hover {
   color: #ddd;
-}
-
-.bi-download {
-  padding-left: .2rem;
 }
 
 .map-container {

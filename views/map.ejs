@@ -9,21 +9,7 @@
 
 <div class="map-container">
   <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
-  <% if (v.header.tilesetImage && v.tilesetSize > 0) { %>
-  <canvas
-    id="map-preview" height="448"
-    data-tilesetimage="<%= v.header.tilesetImage %>"
-    data-backgroundimage="<%= v.header.backgroundImage && v.bgSize > 0 ? v.header.backgroundImage : '' %>"
-    data-backgroundcolor="rgb(<%= v.header.bgColorRed %>, <%= v.header.bgColorGreen %>, <%= v.header.bgColorBlue %>)"
-    data-tilesize="<%= v.header.use64pxTiles === 1 ? 64 : 32 %>"
-    data-mapwidth="<%= v.header.mapWidth %>"
-    data-mapheight="<%= v.header.mapHeight %>"
-    data-tiles='<%- JSON.stringify(v.map) %>'
-    data-modifiers='<%- JSON.stringify(v.modifiers) %>'
-    data-tilemodes='<%- JSON.stringify(v.tm) %>'
-    data-camera='<%- JSON.stringify(v.camera) %>'>
-  </canvas>
-  <% } %>
+  <canvas id="map-preview" data-canvas='<%- JSON.stringify(v.canvas) %>'></canvas>
   <a href="/maps/<%= nextMap %>" class="arrow arrow-right">&#8594;</a>
 </div>
 
@@ -38,10 +24,10 @@
       <span>Map size in tiles</span>
       <span><%= v.header.mapWidth %>×<%= v.header.mapHeight %></span>
     </div>
-    <div class="stat-item<% if (v.header.tilesetImage && v.tilesetSize == 0) { %> err<% } %>">
-      <span>Tileset <%= v.header.tilesetImage %></span>
+    <div class="stat-item<% if (v.header.tileImg && v.tilesetSize == 0) { %> err<% } %>">
+      <span>Tileset <%= v.header.tileImg %></span>
       <span>
-      <% if (!v.header.tilesetImage) { %>
+      <% if (!v.header.tileImg) { %>
         none
       <% } else { %>
         <%= v.tilesetSize > 0 ? bytesToSize(v.tilesetSize) : 'Not Found' %>
@@ -52,10 +38,10 @@
       <span>Tileset tile count</span>
       <span><%= v.header.tileCount %></span>
     </div>
-    <div class="stat-item<% if (v.header.backgroundImage && v.bgSize == 0) { %> err<% } %>">
-      <span>Background<%= v.header.backgroundImage ? ' ' + v.header.backgroundImage : '' %></span>
+    <div class="stat-item<% if (v.header.bgImg && v.bgSize == 0) { %> err<% } %>">
+      <span>Background<%= v.header.bgImg ? ' ' + v.header.bgImg : '' %></span>
       <span>
-      <% if (!v.header.backgroundImage) { %>
+      <% if (!v.header.bgImg) { %>
         none
       <% } else { %>
         <%= v.bgSize > 0 ? bytesToSize(v.bgSize) : 'Not Found' %>
@@ -64,7 +50,7 @@
     </div>
     <div class="stat-item">
       <span>Background color</span>
-      <span>rgb(<%= v.header.bgColorRed %>, <%= v.header.bgColorGreen %>, <%= v.header.bgColorBlue %>)</span>
+      <span>rgb(<%= v.header.bgRed %>, <%= v.header.bgGreen %>, <%= v.header.bgBlue %>)</span>
     </div>
     <div class="stat-item">
       <span>Program used to save</span>
@@ -86,7 +72,7 @@
     <div class="stat-item<% if (item.size == 0) { %> err<% } %>">
       <% if (item.size > 0) { %>
       <% const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path) %>
-      <span<% if (isImage) { %> class="cs2d"<% } %>><%= item.path %><a class="bi bi-download" href="/cs2d/<%= item.path %>"></a></span>
+      <a href="/cs2d/<%= item.path %>"<% if (isImage) { %> class="cs2d"<% } %>><%= item.path %></a>
       <% } else { %>
       <span><%= item.path %></span>
       <% } %>

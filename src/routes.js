@@ -7,9 +7,12 @@ const profile = require('./profile')
 const { formatTime, timeAgo, getEmojiByCountry, bytesToSize } = require('./utils/utils')
 sockets.initialize()
 
-const cs2dDir = process.env.CS2D_DIRECTORY || 'public/cs2d'
 const maps = require('./maps/maps')
-maps.loadAndRender(cs2dDir)
+try {
+  maps.loadAndRender()
+} catch (error) {
+  console.log(error)
+}
 
 function err404(req, reply) {
   return reply.status(404).view('404', {

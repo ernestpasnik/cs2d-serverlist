@@ -20,7 +20,7 @@ class Render {
         bspot: [255, 255, 123, 255]
       }
 
-      const tileModes = dat.tileModes
+      const tileMode = dat.tileMode
       const map = dat.map
 
       const imageData = Buffer.allocUnsafe(scaledWidth * scaledHeight * 4)
@@ -36,7 +36,7 @@ class Render {
       for (let x = 0; x < mapWidth; x++) {
         for (let y = 0; y < mapHeight; y++) {
           const tile = map[x][y]
-          const tileMode = tileModes[tile] ?? 0
+          const tileMode = tileMode[tile] ?? 0
 
           let color
           switch (tileMode) {

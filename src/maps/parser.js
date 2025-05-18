@@ -7,12 +7,12 @@ class Parser {
 
   parse() {
     const header = this.#readHeader()
-    const tileModes = this.#readTileModes(header.tileCount)
+    const tileMode = this.#readTileModes(header.tileCount)
     const tileHeights = this.#readTileHeights(header.saveTileHeights, header.tileCount)
-    const [map, modifiers] = this.#readMap(header.mapWidth, header.mapHeight, header.useModifiers);
+    const [map, mapModifiers] = this.#readMap(header.mapWidth, header.mapHeight, header.useModifiers);
     const entities = this.#readEntities()
 
-    return { header, tileModes, tileHeights, map, modifiers, entities }
+    return { header, tileMode, tileHeights, map, mapModifiers, entities }
   }
 
   #readHeader() {
@@ -40,16 +40,16 @@ class Parser {
     header.programUsed = b.readLine().trim()
     for (let i = 0; i < 8; i++) b.readLine()
     header.infoString = b.readLine()
-    header.tilesetImage = b.readLine().trim()
+    header.tileImg = b.readLine().trim()
     header.tileCount = b.readByte() + 1
     header.mapWidth = b.readInt() + 1
     header.mapHeight = b.readInt() + 1
-    header.backgroundImage = b.readLine().trim()
+    header.bgImg = b.readLine().trim()
     header.bgScrollX = b.readInt()
     header.bgScrollY = b.readInt()
-    header.bgColorRed = b.readByte()
-    header.bgColorGreen = b.readByte()
-    header.bgColorBlue = b.readByte()
+    header.bgRed = b.readByte()
+    header.bgGreen = b.readByte()
+    header.bgBlue = b.readByte()
     header.headerTest = b.readLine()
 
     return header
@@ -84,7 +84,7 @@ class Parser {
   #readMap(width, height, useModifiers) {
     const b = this.buffer
     const map = Array.from({ length: width }, () => new Array(height))
-    const modifiers = Array.from({ length: width }, () => new Array(height).fill(0))
+    const mapModifiers = Array.from({ length: width }, () => new Array(height).fill(0))
 
 
     for (let x = 0; x < width; x++) {
@@ -97,7 +97,7 @@ class Parser {
       for (let x = 0; x < width; x++) {
         for (let y = 0; y < height; y++) {
           const mod = b.readByte()
-          modifiers[x][y] = mod
+          mapModifiers[x][y] = mod
           if ((mod & 64) || (mod & 128)) {
             if ((mod & 64) && (mod & 128)) {
               b.readLine()
@@ -114,7 +114,7 @@ class Parser {
       }
     }
 
-    return [map, modifiers]
+    return [map, mapModifiers]
   }
 
   #readEntities() {

@@ -174,8 +174,8 @@ if (left) {
     },
 
     async sendJsonRequest(url) {
+      Game.isRunning = false;
       try {
-        Game.stop();
         const response = await fetch(url, {
           headers: {
             'Accept': 'application/json'
@@ -260,10 +260,10 @@ if (left) {
         })
         initTippy();
         await Game.loadMapDataFromCanvas(d);
-        Game.start();
+        Game.isRunning = true;
       } catch (err) {
         console.error('Error fetching JSON:', err);
-        Game.start();
+        Game.isRunning = true;
       }
     },
 
@@ -369,7 +369,7 @@ if (left) {
         map.bgImg = Loader.getImage('bg');
       }
       requestAnimationFrame(this.tick.bind(this));
-      Game.start();
+      Game.isRunning = true;
     },
 
     update() {

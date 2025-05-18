@@ -60,20 +60,26 @@ async function loadAndRender() {
     obj.mapWidth = parsed.header.mapWidth
     obj.mapHeight = parsed.header.mapHeight
     obj.tileImg = parsed.header.tileImg
-    if (obj.tileImg && fs.existsSync(`public/cs2d/gfx/tiles/${parsed.header.tileImg}`)) {
-      obj.tilesetSize = fs.statSync(`public/cs2d/gfx/tiles/${parsed.header.tileImg}`).size
-    } else {
+    const tileImgPath = `public/cs2d/gfx/tiles/${parsed.header.tileImg}`
+    if (!fs.existsSync(tileImgPath)) {
+      console.warn(`Tileset Image ${parsed.header.tileImg} doesn't exist for ${mapName}`)
       obj.tilesetSize = 0
-      console.warn(`Tileset Image ${parsed.header.tileImg} doesnt exist for ${mapName}`)
-      return;
+      return
     }
     obj.tileCount = parsed.header.tileCount
     obj.bgImg = parsed.header.bgImg
-    if (obj.bgImg && fs.existsSync(`public/cs2d/gfx/backgrounds/${parsed.header.bgImg}`)) {
-      obj.bgSize = fs.statSync(`public/cs2d/gfx/backgrounds/${parsed.header.bgImg}`).size
-    } else {
-      obj.bgSize = 0
+    const bgImgPath = `public/cs2d/gfx/backgrounds/${parsed.header.bgImg}`
+
+    obj.bgSize = 0
+    if (!empty(obj.bgImg)) {
+      if (!fs.existsSync(bgImgPath)) {
+        console.warn(`Tileset Image ${parsed.header.tileImg} doesn't exist for ${mapName}`)
+        obj.bgSize = 0
+      } else {
+        obj.bgSize = fs.statSync(bgImgPath).size
+      }
     }
+
     obj.bgColor = `rgb(${parsed.header.bgRed}, ${parsed.header.bgGreen}, ${parsed.header.bgBlue})`
     obj.programUsed = parsed.header.programUsed
     obj.authorName = parsed.header.authorName

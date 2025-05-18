@@ -368,7 +368,7 @@ if (left) {
       map.tilesetHeight = this.tileAtlas.height;
       map.tilesetCols = Math.floor(map.tilesetWidth / map.tileSize);
       map.tilesetRows = Math.floor(map.tilesetHeight / map.tileSize);
-      if (map.bgImg) {
+      if (map.bgSize > 0) {
         map.bgImg = Loader.getImage('bg');
       }
       requestAnimationFrame(this.tick.bind(this));

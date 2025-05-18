@@ -14,6 +14,10 @@ async function loadAndRender() {
   const minimaps = 'public/cs2d/minimaps'
   fs.mkdirSync(minimaps, { recursive: true })
 
+
+  let parsedFiles = 0
+  const start = performance.now()
+  
   const allFiles = fs.readdirSync(mapsDir)
   const mapFiles = allFiles.filter(file => file.endsWith('.map'))
   for (const mapFile of mapFiles) {
@@ -30,7 +34,7 @@ async function loadAndRender() {
     const tileImgPath = `public/cs2d/gfx/tiles/${parsed.header.tileImg}`
     if (!fs.existsSync(tileImgPath)) {
       console.warn(`Tileset Image ${parsed.header.tileImg} doesn't exist for ${mapName}`)
-      return
+      continue
     }
 
     obj.tileFileSize = fs.statSync(tileImgPath).size
@@ -86,7 +90,11 @@ async function loadAndRender() {
     obj.mapModifiers = parsed.mapModifiers
     obj.tileSize = parsed.header.use64pxTiles === 1 ? 64 : 32
     await redis.set(`map:${mapName}`, JSON.stringify(obj))
+    parsedFiles++;
   }
+
+  const ms = Math.round(performance.now() - start)
+  console.log(`Parsed ${parsedFiles} map files in ${ms} ms`)
 }
 
 async function getAllMapNames() {

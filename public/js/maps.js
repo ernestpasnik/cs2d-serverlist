@@ -37,15 +37,20 @@ if (maps_filter) {
 
 function initTippy() {
   tippy('.cs2d', {
+    trigger: 'click',
+    interactive: true,
     onShow(instance) {
       const target = instance.reference;
-      const href = target.getAttribute('href');
+      const href = target.getAttribute('data-href');
       if (!href) return;
       fetch(href)
         .then((response) => response.blob())
         .then(() => {
           const image = new Image();
-          image.style.display = 'block';
+          image.style.display = 'block'
+          image.style.maxWidth = '250px'
+          image.style.width = '100%'
+          image.style.height = 'auto'
           image.src = href;
           instance.setContent(image);
         })
@@ -244,11 +249,11 @@ if (left) {
             if (item.size === 0) div.classList.add('err')
             if (item.size > 0) {
               const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path)
-              const a = document.createElement('a')
-              a.href = '/cs2d/' + item.path
-              if (isImage) a.classList.add('cs2d')
-              a.textContent = item.path
-              div.appendChild(a)
+              const span = document.createElement('span')
+              span.setAttribute('data-href', '/cs2d/' + item.path)
+              if (isImage) span.classList.add('cs2d')
+              span.textContent = item.path
+              div.appendChild(span)
             } else {
               const spanPath = document.createElement('span')
               spanPath.textContent = item.path

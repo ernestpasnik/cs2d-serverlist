@@ -7,6 +7,10 @@
   </a>
 </div>
 
+<div id="maps-dev">
+  <p>🚧🛠️ Work in Progress: Some features are not ready yet. ⏳💡</p>
+</div>
+
 <div class="map-container">
   <a href="/maps/<%= prevMap %>" class="arrow arrow-left">&#8592;</a>
   <canvas id="map-preview" data-canvas='<%= JSON.stringify(v) %>'></canvas>
@@ -69,7 +73,7 @@
     <div class="stat-item<% if (item.size == 0) { %> err<% } %>">
       <% if (item.size > 0) { %>
       <% const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path) %>
-      <a href="/cs2d/<%= item.path %>"<% if (isImage) { %> class="cs2d"<% } %>><%= item.path %></a>
+      <span data-href="/cs2d/<%= item.path %>"<% if (isImage) { %> class="cs2d"<% } %>><%= item.path %></span>
       <% } else { %>
       <span><%= item.path %></span>
       <% } %>

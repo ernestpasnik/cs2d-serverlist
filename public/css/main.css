@@ -100,6 +100,22 @@ li {
   display: block !important;
 }
 
+#maps-dev {
+  background-color: rgba(244, 244, 70, 0.1);
+  border-radius: 4px;
+  margin: 0 auto;
+  margin-bottom: 0px;
+  margin-top: .75rem;
+}
+
+#maps-dev > p {
+  padding: .6rem .75rem;
+  line-height: 1rem;
+  color: rgb(255, 255, 123);
+  font-size: .825rem;
+  font-weight: 500;
+}
+
 .development_mode {
   background-color: rgba(244, 244, 70, 0.1);
   border-radius: 0 0 8px 8px;
@@ -142,6 +158,14 @@ code {
   background-color: rgba(255, 96, 238, 0.05);
   color: rgb(230, 133, 181);
   border-radius: 4px;
+}
+
+.cs2d {
+  cursor: pointer;
+}
+
+.cs2d:hover {
+  color: #fff !important;
 }
 
 label {
@@ -545,6 +569,7 @@ small {
 .stat-item {
   display: flex;
   gap: .25rem;
+  justify-content: space-between;
 }
 
 .stat-item:last-child {
@@ -559,7 +584,6 @@ small {
 }
 
 .stat-item>*:last-child {
-  margin-left: auto;
   text-wrap: nowrap;
   overflow: visible;
 }
@@ -738,7 +762,7 @@ input:not([type="checkbox"]),
 }
 
 #search, #maps_filter {
-  margin-top: .5rem;
+  margin-top: .25rem;
 }
 
 #timeAgo > button {
@@ -809,7 +833,7 @@ input:not([type="checkbox"]),
 }
 
 .err, .err > span {
-  color: #bb5d5d !important;
+  color: #ff7474 !important;
 }
 
 .msg, .msg > span {
@@ -993,9 +1017,11 @@ input:not([type="checkbox"]),
 }
 .maplist > a {
   width: calc(25% - .5rem);
-  overflow: clip;
   font-size: .875rem;
   color: #999;
+  text-overflow: clip;
+  overflow: clip;
+  display: block ruby;
 }
 .maplist > a:hover {
   color: #ddd;

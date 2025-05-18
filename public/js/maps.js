@@ -290,6 +290,7 @@ if (left) {
       map.tileMode = d.tileMode;
       map.tileSize = d.tileSize;
       map.bgImg = d.bgImg;
+      map.bgSize = d.bgSize;
       map.bgColor = d.bgColor;
       map.cam = d.cam;
       await Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tileImg}`)

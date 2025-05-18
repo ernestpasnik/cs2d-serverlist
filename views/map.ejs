@@ -24,15 +24,9 @@
       <span>Map size in tiles</span>
       <span><%= v.mapWidth %>×<%= v.mapHeight %></span>
     </div>
-    <div class="stat-item<% if (v.tileImg && v.tilesetSize == 0) { %> err<% } %>">
+    <div class="stat-item<% if (v.tileImg && v.tileFileSize == 0) { %> err<% } %>">
       <span>Tileset <%= v.tileImg %></span>
-      <span>
-      <% if (!v.tileImg) { %>
-        none
-      <% } else { %>
-        <%= v.tilesetSize > 0 ? bytesToSize(v.tilesetSize) : 'Not Found' %>
-      <% } %>
-      </span>
+      <span><%= bytesToSize(v.tileFileSize) %></span>
     </div>
     <div class="stat-item">
       <span>Tileset tile count</span>
@@ -41,10 +35,14 @@
     <div class="stat-item<% if (v.bgImg && v.bgSize == 0) { %> err<% } %>">
       <span>Background<%= v.bgImg ? ' ' + v.bgImg : '' %></span>
       <span>
-      <% if (!v.bgImg) { %>
-        none
+      <% if (v.bgImg) { %>
+        <% if (v.bgSize > 0) { %>
+          <%= bytesToSize(v.bgSize) %>
+        <% } else { %>
+          Not Found
+        <% } %>
       <% } else { %>
-        <%= v.bgSize > 0 ? bytesToSize(v.bgSize) : 'Not Found' %>
+        none
       <% } %>
       </span>
     </div>

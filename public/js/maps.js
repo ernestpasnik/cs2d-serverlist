@@ -199,14 +199,14 @@ if (left) {
         item[0].children[1].textContent = bytesToSize(d.mapSize);
         item[1].children[1].textContent = `${d.mapWidth}×${d.mapHeight}`;
         item[2].children[0].textContent = `Tileset ${d.tileImg}`;
-        item[2].children[1].textContent = bytesToSize(d.tilesetSize);
+        item[2].children[1].textContent = bytesToSize(d.tileFileSize);
         item[3].children[1].textContent = d.tileCount;
         item[4].children[0].textContent = `Background ${d.bgImg || ''}`;
         if (d.bgImg) {
-          if (d.bgSize === 0) {
-            item[4].children[1].textContent = 'Not Found';
-          } else {
+          if (d.bgSize > 0) {
             item[4].children[1].textContent = bytesToSize(d.bgSize);
+          } else {
+            item[4].children[1].textContent = 'Not Found';
           }
         } else {
           item[4].children[1].textContent = 'none';
@@ -287,8 +287,9 @@ if (left) {
       map.mapHeight = d.mapHeight;
       map.mapModifiers = d.mapModifiers;
       map.tileImg = d.tileImg;
-      map.tileMode = d.tileMode;
       map.tileSize = d.tileSize;
+      map.tileFileSize = d.tileFileSize;
+      map.tileMode = d.tileMode;
       map.bgImg = d.bgImg;
       map.bgSize = d.bgSize;
       map.bgColor = d.bgColor;

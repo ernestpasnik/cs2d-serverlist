@@ -6,20 +6,15 @@ const Render = require('./render')
 const render = new Render()
 
 async function loadAndRender() {
-  let files = 0
-  const startTime = Date.now()
   const mapsDir = 'public/cs2d/maps'
-  try {
-    await fs.access(mapsDir)
-  } catch {
+  if (!fs.existsSync(mapsDir)) {
     console.warn(`Maps directory "${mapsDir}" does not exist, skipping loading maps`)
     return
   }
-
   const minimaps = 'public/cs2d/minimaps'
-  await fs.mkdir(minimaps, { recursive: true })
+  fs.mkdirSync(minimaps, { recursive: true })
 
-  const allFiles = await fs.readdir(mapsDir)
+  const allFiles = fs.readdirSync(mapsDir)
   const mapFiles = allFiles.filter(file => file.endsWith('.map'))
   for (const mapFile of mapFiles) {
     const mapName = mapFile.slice(0, -4)
@@ -35,20 +30,18 @@ async function loadAndRender() {
     const tileImgPath = `public/cs2d/gfx/tiles/${parsed.header.tileImg}`
     if (!fs.existsSync(tileImgPath)) {
       console.warn(`Tileset Image ${parsed.header.tileImg} doesn't exist for ${mapName}`)
-      obj.tilesetSize = 0
       return
     }
+
+    obj.tileFileSize = fs.statSync(tileImgPath).size
     obj.tileCount = parsed.header.tileCount
     obj.bgImg = parsed.header.bgImg
-    console.log(parsed.header.bgImg)
-    const bgImgPath = `public/cs2d/gfx/backgrounds/${parsed.header.bgImg}`
-
     obj.bgSize = 0
-    if (!empty(obj.bgImg)) {
-      if (!fs.existsSync(bgImgPath)) {
-        console.warn(`Tileset Image ${parsed.header.tileImg} doesn't exist for ${mapName}`)
-        obj.bgSize = 0
-      } else {
+
+
+    if (parsed.header.bgImg) {
+      const bgImgPath = `public/cs2d/gfx/backgrounds/${parsed.header.bgImg}`
+      if (fs.existsSync(bgImgPath)) {
         obj.bgSize = fs.statSync(bgImgPath).size
       }
     }
@@ -93,24 +86,7 @@ async function loadAndRender() {
     obj.mapModifiers = parsed.mapModifiers
     obj.tileSize = parsed.header.use64pxTiles === 1 ? 64 : 32
     await redis.set(`map:${mapName}`, JSON.stringify(obj))
-
-    const minimapPath = `public/cs2d/minimaps/${mapName}.webp`
-    try {
-      await fs.access(minimapPath)
-    } catch {
-      const content = await render.minimap(obj, mapName)
-      await fs.writeFile(minimapPath, content)
-      files++
-    }
   }
-
-  if (files === 0) return
-
-  const elapsed = (Date.now() - startTime) / 1000
-  const minutes = Math.floor(elapsed / 60)
-  const seconds = (elapsed % 60).toFixed(2)
-  const time = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`
-  console.log(`Successfully rendered ${files} minimaps in ${time}`)
 }
 
 async function getAllMapNames() {

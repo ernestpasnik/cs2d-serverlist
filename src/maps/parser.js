@@ -44,7 +44,7 @@ class Parser {
     header.tileCount = b.readByte() + 1
     header.mapWidth = b.readInt() + 1
     header.mapHeight = b.readInt() + 1
-    header.bgImg = b.readLine().trim()
+    header.bgImg = b.readLine().trim() || null
     header.bgScrollX = b.readInt()
     header.bgScrollY = b.readInt()
     header.bgRed = b.readByte()

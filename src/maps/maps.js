@@ -5,32 +5,6 @@ const Parser = require('./parser')
 const Render = require('./render')
 const render = new Render()
 
-function pLimit(concurrency) {
-  const queue = []
-  let activeCount = 0
-
-  const next = () => {
-    if (queue.length === 0) return
-    if (activeCount >= concurrency) return
-
-    activeCount++
-    const { fn, resolve, reject } = queue.shift()
-
-    fn()
-      .then(resolve)
-      .catch(reject)
-      .finally(() => {
-        activeCount--
-        next()
-      })
-  }
-
-  return (fn) => new Promise((resolve, reject) => {
-    queue.push({ fn, resolve, reject })
-    next()
-  })
-}
-
 async function loadAndRender() {
   let files = 0
   const startTime = Date.now()
@@ -47,11 +21,9 @@ async function loadAndRender() {
 
   const allFiles = await fs.readdir(mapsDir)
   const mapFiles = allFiles.filter(file => file.endsWith('.map'))
-
-  const limit = pLimit(4)
-  const tasks = mapFiles.map(mapFile => limit(async () => {
+  for (const mapFile of mapFiles) {
     const mapName = mapFile.slice(0, -4)
-    const buffer = await fs.readFile(`public/cs2d/maps/${mapName}.map`)
+    const buffer = fs.readFileSync(`public/cs2d/maps/${mapName}.map`)
     const parsed = new Parser(buffer).parse()
     const obj = {}
     obj.name = mapName
@@ -68,6 +40,7 @@ async function loadAndRender() {
     }
     obj.tileCount = parsed.header.tileCount
     obj.bgImg = parsed.header.bgImg
+    console.log(parsed.header.bgImg)
     const bgImgPath = `public/cs2d/gfx/backgrounds/${parsed.header.bgImg}`
 
     obj.bgSize = 0
@@ -94,7 +67,7 @@ async function loadAndRender() {
       if (!resourcePath || obj.resources.some(r => r.path === resourcePath)) continue
       let size = 0
       try {
-        const stat = await fs.stat(`public/cs2d/${resourcePath}`)
+        const stat = fs.statSync(`public/cs2d/${resourcePath}`)
         size = stat.size
       } catch {
         size = 0
@@ -129,9 +102,7 @@ async function loadAndRender() {
       await fs.writeFile(minimapPath, content)
       files++
     }
-  }))
-
-  await Promise.all(tasks)
+  }
 
   if (files === 0) return
 

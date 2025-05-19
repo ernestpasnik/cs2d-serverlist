@@ -35,11 +35,8 @@ class Render {
 
       for (let x = 0; x < mapWidth; x++) {
         for (let y = 0; y < mapHeight; y++) {
-          const tile = map[x][y]
-          const tileMode = tileMode[tile] ?? 0
-
           let color
-          switch (tileMode) {
+          switch (tileMode[map[x][y]] ?? 0) {
             case 1: color = colors.wall; break
             case 2: color = colors.obstacle; break
             case 14: color = colors.water; break

@@ -227,6 +227,7 @@ if (left) {
         document.querySelector('a.arrow-right').href = d.nextMap;
         const item = document.querySelectorAll('.stats-container .stat-item')
         item[0].children[0].textContent = `Map ${d.name}.map`
+        item[0].children[0].setAttribute('data-href', `/cs2d/minimaps/${d.name}.webp`);
         item[0].children[1].textContent = bytesToSize(d.mapSize);
         item[1].children[1].textContent = `${d.mapWidth}×${d.mapHeight}`;
         item[2].children[0].textContent = `Tileset ${d.tileImg}`;
@@ -472,7 +473,6 @@ if (left) {
       ctx.putImageData(imageData, 0, 0)
       this.gui_icons = canvas
 
-
       // Set tileset size
       map.tilesetWidth = this.tileAtlas.width;
       map.tilesetHeight = this.tileAtlas.height;
@@ -490,13 +490,12 @@ if (left) {
         this.isRunning = false;
       }
       this.isRunning = true;
+
       if (this.isDragging) {
         const dx = this.mouse.lastX - this.mouse.x
         const dy = this.mouse.lastY - this.mouse.y
-
         this.camera.x = Math.max(this.camera.minX, Math.min(this.camera.x + dx, this.camera.extMaxX))
         this.camera.y = Math.max(this.camera.minY, Math.min(this.camera.y + dy, this.camera.extMaxY))
-
         this.mouse.lastX = this.mouse.x
         this.mouse.lastY = this.mouse.y
       }
@@ -597,37 +596,26 @@ if (left) {
         const y = Math.round((e.y - startRow) * map.tileSize + offsetY)
         const centerX = x + (map.tileSize - map.tileSize / 1.5) / 2
         const centerY = y + (map.tileSize - map.tileSize / 1.5) / 2
-
         this.offCtx.clearRect(0, 0, map.tileSize, map.tileSize)
         this.offCtx.drawImage(this.gui_icons, 0, 0, map.tileSize, map.tileSize)
         this.offCtx.globalCompositeOperation = 'source-in'
         this.offCtx.fillStyle = map.tintColors[e.type]
         this.offCtx.fillRect(0, 0, map.tileSize, map.tileSize)
         this.offCtx.globalCompositeOperation = 'source-over'
-
         this.ctx.save()
         this.ctx.shadowColor = 'rgba(12, 14, 12, 0.9)'
         this.ctx.shadowBlur = 8
         this.ctx.shadowOffsetX = 2
         this.ctx.shadowOffsetY = 2
-
         this.ctx.drawImage(this.offscreen, 0, 0, map.tileSize, map.tileSize, centerX - 4, centerY - 4, map.tileSize / 1.5, map.tileSize / 1.5)
-
-        // Teraz dodajemy tekst pod ikonką
         this.ctx.font = '0.75rem Inter';
-        this.ctx.fillStyle = map.tintColors[e.type] // kolor tekstu
+        this.ctx.fillStyle = map.tintColors[e.type]
         this.ctx.textAlign = 'center'
         this.ctx.textBaseline = 'top'
-
-        // Możesz tu dopasować tekst, np. e.type lub inny opis
         const label = map.entityTypeMap[e.type]
-
-        // Rysujemy tekst pod ikonką (możesz zmienić y + map.tileSize / 1.5 + offset, żeby tekst był pod spodem)
         this.ctx.fillText(label, centerX + (map.tileSize / 1.5) / 2 + 4, centerY + (map.tileSize / 1.5) / 2 + 4)
-
         this.ctx.restore()
       }
-
 
       // Draw Text
       if (this.hoveredTile) {

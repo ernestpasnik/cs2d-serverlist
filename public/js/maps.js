@@ -91,6 +91,7 @@ if (left) {
       4: 'yellow',
       5: 'yellow',
       6: 'yellow',
+      21: 'rgb(50, 180, 50)',
     },
     glowColors: {
       0: 'rgba(155, 40, 28, 0.6)',
@@ -100,6 +101,7 @@ if (left) {
       4: 'rgba(255, 255, 0, 0.6)',
       5: 'rgba(255, 255, 0, 0.6)',
       6: 'rgba(255, 255, 0, 0.6)',
+      21: 'rgba(40, 120, 40, 0.85)',
     },
     entityTypeMap: {
       0: 'Info_T',
@@ -109,6 +111,7 @@ if (left) {
       4: 'Info_RescuePoint',
       5: 'Info_BombSpot',
       6: 'Info_EscapePoint',
+      21: 'Env_Item',
     },
     combinations: [
       [0, 0, 2, { col: 1, row: 4 }],
@@ -374,7 +377,7 @@ if (left) {
         const tileY = Math.floor(worldY / map.tileSize);
         if (tileX >= 0 && tileX < map.mapWidth && tileY >= 0 && tileY < map.mapHeight) {
           const tileId = map.getTile(tileX, tileY);
-          const entity = map.entities.find(e => e.x === tileX && e.y === tileY);
+          const entity = map.entities.find(e => e.x === tileX && e.y === tileY && e.type in map.entityTypeMap);
           this.hoveredTile = { x: tileX, y: tileY, id: tileId, entity };
         } else {
           this.hoveredTile = null;

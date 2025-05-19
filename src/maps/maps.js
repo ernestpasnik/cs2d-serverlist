@@ -98,6 +98,7 @@ async function loadAndRender() {
     }
     obj.mapModifiers = parsed.mapModifiers
     obj.tileSize = parsed.header.use64pxTiles === 1 ? 64 : 32
+    obj.entities = parsed.entities
     await redis.set(`map:${mapName}`, JSON.stringify(obj))
     parsedFiles++;
   }

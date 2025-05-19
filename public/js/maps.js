@@ -49,8 +49,7 @@ function initTippy() {
     trigger: 'click',
     interactive: true,
     onShow(instance) {
-      const target = instance.reference;
-      const href = target.getAttribute('data-href');
+      const href = instance.reference.getAttribute('data-href');
       if (!href) return;
       fetch(href)
         .then((response) => response.blob())
@@ -75,19 +74,42 @@ if (left) {
   initTippy();
   document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowLeft') {
-      const href = document.querySelector('a.arrow-left').href
-      const url = new URL(href)
-      const pathOnly = url.pathname + url.search + url.hash
-      Game.sendJsonRequest('/api' + pathOnly)
+      const url = new URL(document.querySelector('a.arrow-left').href)
+      Game.sendJsonRequest('/api' + url.pathname + url.search + url.hash)
     } else if (e.key === 'ArrowRight') {
-      const href = document.querySelector('a.arrow-right').href
-      const url = new URL(href)
-      const pathOnly = url.pathname + url.search + url.hash
-      Game.sendJsonRequest('/api' + pathOnly)
+      const url = new URL(document.querySelector('a.arrow-right').href)
+      Game.sendJsonRequest('/api' + url.pathname + url.search + url.hash)
     }
   });
 
   const map = {
+    tintColors: {
+      0: 'rgb(235, 51, 31)',
+      1: 'rgb(26, 67, 201)',
+      2: 'yellow',
+      3: 'yellow',
+      4: 'yellow',
+      5: 'yellow',
+      6: 'yellow',
+    },
+    glowColors: {
+      0: 'rgba(155, 40, 28, 0.6)',
+      1: 'rgba(65, 105, 237, 0.6)',
+      2: 'rgba(255, 255, 0, 0.6)',
+      3: 'rgba(255, 255, 0, 0.6)',
+      4: 'rgba(255, 255, 0, 0.6)',
+      5: 'rgba(255, 255, 0, 0.6)',
+      6: 'rgba(255, 255, 0, 0.6)',
+    },
+    entityTypeMap: {
+      0: 'Info_T',
+      1: 'Info_CT',
+      2: 'Info_VIP',
+      3: 'Info_Hostage',
+      4: 'Info_RescuePoint',
+      5: 'Info_BombSpot',
+      6: 'Info_EscapePoint',
+    },
     combinations: [
       [0, 0, 2, { col: 1, row: 4 }],
       [0, 0, 1, { col: 0, row: 4 }],
@@ -172,17 +194,13 @@ if (left) {
     handleArrowClick(e) {
       e.preventDefault()
       if (e.currentTarget === Game.arrowRight) {
-        const href = document.querySelector('a.arrow-right').href
-        const url = new URL(href)
-        const pathOnly = url.pathname + url.search + url.hash
-        Game.sendJsonRequest('/api' + pathOnly)
+        const url = new URL(document.querySelector('a.arrow-right').href)
+        Game.sendJsonRequest('/api' + url.pathname + url.search + url.hash)
         Game.arrowRight.removeEventListener('click', Game.handleArrowClick)
       }
       else if (e.currentTarget === Game.arrowLeft) {
-        const href = document.querySelector('a.arrow-left').href
-        const url = new URL(href)
-        const pathOnly = url.pathname + url.search + url.hash
-        Game.sendJsonRequest('/api' + pathOnly)
+        const url = new URL(document.querySelector('a.arrow-left').href)
+        Game.sendJsonRequest('/api' + url.pathname + url.search + url.hash)
         Game.arrowLeft.removeEventListener('click', Game.handleArrowClick)
       }
     },
@@ -310,6 +328,7 @@ if (left) {
       this.height = canvas.height;
       const data = JSON.parse(canvas.getAttribute('data-canvas'));
       await Loader.loadImage('shadows', '/img/shadows.png');
+      await Loader.loadImage('gui_icons', '/img/gui_icons.bmp');
       this.loadMapDataFromCanvas(data);
     },
 
@@ -326,8 +345,9 @@ if (left) {
       map.bgSize = d.bgSize;
       map.bgColor = d.bgColor;
       map.cam = d.cam;
-      await Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tileImg}`)
-      if (map.bgSize > 0) await Loader.loadImage('bg', `/cs2d/gfx/backgrounds/${map.bgImg}`)
+      map.entities = d.entities;
+      await Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tileImg}`);
+      if (map.bgSize > 0) await Loader.loadImage('bg', `/cs2d/gfx/backgrounds/${map.bgImg}`);
       this.init();
     },
 
@@ -346,19 +366,18 @@ if (left) {
       });
 
       this.canvas.addEventListener('mousemove', e => {
-        this.mouse.x = e.offsetX
-        this.mouse.y = e.offsetY
-
-        const worldX = this.mouse.x + this.camera.x
-        const worldY = this.mouse.y + this.camera.y
-        const tileX = Math.floor(worldX / map.tileSize)
-        const tileY = Math.floor(worldY / map.tileSize)
-
+        this.mouse.x = e.offsetX;
+        this.mouse.y = e.offsetY;
+        const worldX = this.mouse.x + this.camera.x;
+        const worldY = this.mouse.y + this.camera.y;
+        const tileX = Math.floor(worldX / map.tileSize);
+        const tileY = Math.floor(worldY / map.tileSize);
         if (tileX >= 0 && tileX < map.mapWidth && tileY >= 0 && tileY < map.mapHeight) {
-          const tileId = map.getTile(tileX, tileY)
-          this.hoveredTile = { x: tileX, y: tileY, id: tileId }
+          const tileId = map.getTile(tileX, tileY);
+          const entity = map.entities.find(e => e.x === tileX && e.y === tileY);
+          this.hoveredTile = { x: tileX, y: tileY, id: tileId, entity };
         } else {
-          this.hoveredTile = null
+          this.hoveredTile = null;
         }
       });
 
@@ -409,6 +428,38 @@ if (left) {
         this.shadowMap = canvas;
       }
 
+      // Load gui_icons
+      this.gui_icons = Loader.getImage('gui_icons')
+      const tileWidth = 16
+      const tileHeight = 16
+      const col = 3
+      const row = 1
+      const canvas = document.createElement('canvas')
+      canvas.width = tileWidth
+      canvas.height = tileHeight
+      const ctx = canvas.getContext('2d')
+      ctx.drawImage(
+        this.gui_icons,
+        col * tileWidth, row * tileHeight,
+        tileWidth, tileHeight,
+        0, 0,
+        tileWidth, tileHeight
+      )
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      const data2 = imageData.data
+      for (let i = 0; i < data2.length; i += 4) {
+        const r = data2[i]
+        const g = data2[i + 1]
+        const b = data2[i + 2]
+        if (r < 10 && g < 10 && b < 10) {
+          data2[i + 3] = 0
+        }
+      }
+      ctx.putImageData(imageData, 0, 0)
+      this.gui_icons = canvas
+
+
+      // Set tileset size
       map.tilesetWidth = this.tileAtlas.width;
       map.tilesetHeight = this.tileAtlas.height;
       map.tilesetCols = Math.floor(map.tilesetWidth / map.tileSize);
@@ -429,6 +480,15 @@ if (left) {
         this.mouse.lastX = this.mouse.x;
         this.mouse.lastY = this.mouse.y;
       }
+      const startCol = Math.floor(this.camera.x / map.tileSize)
+      const endCol = Math.ceil((this.camera.x + this.camera.width) / map.tileSize)
+      const startRow = Math.floor(this.camera.y / map.tileSize)
+      const endRow = Math.ceil((this.camera.y + this.camera.height) / map.tileSize)
+      map.visibleEntities = map.entities.filter(entity =>
+        entity.x >= startCol && entity.x <= endCol &&
+        entity.y >= startRow && entity.y <= endRow &&
+        entity.type in map.entityTypeMap
+      )
     },
 
     render() {
@@ -502,40 +562,70 @@ if (left) {
           }
         }
       }
-      if (this.hoveredTile) {
-        const text = `Tile Position ${this.hoveredTile.x}|${this.hoveredTile.y} - Tile #${this.hoveredTile.id}`
+
+      // Draw Entities
+      const scaleFactor = 1.5
+      const size = map.tileSize / scaleFactor
+      for (const entity of map.visibleEntities) {
+        const c = entity.x
+        const r = entity.y
+        const x = Math.round((c - startCol) * map.tileSize + offsetX)
+        const y = Math.round((r - startRow) * map.tileSize + offsetY)
+        const centerX = x + (map.tileSize - size) / 2
+        const centerY = y + (map.tileSize - size) / 2
+        const offscreen = document.createElement('canvas')
+        offscreen.width = map.tileSize
+        offscreen.height = map.tileSize
+        const offCtx = offscreen.getContext('2d')
+        offCtx.drawImage(this.gui_icons, 0, 0, map.tileSize, map.tileSize)
+        offCtx.globalCompositeOperation = 'source-in'
+        offCtx.fillStyle = map.tintColors[entity.type]
+        offCtx.fillRect(0, 0, map.tileSize, map.tileSize)
+        offCtx.globalCompositeOperation = 'source-over'
         this.ctx.save()
-        this.ctx.font = '14px Inter'
-        this.ctx.textBaseline = 'top'
-        const padding = 5
-        const textWidth = this.ctx.measureText(text).width
-        const textHeight = 12
-        const x = 0
-        const y = this.canvas.height - (textHeight + padding * 2)
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
-        this.ctx.fillRect(x, y, textWidth + padding * 2, textHeight + padding * 2)
-        this.ctx.fillStyle = 'white'
-        this.ctx.fillText(text, x + padding, y + padding)
+        this.ctx.shadowColor = map.glowColors[entity.type]
+        this.ctx.shadowBlur = 10
+        this.ctx.shadowOffsetX = 0
+        this.ctx.shadowOffsetY = 0
+        this.ctx.drawImage(offscreen, 0, 0, map.tileSize, map.tileSize, centerX, centerY, size, size)
         this.ctx.restore()
       }
 
-
-
+      // Draw Text
+      if (this.hoveredTile) {
+        let entityText = '';
+        if (this.hoveredTile.entity) {
+          entityText = ` - ${map.entityTypeMap[this.hoveredTile.entity.type]}`
+        }
+        const text = `Tile Position ${this.hoveredTile.x}|${this.hoveredTile.y} - Tile #${this.hoveredTile.id}${entityText}`;
+        this.ctx.save();
+        this.ctx.font = '0.875rem Inter';
+        this.ctx.textBaseline = 'top';
+        const padding = 5;
+        const textWidth = this.ctx.measureText(text).width;
+        const textHeight = 12;
+        const y = this.canvas.height - (textHeight + padding * 2);
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        this.ctx.fillRect(0, y, textWidth + padding * 2, textHeight + padding * 2);
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText(text, 0 + padding, y + padding);
+        this.ctx.restore();
+      }
     },
 
     start() {
       if (!this.isRunning) {
-        this.isRunning = true
-        this.tick()
+        this.isRunning = true;
+        this.tick();
       }
     },
 
     stop() {
       if (this.isRunning) {
-        this.isRunning = false
+        this.isRunning = false;
         if (this.animationFrameId !== null) {
-          cancelAnimationFrame(this.animationFrameId)
-          this.animationFrameId = null
+          cancelAnimationFrame(this.animationFrameId);
+          this.animationFrameId = null;
         }
       }
     },

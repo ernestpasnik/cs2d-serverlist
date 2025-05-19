@@ -366,6 +366,7 @@ if (left) {
           this.mouse.lastY = e.offsetY;
           this.canvas.style.cursor = 'grabbing';
         }
+        this.hoveredText = 'xd';
       });
 
       this.canvas.addEventListener('mousemove', e => {
@@ -471,6 +472,8 @@ if (left) {
         map.bgImg = Loader.getImage('bg');
       }
       requestAnimationFrame(this.tick.bind(this));
+      this.hoveredTile = null;
+      this.entityText = null;
       Game.isRunning = true;
     },
 
@@ -495,6 +498,7 @@ if (left) {
     },
 
     render() {
+      const start = performance.now()
       if (map.bgSize > 0) {
         ctx.fillStyle = ctx.createPattern(map.bgImg, 'repeat');
       } else {
@@ -596,24 +600,30 @@ if (left) {
 
       // Draw Text
       if (this.hoveredTile) {
-        let entityText = '';
+        let entTxt = '';
         if (this.hoveredTile.entity) {
-          entityText = ` - ${map.entityTypeMap[this.hoveredTile.entity.type]}`
+          entTxt = ` - ${map.entityTypeMap[this.hoveredTile.entity.type]}`
         }
-        const text = `Tile Position ${this.hoveredTile.x}|${this.hoveredTile.y} - Tile #${this.hoveredTile.id}${entityText}`;
-        this.ctx.save();
-        this.ctx.font = '0.875rem Inter';
-        this.ctx.textBaseline = 'top';
-        const padding = 5;
-        const textWidth = this.ctx.measureText(text).width;
-        const textHeight = 12;
-        const y = this.canvas.height - (textHeight + padding * 2);
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        this.ctx.fillRect(0, y, textWidth + padding * 2, textHeight + padding * 2);
-        this.ctx.fillStyle = 'white';
-        this.ctx.fillText(text, 0 + padding, y + padding);
-        this.ctx.restore();
+        this.entityText = `Tile Position ${this.hoveredTile.x}|${this.hoveredTile.y} - Tile #${this.hoveredTile.id}${entTxt}`;
+      } else {
+        if (!this.entityText) {
+          const end = performance.now()
+          const duration = end - start
+          this.entityText = `Initial render completed in ${duration} ms`
+        }
       }
+      this.ctx.save();
+      this.ctx.font = '0.875rem Inter';
+      this.ctx.textBaseline = 'top';
+      const padding = 5;
+      const textWidth = this.ctx.measureText(this.entityText).width;
+      const textHeight = 12;
+      const y = this.canvas.height - (textHeight + padding * 2);
+      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      this.ctx.fillRect(0, y, textWidth + padding * 2, textHeight + padding * 2);
+      this.ctx.fillStyle = 'white';
+      this.ctx.fillText(this.entityText, 0 + padding, y + padding);
+      this.ctx.restore();
     },
 
     start() {

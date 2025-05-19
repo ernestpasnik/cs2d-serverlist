@@ -84,34 +84,24 @@ if (left) {
 
   const map = {
     tintColors: {
-      0: 'rgb(235, 51, 31)',
-      1: 'rgb(26, 67, 201)',
+      0: 'rgb(237, 81, 65)',
+      1: 'rgb(76, 163, 255)',
       2: 'yellow',
       3: 'yellow',
       4: 'yellow',
       5: 'yellow',
       6: 'yellow',
-      21: 'rgb(50, 180, 50)',
-    },
-    glowColors: {
-      0: 'rgba(155, 40, 28, 0.6)',
-      1: 'rgba(65, 105, 237, 0.6)',
-      2: 'rgba(255, 255, 0, 0.6)',
-      3: 'rgba(255, 255, 0, 0.6)',
-      4: 'rgba(255, 255, 0, 0.6)',
-      5: 'rgba(255, 255, 0, 0.6)',
-      6: 'rgba(255, 255, 0, 0.6)',
-      21: 'rgba(40, 120, 40, 0.85)',
+      21: 'rgb(26, 187, 26)',
     },
     entityTypeMap: {
-      0: 'Info_T',
-      1: 'Info_CT',
-      2: 'Info_VIP',
-      3: 'Info_Hostage',
-      4: 'Info_RescuePoint',
-      5: 'Info_BombSpot',
-      6: 'Info_EscapePoint',
-      21: 'Env_Item',
+      0: 'T',
+      1: 'CT',
+      2: 'VIP',
+      3: 'Hostage',
+      4: 'RescuePoint',
+      5: 'BombSpot',
+      6: 'EscapePoint',
+      21: 'Item',
     },
     combinations: [
       [0, 0, 2, { col: 1, row: 4 }],
@@ -177,14 +167,20 @@ if (left) {
 
   class Camera {
     constructor(map, width, height) {
-      this.width = width;
-      this.height = height;
-      this.maxX = map.mapWidth * map.tileSize - width;
-      this.maxY = map.mapHeight * map.tileSize - height;
-      const initialX = (map.cam[0] * map.tileSize - width) + (width / 2);
-      const initialY = (map.cam[1] * map.tileSize - height) + (height / 2);
-      this.x = Math.max(0, Math.min(initialX, this.maxX));
-      this.y = Math.max(0, Math.min(initialY, this.maxY));
+      this.width = width
+      this.height = height
+      this.marginX = 500
+      this.marginY = 250
+      this.maxX = map.mapWidth * map.tileSize - width
+      this.maxY = map.mapHeight * map.tileSize - height
+      this.minX = -this.marginX
+      this.minY = -this.marginY
+      this.extMaxX = this.maxX + this.marginX
+      this.extMaxY = this.maxY + this.marginY
+      const initialX = (map.cam[0] * map.tileSize) - (width / 2)
+      const initialY = (map.cam[1] * map.tileSize) - (height / 2)
+      this.x = Math.max(this.minX, Math.min(initialX, this.extMaxX))
+      this.y = Math.max(this.minY, Math.min(initialY, this.extMaxY))
     }
   }
 
@@ -335,6 +331,21 @@ if (left) {
       this.loadMapDataFromCanvas(data);
     },
 
+    getRandomEntityCoords(entities) {
+      const type5Entities = entities.filter(e => e.type === 5)
+      if (type5Entities.length > 0) {
+        const entity = type5Entities[Math.floor(Math.random() * type5Entities.length)]
+        return [entity.x, entity.y]
+      }
+      const type1or2Entities = entities.filter(e => e.type === 1 || e.type === 2)
+      if (type1or2Entities.length > 0) {
+        const entity = type1or2Entities[Math.floor(Math.random() * type1or2Entities.length)]
+        return [entity.x, entity.y]
+      }
+
+      return null
+    },
+
     async loadMapDataFromCanvas(d) {
       map.map = d.map;
       map.mapWidth = d.mapWidth;
@@ -347,7 +358,7 @@ if (left) {
       map.bgImg = d.bgImg;
       map.bgSize = d.bgSize;
       map.bgColor = d.bgColor;
-      map.cam = d.cam;
+      map.cam = this.getRandomEntityCoords(d.entities);
       map.entities = d.entities;
       await Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tileImg}`);
       if (map.bgSize > 0) await Loader.loadImage('bg', `/cs2d/gfx/backgrounds/${map.bgImg}`);
@@ -366,7 +377,6 @@ if (left) {
           this.mouse.lastY = e.offsetY;
           this.canvas.style.cursor = 'grabbing';
         }
-        this.hoveredText = 'xd';
       });
 
       this.canvas.addEventListener('mousemove', e => {
@@ -472,20 +482,25 @@ if (left) {
         map.bgImg = Loader.getImage('bg');
       }
       requestAnimationFrame(this.tick.bind(this));
-      this.hoveredTile = null;
-      this.entityText = null;
       Game.isRunning = true;
     },
 
     update() {
-      if (this.isDragging) {
-        const dx = this.mouse.lastX - this.mouse.x;
-        const dy = this.mouse.lastY - this.mouse.y;
-        this.camera.x = Math.max(0, Math.min(this.camera.x + dx, this.camera.maxX));
-        this.camera.y = Math.max(0, Math.min(this.camera.y + dy, this.camera.maxY));
-        this.mouse.lastX = this.mouse.x;
-        this.mouse.lastY = this.mouse.y;
+      if (!this.isDragging) {
+        this.isRunning = false;
       }
+      this.isRunning = true;
+      if (this.isDragging) {
+        const dx = this.mouse.lastX - this.mouse.x
+        const dy = this.mouse.lastY - this.mouse.y
+
+        this.camera.x = Math.max(this.camera.minX, Math.min(this.camera.x + dx, this.camera.extMaxX))
+        this.camera.y = Math.max(this.camera.minY, Math.min(this.camera.y + dy, this.camera.extMaxY))
+
+        this.mouse.lastX = this.mouse.x
+        this.mouse.lastY = this.mouse.y
+      }
+
       const startCol = Math.floor(this.camera.x / map.tileSize)
       const endCol = Math.ceil((this.camera.x + this.camera.width) / map.tileSize)
       const startRow = Math.floor(this.camera.y / map.tileSize)
@@ -495,17 +510,22 @@ if (left) {
         entity.y >= startRow && entity.y <= endRow &&
         entity.type in map.entityTypeMap
       )
-    },
 
-    render() {
-      const start = performance.now()
+      // Entities
+      this.offscreen = document.createElement('canvas')
+      this.offscreen.width = map.tileSize
+      this.offscreen.height = map.tileSize
+      this.offCtx = this.offscreen.getContext('2d')
+
       if (map.bgSize > 0) {
         ctx.fillStyle = ctx.createPattern(map.bgImg, 'repeat');
       } else {
         ctx.fillStyle = map.bgColor;
       }
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+    },
 
+    render() {
       const startCol = Math.floor(this.camera.x / map.tileSize);
       const endCol = Math.ceil((this.camera.x + this.camera.width) / map.tileSize);
       const startRow = Math.floor(this.camera.y / map.tileSize);
@@ -516,29 +536,31 @@ if (left) {
       for (let r = startRow; r <= endRow; r++) {
         for (let c = startCol; c <= endCol; c++) {
           const tile = map.getTile(c, r);
-          const sx = (tile % map.tilesetCols) * map.tileSize;
-          const sy = Math.floor(tile / map.tilesetCols) * map.tileSize;
-          const x = Math.round((c - startCol) * map.tileSize + offsetX);
-          const y = Math.round((r - startRow) * map.tileSize + offsetY);
-          const rotation = (() => {
-            switch (map.mapModifiers?.[c]?.[r]) {
-              case 1: return Math.PI / 2;
-              case 2: return Math.PI;
-              case 3: return -Math.PI / 2;
-              default: return 0;
+          if (tile > 0) {
+
+            const sx = (tile % map.tilesetCols) * map.tileSize;
+            const sy = Math.floor(tile / map.tilesetCols) * map.tileSize;
+            const x = Math.round((c - startCol) * map.tileSize + offsetX);
+            const y = Math.round((r - startRow) * map.tileSize + offsetY);
+            const rotation = (() => {
+              switch (map.mapModifiers?.[c]?.[r]) {
+                case 1: return Math.PI / 2;
+                case 2: return Math.PI;
+                case 3: return -Math.PI / 2;
+                default: return 0;
+              }
+            })();
+
+            if (rotation === 0) {
+              this.ctx.drawImage(this.tileAtlas, sx, sy, map.tileSize, map.tileSize, x, y, map.tileSize, map.tileSize)
+            } else {
+              this.ctx.save()
+              this.ctx.translate(Math.round(x + map.tileSize / 2), Math.round(y + map.tileSize / 2))
+              this.ctx.rotate(rotation)
+              this.ctx.drawImage(this.tileAtlas, sx, sy, map.tileSize, map.tileSize, -map.tileSize / 2, -map.tileSize / 2, map.tileSize, map.tileSize)
+              this.ctx.restore()
             }
-          })();
-
-          if (rotation === 0) {
-            this.ctx.drawImage(this.tileAtlas, sx, sy, map.tileSize, map.tileSize, x, y, map.tileSize, map.tileSize)
-          } else {
-            this.ctx.save()
-            this.ctx.translate(Math.round(x + map.tileSize / 2), Math.round(y + map.tileSize / 2))
-            this.ctx.rotate(rotation)
-            this.ctx.drawImage(this.tileAtlas, sx, sy, map.tileSize, map.tileSize, -map.tileSize / 2, -map.tileSize / 2, map.tileSize, map.tileSize)
-            this.ctx.restore()
           }
-
           if (tile === 0) continue;
           if (map.tileMode?.[c]?.[r] === 0) {
             const leftTopTile = map.getTileMode(c - 1, r - 1);
@@ -570,60 +592,63 @@ if (left) {
         }
       }
 
-      // Draw Entities
-      const scaleFactor = 1.5
-      const size = map.tileSize / scaleFactor
-      for (const entity of map.visibleEntities) {
-        const c = entity.x
-        const r = entity.y
-        const x = Math.round((c - startCol) * map.tileSize + offsetX)
-        const y = Math.round((r - startRow) * map.tileSize + offsetY)
-        const centerX = x + (map.tileSize - size) / 2
-        const centerY = y + (map.tileSize - size) / 2
-        const offscreen = document.createElement('canvas')
-        offscreen.width = map.tileSize
-        offscreen.height = map.tileSize
-        const offCtx = offscreen.getContext('2d')
-        offCtx.drawImage(this.gui_icons, 0, 0, map.tileSize, map.tileSize)
-        offCtx.globalCompositeOperation = 'source-in'
-        offCtx.fillStyle = map.tintColors[entity.type]
-        offCtx.fillRect(0, 0, map.tileSize, map.tileSize)
-        offCtx.globalCompositeOperation = 'source-over'
+      for (const e of map.visibleEntities) {
+        const x = Math.round((e.x - startCol) * map.tileSize + offsetX)
+        const y = Math.round((e.y - startRow) * map.tileSize + offsetY)
+        const centerX = x + (map.tileSize - map.tileSize / 1.5) / 2
+        const centerY = y + (map.tileSize - map.tileSize / 1.5) / 2
+
+        this.offCtx.clearRect(0, 0, map.tileSize, map.tileSize)
+        this.offCtx.drawImage(this.gui_icons, 0, 0, map.tileSize, map.tileSize)
+        this.offCtx.globalCompositeOperation = 'source-in'
+        this.offCtx.fillStyle = map.tintColors[e.type]
+        this.offCtx.fillRect(0, 0, map.tileSize, map.tileSize)
+        this.offCtx.globalCompositeOperation = 'source-over'
+
         this.ctx.save()
-        this.ctx.shadowColor = map.glowColors[entity.type]
-        this.ctx.shadowBlur = 10
-        this.ctx.shadowOffsetX = 0
-        this.ctx.shadowOffsetY = 0
-        this.ctx.drawImage(offscreen, 0, 0, map.tileSize, map.tileSize, centerX, centerY, size, size)
+        this.ctx.shadowColor = 'rgba(12, 14, 12, 0.9)'
+        this.ctx.shadowBlur = 8
+        this.ctx.shadowOffsetX = 2
+        this.ctx.shadowOffsetY = 2
+
+        this.ctx.drawImage(this.offscreen, 0, 0, map.tileSize, map.tileSize, centerX - 4, centerY - 4, map.tileSize / 1.5, map.tileSize / 1.5)
+
+        // Teraz dodajemy tekst pod ikonką
+        this.ctx.font = '0.75rem Inter';
+        this.ctx.fillStyle = map.tintColors[e.type] // kolor tekstu
+        this.ctx.textAlign = 'center'
+        this.ctx.textBaseline = 'top'
+
+        // Możesz tu dopasować tekst, np. e.type lub inny opis
+        const label = map.entityTypeMap[e.type]
+
+        // Rysujemy tekst pod ikonką (możesz zmienić y + map.tileSize / 1.5 + offset, żeby tekst był pod spodem)
+        this.ctx.fillText(label, centerX + (map.tileSize / 1.5) / 2 + 4, centerY + (map.tileSize / 1.5) / 2 + 4)
+
         this.ctx.restore()
       }
 
+
       // Draw Text
       if (this.hoveredTile) {
-        let entTxt = '';
+        let entityText = '';
         if (this.hoveredTile.entity) {
-          entTxt = ` - ${map.entityTypeMap[this.hoveredTile.entity.type]}`
+          entityText = ` - ${map.entityTypeMap[this.hoveredTile.entity.type]}`
         }
-        this.entityText = `Tile Position ${this.hoveredTile.x}|${this.hoveredTile.y} - Tile #${this.hoveredTile.id}${entTxt}`;
-      } else {
-        if (!this.entityText) {
-          const end = performance.now()
-          const duration = end - start
-          this.entityText = `Initial render completed in ${duration} ms`
-        }
+        const text = `Tile Position ${this.hoveredTile.x}|${this.hoveredTile.y} - Tile #${this.hoveredTile.id}${entityText}`;
+        this.ctx.save();
+        this.ctx.font = '0.875rem Inter';
+        this.ctx.textBaseline = 'top';
+        const padding = 5;
+        const textWidth = this.ctx.measureText(text).width;
+        const textHeight = 12;
+        const y = this.canvas.height - (textHeight + padding * 2);
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        this.ctx.fillRect(0, y, textWidth + padding * 2, textHeight + padding * 2);
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText(text, 0 + padding, y + padding);
+        this.ctx.restore();
       }
-      this.ctx.save();
-      this.ctx.font = '0.875rem Inter';
-      this.ctx.textBaseline = 'top';
-      const padding = 5;
-      const textWidth = this.ctx.measureText(this.entityText).width;
-      const textHeight = 12;
-      const y = this.canvas.height - (textHeight + padding * 2);
-      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-      this.ctx.fillRect(0, y, textWidth + padding * 2, textHeight + padding * 2);
-      this.ctx.fillStyle = 'white';
-      this.ctx.fillText(this.entityText, 0 + padding, y + padding);
-      this.ctx.restore();
     },
 
     start() {

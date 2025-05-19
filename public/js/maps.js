@@ -169,8 +169,8 @@ if (left) {
     constructor(map, width, height) {
       this.width = width
       this.height = height
-      this.marginX = 500
-      this.marginY = 250
+      this.marginX = 100
+      this.marginY = 50
       this.maxX = map.mapWidth * map.tileSize - width
       this.maxY = map.mapHeight * map.tileSize - height
       this.minX = -this.marginX
@@ -362,7 +362,9 @@ if (left) {
       map.entities = d.entities;
       const dynWalls = d.entities.filter(e => e.type === 71)
       for (const e of dynWalls) {
+        if (e.int[0] > 0) {
         map.map[e.x][e.y] = e.int[0];
+        }
         if (e.int[1] == 0) {
           map.tileMode[e.x][e.y] = 1;
         } else if (e.int[1] == 1) {
@@ -541,32 +543,31 @@ if (left) {
       const offsetY = -this.camera.y + startRow * map.tileSize;
 
       for (let r = startRow; r <= endRow; r++) {
+        if (r < 0 || r >= map.mapHeight) continue;
         for (let c = startCol; c <= endCol; c++) {
+          if (c < 0 || c >= map.mapWidth) continue;
           const tile = map.getTile(c, r);
-          if (tile > 0) {
-
-            const sx = (tile % map.tilesetCols) * map.tileSize;
-            const sy = Math.floor(tile / map.tilesetCols) * map.tileSize;
-            const x = Math.round((c - startCol) * map.tileSize + offsetX);
-            const y = Math.round((r - startRow) * map.tileSize + offsetY);
-            const rotation = (() => {
-              switch (map.mapModifiers?.[c]?.[r]) {
-                case 1: return Math.PI / 2;
-                case 2: return Math.PI;
-                case 3: return -Math.PI / 2;
-                default: return 0;
-              }
-            })();
-
-            if (rotation === 0) {
-              this.ctx.drawImage(this.tileAtlas, sx, sy, map.tileSize, map.tileSize, x, y, map.tileSize, map.tileSize)
-            } else {
-              this.ctx.save()
-              this.ctx.translate(Math.round(x + map.tileSize / 2), Math.round(y + map.tileSize / 2))
-              this.ctx.rotate(rotation)
-              this.ctx.drawImage(this.tileAtlas, sx, sy, map.tileSize, map.tileSize, -map.tileSize / 2, -map.tileSize / 2, map.tileSize, map.tileSize)
-              this.ctx.restore()
+          const sx = (tile % map.tilesetCols) * map.tileSize;
+          const sy = Math.floor(tile / map.tilesetCols) * map.tileSize;
+          const x = Math.round((c - startCol) * map.tileSize + offsetX);
+          const y = Math.round((r - startRow) * map.tileSize + offsetY);
+          const rotation = (() => {
+            switch (map.mapModifiers?.[c]?.[r]) {
+              case 1: return Math.PI / 2;
+              case 2: return Math.PI;
+              case 3: return -Math.PI / 2;
+              default: return 0;
             }
+          })();
+
+          if (rotation === 0) {
+            this.ctx.drawImage(this.tileAtlas, sx, sy, map.tileSize, map.tileSize, x, y, map.tileSize, map.tileSize)
+          } else {
+            this.ctx.save()
+            this.ctx.translate(Math.round(x + map.tileSize / 2), Math.round(y + map.tileSize / 2))
+            this.ctx.rotate(rotation)
+            this.ctx.drawImage(this.tileAtlas, sx, sy, map.tileSize, map.tileSize, -map.tileSize / 2, -map.tileSize / 2, map.tileSize, map.tileSize)
+            this.ctx.restore()
           }
           if (tile === 0) continue;
           if (map.tileMode?.[c]?.[r] === 0) {

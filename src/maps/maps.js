@@ -27,7 +27,7 @@ async function loadAndRender() {
   const mapFiles = allFiles.filter(file => file.endsWith('.map'))
   for (const mapFile of mapFiles) {
     const mapName = mapFile.slice(0, -4)
-    if (!/^[a-zA-Z0-9_-]+$/.test(mapName)) {
+    if (!/^[a-zA-Z0-9 _-]+$/.test(mapName)) {
       console.warn(`Skipping ${mapName} invalid name`)
       continue
     }

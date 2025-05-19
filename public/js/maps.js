@@ -343,7 +343,6 @@ if (left) {
         const entity = type1or2Entities[Math.floor(Math.random() * type1or2Entities.length)]
         return [entity.x, entity.y]
       }
-
       return null
     },
 
@@ -361,6 +360,15 @@ if (left) {
       map.bgColor = d.bgColor;
       map.cam = this.getRandomEntityCoords(d.entities);
       map.entities = d.entities;
+      const dynWalls = d.entities.filter(e => e.type === 71)
+      for (const e of dynWalls) {
+        map.map[e.x][e.y] = e.int[0];
+        if (e.int[1] == 0) {
+          map.tileMode[e.x][e.y] = 1;
+        } else if (e.int[1] == 1) {
+          map.tileMode[e.x][e.y] = 2;
+        }
+      }
       await Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tileImg}`);
       if (map.bgSize > 0) await Loader.loadImage('bg', `/cs2d/gfx/backgrounds/${map.bgImg}`);
       this.init();

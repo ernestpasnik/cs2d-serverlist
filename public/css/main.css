@@ -39,7 +39,6 @@ canvas {
 a {
   text-decoration: none;
   color: #ddd;
-  font-weight: 500;
 }
 
 a:hover {
@@ -196,7 +195,6 @@ code {
 }
 
 [data-href] {
-  font-weight: 500;
   color: #ddd;
   cursor: pointer;
 }
@@ -615,15 +613,12 @@ small {
   display: flex;
   gap: 0.25rem;
   justify-content: space-between;
-}
-
-.stat-item > span:first-child {
   color: #ddd;
 }
 
 .stat-item > *:last-child {
-  min-width: 70px;
-  text-align: right;
+  text-wrap: nowrap;
+  overflow: visible;
 }
 
 .stat-item > span {
@@ -699,11 +694,6 @@ small {
   text-overflow: ellipsis;
   overflow: hidden;
   text-wrap: nowrap;
-}
-
-span,
-.stat-item > span {
-  color: #bbb;
 }
 
 p,
@@ -819,7 +809,6 @@ a[download] {
   font-size: 0.8rem;
   min-width: 125px;
   margin-top: 0.25rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
 #timeAgo > button:not(:disabled):hover, a[download]:not(:disabled):hover {
@@ -1254,5 +1243,9 @@ footer > a:hover {
   .svlst > thead > tr > th:nth-child(5),
   .svlst > tbody > tr > td:nth-child(5) {
     display: none;
+  }
+
+  .fl > div {
+    flex: 1 30%;
   }
 }

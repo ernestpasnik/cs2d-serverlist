@@ -66,28 +66,24 @@ function initTippy() {
   tippy('[data-href]', {
     trigger: 'click',
     interactive: true,
+    appendTo: document.body,
     onShow(instance) {
       const href = instance.reference.getAttribute('data-href')
       if (!href) return
-
       const lowerHref = href.toLowerCase()
-
       fetch(href)
         .then((response) => {
           if (!response.ok) throw new Error(`HTTP ${response.status}`)
-          const contentType = response.headers.get('Content-Type') || ''
           const contentLength = response.headers.get('Content-Length')
           return Promise.all([response.blob(), contentLength])
         })
         .then(([blob, contentLength]) => {
           const sizeKB = bytesToSize(contentLength)
-
           let mainContent
-
           if (/\.(webp|png|bmp|jpe?g)$/.test(lowerHref)) {
             const image = new Image()
             image.style.display = 'block'
-            image.style.maxWidth = '250px'
+            image.style.maxWidth = '300px'
             image.style.margin = '1rem auto'
             image.style.height = 'auto'
             image.src = href
@@ -100,16 +96,13 @@ function initTippy() {
           } else {
             mainContent = document.createTextNode('Unsupported file type')
           }
-
           const container = document.createElement('div')
           if (mainContent) container.appendChild(mainContent)
-
           const link = document.createElement('a')
           link.href = href
           link.download = ''
           link.textContent = `Download ${sizeKB ? ` (${sizeKB})` : ''}`
           container.appendChild(link)
-
           instance.setContent(container)
         })
         .catch((error) => {
@@ -119,6 +112,11 @@ function initTippy() {
   })
 }
 
+document.querySelectorAll('.stats-container').forEach(container => {
+  container.addEventListener('scroll', () => {
+    tippy.hideAll()
+  }, { passive: true })
+})
 
 const left = document.querySelector('.arrow-left');
 if (left) {

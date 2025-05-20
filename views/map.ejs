@@ -17,7 +17,7 @@
   <div class="stats-container">
     <label>Map Metadata</label>
     <div class="stat-item">
-      <span data-href="/cs2d/minimaps/<%= title %>.webp" class="cs2d">Map <%= title %>.map</span>
+      <span data-href="/cs2d/minimaps/<%= title %>.webp">Map <%= title %>.map</span>
       <span><%= bytesToSize(v.mapSize) %></span>
     </div>
     <div class="stat-item">
@@ -25,7 +25,7 @@
       <span><%= v.mapWidth %>×<%= v.mapHeight %></span>
     </div>
     <div class="stat-item">
-      <span data-href="/cs2d/gfx/tiles/<%= v.tileImg %>" class="cs2d">Tileset <%= v.tileImg %></span>
+      <span data-href="/cs2d/gfx/tiles/<%= v.tileImg %>">Tileset <%= v.tileImg %></span>
       <span><%= bytesToSize(v.tileFileSize) %></span>
     </div>
     <div class="stat-item">
@@ -33,16 +33,7 @@
       <span><%= v.tileCount %></span>
     </div>
     <div class="stat-item">
-<% const isImage = /\.(png|bmp|jpe?g)$/i.test(v.bgImg) %>
-<span
-  <% if (isImage && v.bgSize > 0) { %>
-    class="cs2d"
-    data-href="/cs2d/gfx/backgrounds/<%= v.bgImg %>"
-  <% } %>
->
-  Background<%= v.bgImg ? ' ' + v.bgImg : '' %>
-</span>
-
+      <span<% if (v.bgSize > 0) { %> data-href="/cs2d/gfx/backgrounds/<%= v.bgImg %>"<% } %>>Background<%= v.bgImg ? ' ' + v.bgImg : '' %></span>
       <span<% if (v.bgImg && v.bgSize == 0) { %> class="err"<% } %>>
       <% if (v.bgImg) { %>
         <% if (v.bgSize > 0) { %>
@@ -77,12 +68,11 @@
     <% v.resources.forEach((item, index) => { %>
     <div class="stat-item">
       <% if (item.size > 0) { %>
-      <% const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path) %>
-      <span data-href="/cs2d/<%= item.path %>"<% if (isImage) { %> class="cs2d"<% } %>><%= item.path %></span>
+      <span data-href="/cs2d/<%= item.path %>"><%= item.path %></span>
       <% } else { %>
       <span><%= item.path %></span>
       <% } %>
-      <span<% if (item.size == 0) { %> class="err"<% } %>><%- item.size > 0 ? bytesToSize(item.size, true) : 'Not Found' %></span>
+      <%- bytesToSize(item.size, true) %>
     </div>
     <% }) %>
     <% if (v.resources.length === 0) {%>

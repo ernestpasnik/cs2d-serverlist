@@ -195,13 +195,13 @@ code {
   border-radius: 4px;
 }
 
-.cs2d {
+[data-href] {
   font-weight: 500;
   color: #ddd;
   cursor: pointer;
 }
 
-.cs2d:hover {
+[data-href]:hover {
   color: #fff !important;
 }
 
@@ -617,20 +617,13 @@ small {
   justify-content: space-between;
 }
 
-.stat-item:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
 .stat-item > span:first-child {
   color: #ddd;
-  max-width: 200px;
 }
 
 .stat-item > *:last-child {
-  text-wrap: nowrap;
-  overflow: visible;
+  min-width: 70px;
+  text-align: right;
 }
 
 .stat-item > span {
@@ -662,6 +655,7 @@ small {
   background-color: rgba(115, 130, 140, 0.05);
   border-radius: 4px;
   gap: 0.35rem;
+  overflow: auto;
 }
 
 .stats > div > label {
@@ -793,7 +787,8 @@ li {
 }
 
 input:not([type="checkbox"]),
-#timeAgo > button {
+#timeAgo > button,
+a[download] {
   background-color: rgba(115, 130, 140, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.6rem 0.75rem;
@@ -808,7 +803,12 @@ input:not([type="checkbox"]),
   margin-top: 0.25rem;
 }
 
-#timeAgo > button {
+a[download] {
+  display: block;
+  text-align: center;
+}
+
+#timeAgo > button, a[download] {
   background-color: rgb(47, 113, 58);
   cursor: pointer;
   width: auto;
@@ -822,7 +822,7 @@ input:not([type="checkbox"]),
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 }
 
-#timeAgo > button:not(:disabled):hover {
+#timeAgo > button:not(:disabled):hover, a[download]:not(:disabled):hover {
   background-color: rgb(72, 147, 84);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -1082,10 +1082,6 @@ input:not([type="checkbox"]),
 .map-info > div {
   max-height: 236px;
   overflow: auto;
-}
-
-.map-info > div > div > span {
-  max-width: initial !important;
 }
 
 .arrow {

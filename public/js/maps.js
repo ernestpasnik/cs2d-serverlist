@@ -1,18 +1,36 @@
 const bytesToSize = (b, colors = false) => {
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-  if (b === 0) return colors ? `<span style="color: rgb(96, 255, 95)">0 B</span>` : '0 B'
+
+  if (b === 0) {
+    if (colors) {
+      const span = document.createElement('span')
+      span.style.color = '#ff7474'
+      span.textContent = 'Not Found'
+      return span
+    }
+    return '0 B'
+  }
+
   const i = Math.floor(Math.log(b) / Math.log(1024))
   const size = Math.round(b / Math.pow(1024, i))
   const str = `${size} ${sizes[i]}`
+
   if (!colors) return str
+
   const max = 3 * 1024 * 1024
   const ratio = Math.min(b / max, 1)
   const r = Math.round(96 + (255 - 96) * ratio)
   const g = Math.round(255 - 255 * ratio)
   const bCol = Math.round(95 - 95 * ratio)
   const color = `rgb(${r}, ${g}, ${bCol})`
-  return `<span style="color: ${color}">${str}</span>`
+
+  const span = document.createElement('span')
+  span.style.color = color
+  span.textContent = str
+
+  return span
 }
+
 
 const maps_filter = document.getElementById('maps_filter');
 if (maps_filter) {
@@ -45,29 +63,62 @@ if (maps_filter) {
 }
 
 function initTippy() {
-  tippy('.cs2d', {
+  tippy('[data-href]', {
     trigger: 'click',
     interactive: true,
     onShow(instance) {
-      const href = instance.reference.getAttribute('data-href');
-      if (!href) return;
+      const href = instance.reference.getAttribute('data-href')
+      if (!href) return
+
+      const lowerHref = href.toLowerCase()
+
       fetch(href)
-        .then((response) => response.blob())
-        .then(() => {
-          const image = new Image();
-          image.style.display = 'block'
-          image.style.maxWidth = '250px'
-          image.style.width = '100%'
-          image.style.height = 'auto'
-          image.src = href;
-          instance.setContent(image);
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`)
+          const contentType = response.headers.get('Content-Type') || ''
+          const contentLength = response.headers.get('Content-Length')
+          return Promise.all([response.blob(), contentLength])
+        })
+        .then(([blob, contentLength]) => {
+          const sizeKB = bytesToSize(contentLength)
+
+          let mainContent
+
+          if (/\.(webp|png|bmp|jpe?g)$/.test(lowerHref)) {
+            const image = new Image()
+            image.style.display = 'block'
+            image.style.maxWidth = '250px'
+            image.style.margin = '1rem auto'
+            image.style.height = 'auto'
+            image.src = href
+            mainContent = image
+          } else if (/\.(ogg|wav)$/.test(lowerHref)) {
+            const audio = document.createElement('audio')
+            audio.controls = true
+            audio.src = href
+            mainContent = audio
+          } else {
+            mainContent = document.createTextNode('Unsupported file type')
+          }
+
+          const container = document.createElement('div')
+          if (mainContent) container.appendChild(mainContent)
+
+          const link = document.createElement('a')
+          link.href = href
+          link.download = ''
+          link.textContent = `Download ${sizeKB ? ` (${sizeKB})` : ''}`
+          container.appendChild(link)
+
+          instance.setContent(container)
         })
         .catch((error) => {
-          instance.setContent(`Request failed. ${error}`);
-        });
+          instance.setContent(`Request failed. ${error}`)
+        })
     }
-  });
+  })
 }
+
 
 const left = document.querySelector('.arrow-left');
 if (left) {
@@ -237,12 +288,8 @@ if (left) {
         item[4].children[0].remove()
         const newEl = document.createElement('span')
         item[4].insertBefore(newEl, item[4].children[0])
-        if (d.bgImg) {
-          const isImage = /\.(png|bmp|jpe?g)$/i.test(d.bgImg)
-          if (isImage && d.bgSize > 0) {
-            newEl.classList.add('cs2d')
-            newEl.setAttribute('data-href', '/cs2d/gfx/backgrounds/' + d.bgImg)
-          }
+        if (d.bgImg && d.bgSize > 0) {
+          newEl.setAttribute('data-href', '/cs2d/gfx/backgrounds/' + d.bgImg)
         }
         if (d.bgImg) {
           newEl.textContent = `Background ${d.bgImg}`
@@ -289,10 +336,8 @@ if (left) {
             const div = document.createElement('div')
             div.className = 'stat-item'
             if (item.size > 0) {
-              const isImage = /\.(png|bmp|jpe?g)$/i.test(item.path)
               const span = document.createElement('span')
               span.setAttribute('data-href', '/cs2d/' + item.path)
-              if (isImage) span.classList.add('cs2d')
               span.textContent = item.path
               div.appendChild(span)
             } else {
@@ -300,10 +345,7 @@ if (left) {
               spanPath.textContent = item.path
               div.appendChild(spanPath)
             }
-            const spanSize = document.createElement('span')
-            spanSize.innerHTML = item.size > 0 ? bytesToSize(item.size, true) : 'Not Found'
-            div.appendChild(spanSize)
-            if (item.size === 0) spanSize.classList.add('err')
+            div.appendChild(bytesToSize(item.size, true))
             resourcesContainer.appendChild(div)
           })
         }

@@ -47,7 +47,7 @@ function timeAgo(ts, full = false) {
 
 const bytesToSize = (b, colors = false) => {
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-  if (b === 0) return colors ? `<span style="color: rgb(96, 255, 95)">0 B</span>` : '0 B'
+  if (b === 0) return colors ? `<span style="color:#ff7474">Not Found</span>` : '0 B'
   const i = Math.floor(Math.log(b) / Math.log(1024))
   const size = Math.round(b / Math.pow(1024, i))
   const str = `${size} ${sizes[i]}`

@@ -27,8 +27,7 @@ async function loadAndRender() {
   const mapFiles = allFiles.filter(file => file.endsWith('.map'))
   for (const mapFile of mapFiles) {
     const mapName = mapFile.slice(0, -4)
-    if (!/^[a-zA-Z0-9 _-]+$/.test(mapName)) {
-      console.warn(`Skipping ${mapName} invalid name`)
+    if (!/^(as_|cs_|de_|dm_|ctf_|dom_|con_|zm_|fy_|he_|ka_|awp_|aim_)[a-z0-9_]+$/.test(mapName)) {
       continue
     }
     const buffer = fs.readFileSync(`public/cs2d/maps/${mapName}.map`)

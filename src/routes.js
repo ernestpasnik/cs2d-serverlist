@@ -128,7 +128,7 @@ function routes(fastify) {
 
   fastify.get('/maps/:mapName', async (req, reply) => {
     const mapName = req.params.mapName
-    if (!/^[a-zA-Z0-9 _-]+$/.test(mapName)) {
+    if (!/^(as_|cs_|de_|dm_|ctf_|dom_|con_|zm_|fy_|he_|ka_|awp_|aim_)[a-z0-9_]+$/.test(mapName)) {
       return reply.code(400).send({ error: 'Invalid map name' })
     }
     const dat = await redis.get(`map:${mapName}`)
@@ -174,7 +174,7 @@ function routes(fastify) {
 
   fastify.get('/api/maps/:mapName', async (req, reply) => {
     const mapName = req.params.mapName
-    if (!/^[a-zA-Z0-9 _-]+$/.test(mapName)) {
+    if (!/^(as_|cs_|de_|dm_|ctf_|dom_|con_|zm_|fy_|he_|ka_|awp_|aim_)[a-z0-9_]+$/.test(mapName)) {
       return reply.code(400).send({ error: 'Invalid map name' })
     }
     const dat = await redis.get(`map:${mapName}`)

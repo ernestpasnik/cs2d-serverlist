@@ -205,8 +205,8 @@ if (left) {
     },
 
     async sendJsonRequest(url) {
-      tippy.hideAll();
       Game.isRunning = false;
+      tippy.hideAll();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       try {
         const response = await fetch(url, {
@@ -234,12 +234,9 @@ if (left) {
         item[2].children[0].setAttribute('data-href', `/cs2d/gfx/tiles/${d.tileImg}`);
         item[2].children[1].textContent = bytesToSize(d.tileFileSize);
         item[3].children[1].textContent = d.tileCount;
-        item[4].children[0].textContent = `Background ${d.bgImg || ''}`;
-        if (item[4].children[0]) {
-          item[4].children[0].remove()
-        }
+        item[4].children[0].remove()
         const newEl = document.createElement('span')
-        newEl.textContent = 'Background ' + (d.bgImg || '')
+        item[4].insertBefore(newEl, item[4].children[0])
         if (d.bgImg) {
           const isImage = /\.(png|bmp|jpe?g)$/i.test(d.bgImg)
           if (isImage && d.bgSize > 0) {
@@ -247,8 +244,8 @@ if (left) {
             newEl.setAttribute('data-href', '/cs2d/gfx/backgrounds/' + d.bgImg)
           }
         }
-        item[4].insertBefore(newEl, item[4].children[0] || null)
         if (d.bgImg) {
+          newEl.textContent = `Background ${d.bgImg}`
           if (d.bgSize > 0) {
             item[4].children[1].textContent = bytesToSize(d.bgSize)
             item[4].children[1].classList.remove('err')
@@ -312,10 +309,8 @@ if (left) {
         }
         initTippy();
         Game.loadMapDataFromCanvas(d);
-        Game.isRunning = true;
       } catch (err) {
-        console.error('Error fetching JSON:', err);
-        Game.isRunning = true;
+        console.error(err);
       }
     },
 
@@ -360,19 +355,35 @@ if (left) {
       map.bgColor = d.bgColor;
       map.cam = this.getRandomEntityCoords(d.entities);
       map.entities = d.entities;
+
+      // Func_DynWall
       const dynWalls = d.entities.filter(e => e.type === 71)
       for (const e of dynWalls) {
-        if (e.int[0] > 0) {
-        map.map[e.x][e.y] = e.int[0];
-        }
+        if (e.int[0] > 0) map.map[e.x][e.y] = e.int[0];
         if (e.int[1] == 0) {
           map.tileMode[e.x][e.y] = 1;
         } else if (e.int[1] == 1) {
           map.tileMode[e.x][e.y] = 2;
         }
       }
-      await Loader.loadImage('tiles', `/cs2d/gfx/tiles/${map.tileImg}`);
-      if (map.bgSize > 0) await Loader.loadImage('bg', `/cs2d/gfx/backgrounds/${map.bgImg}`);
+
+      // Env_Breakable
+      const breakable = d.entities.filter(e => e.type === 25)
+      for (const e of breakable) {
+        if (e.int[0] > 0) map.map[e.x][e.y] = e.int[0];
+        if (e.int[6] == 1) {
+          map.tileMode[e.x][e.y] = 1;
+        } else if (e.int[6] == 2) {
+          map.tileMode[e.x][e.y] = 2;
+        }
+      }
+
+      if (!Loader.images.has(`tiles_${map.tileImg}`)) {
+        await Loader.loadImage(`tiles_${map.tileImg}`, `/cs2d/gfx/tiles/${map.tileImg}`);
+      }
+      if ((map.bgSize > 0) && !Loader.images.has(`bg_${map.bgImg}`)) {
+        await Loader.loadImage(`bg_${map.bgImg}`, `/cs2d/gfx/backgrounds/${map.bgImg}`);
+      }
       this.init();
     },
 
@@ -380,14 +391,12 @@ if (left) {
       this.isDragging = false;
       this.mouse = { x: 0, y: 0, lastX: 0, lastY: 0 };
       this.canvas.addEventListener('mousedown', e => {
-        if (e.button === 0) {
-          this.isDragging = true;
-          this.mouse.x = e.offsetX;
-          this.mouse.y = e.offsetY;
-          this.mouse.lastX = e.offsetX;
-          this.mouse.lastY = e.offsetY;
-          this.canvas.style.cursor = 'grabbing';
-        }
+        this.isDragging = true;
+        this.mouse.x = e.offsetX;
+        this.mouse.y = e.offsetY;
+        this.mouse.lastX = e.offsetX;
+        this.mouse.lastY = e.offsetY;
+        this.canvas.style.cursor = 'grabbing';
       });
 
       this.canvas.addEventListener('mousemove', e => {
@@ -407,10 +416,8 @@ if (left) {
       });
 
       this.canvas.addEventListener('mouseup', e => {
-        if (e.button === 0) {
-          this.isDragging = false;
-          this.canvas.style.cursor = 'grab';
-        }
+        this.isDragging = false;
+        this.canvas.style.cursor = 'grab';
       });
 
       this.canvas.addEventListener('mouseleave', () => {
@@ -421,7 +428,7 @@ if (left) {
       this.camera = new Camera(map, this.canvas.width, this.canvas.height);
 
       // Load tiles
-      let tileImg = Loader.getImage('tiles');
+      let tileImg = Loader.getImage(`tiles_${map.tileImg}`);
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = tileImg.width;
       tempCanvas.height = tileImg.height;
@@ -488,19 +495,12 @@ if (left) {
       map.tilesetHeight = this.tileAtlas.height;
       map.tilesetCols = Math.floor(map.tilesetWidth / map.tileSize);
       map.tilesetRows = Math.floor(map.tilesetHeight / map.tileSize);
-      if (map.bgSize > 0) {
-        map.bgImg = Loader.getImage('bg');
-      }
-      requestAnimationFrame(this.tick.bind(this));
+      if (map.bgSize > 0) map.bgImg = Loader.getImage(`bg_${map.bgImg}`);
       Game.isRunning = true;
+      requestAnimationFrame(this.tick.bind(this));
     },
 
     update() {
-      if (!this.isDragging) {
-        this.isRunning = false;
-      }
-      this.isRunning = true;
-
       if (this.isDragging) {
         const dx = this.mouse.lastX - this.mouse.x
         const dy = this.mouse.lastY - this.mouse.y
@@ -648,37 +648,19 @@ if (left) {
       }
     },
 
-    start() {
-      if (!this.isRunning) {
-        this.isRunning = true;
-        this.tick();
-      }
-    },
-
-    stop() {
-      if (this.isRunning) {
-        this.isRunning = false;
-        if (this.animationFrameId !== null) {
-          cancelAnimationFrame(this.animationFrameId);
-          this.animationFrameId = null;
-        }
-      }
-    },
-
     tick() {
       if (!this.isRunning) return
       this.update()
       this.render()
       this.animationFrameId = requestAnimationFrame(this.tick.bind(this))
     },
-
   };
 
   const canvas = document.getElementById('map-preview');
   const ctx = canvas.getContext('2d');
   const parent = canvas.parentElement;
   canvas.width = parent.clientWidth;
-  canvas.height = 448;
+  canvas.height = 470;
   canvas.style.cursor = 'grab';
   Game.run(ctx, canvas);
 };

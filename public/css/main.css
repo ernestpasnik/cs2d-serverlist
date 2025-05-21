@@ -818,11 +818,16 @@ a[download]:not(:disabled):hover,
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+#btn-download:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
 #btn-download {
   margin: 0 auto;
   display: block;
-  width: 50%;
-  margin-top: 1rem;
+  width: 100%;
+  margin-top: .5rem;
 }
 
 #timeAgo > button:disabled {

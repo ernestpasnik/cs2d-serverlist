@@ -42,10 +42,7 @@ async function GenerateZipDownload() {
   for (const url of fileUrls) {
     try {
       const match = url.match(/(gfx|sfx|maps)\/.+/);
-            console.log(url.match(/(gfx|sfx|maps)\/.+/));
-
       if (!match) continue;
-      console.log(`Adding ${url} to zip...`);
       const relativePath = match[0];
       const blob = await fetch(url).then(r => {
         if (!r.ok) throw new Error(`Fetch failed: ${r.status}`);
@@ -167,6 +164,7 @@ if (left) {
   });
 
   const map = {
+    rotationMap: [0, Math.PI / 2, Math.PI, -Math.PI / 2],
     tintColors: {
       0: 'rgb(237, 81, 65)',
       1: 'rgb(76, 163, 255)',
@@ -178,14 +176,14 @@ if (left) {
       21: 'rgb(26, 187, 26)',
     },
     entityTypeMap: {
-      0: 'T',
-      1: 'CT',
-      2: 'VIP',
-      3: 'Hostage',
-      4: 'RescuePoint',
-      5: 'BombSpot',
-      6: 'EscapePoint',
-      21: 'Item',
+      0: 'Info_T',
+      1: 'Info_CT',
+      2: 'Info_VIP',
+      3: 'Info_Hostage',
+      4: 'Info_RescuePoint',
+      5: 'Info_BombSpot',
+      6: 'Info_EscapePoint',
+      21: 'Env_Item',
     },
     combinations: [
       [0, 0, 2, { col: 1, row: 4 }],
@@ -253,8 +251,8 @@ if (left) {
     constructor(map, width, height) {
       this.width = width
       this.height = height
-      this.marginX = 100
-      this.marginY = 50
+      this.marginX = 200
+      this.marginY = 200
       this.maxX = map.mapWidth * map.tileSize - width
       this.maxY = map.mapHeight * map.tileSize - height
       this.minX = -this.marginX
@@ -289,9 +287,9 @@ if (left) {
     },
 
     async sendJsonRequest(url) {
+      this.hoveredTile = null;
       Game.isRunning = false;
       tippy.hideAll();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
       try {
         const response = await fetch(url, {
           headers: {
@@ -439,22 +437,31 @@ if (left) {
       // Func_DynWall
       const dynWalls = d.entities.filter(e => e.type === 71)
       for (const e of dynWalls) {
-        if (e.int[0] > 0) map.map[e.x][e.y] = e.int[0];
-        if (e.int[1] == 0) {
-          map.tileMode[e.x][e.y] = 1;
-        } else if (e.int[1] == 1) {
-          map.tileMode[e.x][e.y] = 2;
+        if (e.int[0] > 0 && map.map?.[e.x]) {
+          map.map[e.x][e.y] = e.int[0]
+        }
+        if (map.tileMode?.[e.x]) {
+          if (e.int[1] === 0) {
+            map.tileMode[e.x][e.y] = 1
+          } else if (e.int[1] === 1) {
+            map.tileMode[e.x][e.y] = 2
+          }
         }
       }
 
       // Env_Breakable
       const breakable = d.entities.filter(e => e.type === 25)
       for (const e of breakable) {
-        if (e.int[0] > 0) map.map[e.x][e.y] = e.int[0];
-        if (e.int[6] == 1) {
-          map.tileMode[e.x][e.y] = 1;
-        } else if (e.int[6] == 2) {
-          map.tileMode[e.x][e.y] = 2;
+        if (e.int[0] > 0 && map.map?.[e.x]) {
+          map.map[e.x][e.y] = e.int[0]
+        }
+
+        if (map.tileMode?.[e.x]) {
+          if (e.int[6] === 1) {
+            map.tileMode[e.x][e.y] = 1
+          } else if (e.int[6] === 2) {
+            map.tileMode[e.x][e.y] = 2
+          }
         }
       }
 
@@ -464,6 +471,9 @@ if (left) {
       if ((map.bgSize > 0) && !Loader.images.has(`bg_${map.bgImg}`)) {
         await Loader.loadImage(`bg_${map.bgImg}`, `/cs2d/gfx/backgrounds/${map.bgImg}`);
       }
+
+      // Keep only the entities we want to show
+      map.entities = map.entities.filter(e => [0, 1, 2, 3, 4, 5, 6, 21].includes(e.type))
       this.init();
     },
 
@@ -576,11 +586,19 @@ if (left) {
       map.tilesetCols = Math.floor(map.tilesetWidth / map.tileSize);
       map.tilesetRows = Math.floor(map.tilesetHeight / map.tileSize);
       if (map.bgSize > 0) map.bgImg = Loader.getImage(`bg_${map.bgImg}`);
+
+
+      // Entities
+      this.offscreen = document.createElement('canvas')
+      this.offscreen.width = map.tileSize
+      this.offscreen.height = map.tileSize
+      this.offCtx = this.offscreen.getContext('2d')
+
       Game.isRunning = true;
       requestAnimationFrame(this.tick.bind(this));
     },
 
-    update() {
+    render() {
       if (this.isDragging) {
         const dx = this.mouse.lastX - this.mouse.x
         const dy = this.mouse.lastY - this.mouse.y
@@ -596,15 +614,8 @@ if (left) {
       const endRow = Math.ceil((this.camera.y + this.camera.height) / map.tileSize)
       map.visibleEntities = map.entities.filter(entity =>
         entity.x >= startCol && entity.x <= endCol &&
-        entity.y >= startRow && entity.y <= endRow &&
-        entity.type in map.entityTypeMap
+        entity.y >= startRow && entity.y <= endRow
       )
-
-      // Entities
-      this.offscreen = document.createElement('canvas')
-      this.offscreen.width = map.tileSize
-      this.offscreen.height = map.tileSize
-      this.offCtx = this.offscreen.getContext('2d')
 
       if (map.bgSize > 0) {
         ctx.fillStyle = ctx.createPattern(map.bgImg, 'repeat');
@@ -612,13 +623,8 @@ if (left) {
         ctx.fillStyle = map.bgColor;
       }
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-    },
 
-    render() {
-      const startCol = Math.floor(this.camera.x / map.tileSize);
-      const endCol = Math.ceil((this.camera.x + this.camera.width) / map.tileSize);
-      const startRow = Math.floor(this.camera.y / map.tileSize);
-      const endRow = Math.ceil((this.camera.y + this.camera.height) / map.tileSize);
+
       const offsetX = -this.camera.x + startCol * map.tileSize;
       const offsetY = -this.camera.y + startRow * map.tileSize;
 
@@ -631,15 +637,7 @@ if (left) {
           const sy = Math.floor(tile / map.tilesetCols) * map.tileSize;
           const x = Math.round((c - startCol) * map.tileSize + offsetX);
           const y = Math.round((r - startRow) * map.tileSize + offsetY);
-          const rotation = (() => {
-            switch (map.mapModifiers?.[c]?.[r]) {
-              case 1: return Math.PI / 2;
-              case 2: return Math.PI;
-              case 3: return -Math.PI / 2;
-              default: return 0;
-            }
-          })();
-
+          const rotation = map.rotationMap[map.mapModifiers?.[c]?.[r] ?? 0] || 0;
           if (rotation === 0) {
             this.ctx.drawImage(this.tileAtlas, sx, sy, map.tileSize, map.tileSize, x, y, map.tileSize, map.tileSize)
           } else {
@@ -683,8 +681,8 @@ if (left) {
       for (const e of map.visibleEntities) {
         const x = Math.round((e.x - startCol) * map.tileSize + offsetX)
         const y = Math.round((e.y - startRow) * map.tileSize + offsetY)
-        const centerX = x + (map.tileSize - map.tileSize / 1.5) / 2
-        const centerY = y + (map.tileSize - map.tileSize / 1.5) / 2
+        const centerX = x + (map.tileSize / 4)
+        const centerY = y + (map.tileSize / 4)
         this.offCtx.clearRect(0, 0, map.tileSize, map.tileSize)
         this.offCtx.drawImage(this.gui_icons, 0, 0, map.tileSize, map.tileSize)
         this.offCtx.globalCompositeOperation = 'source-in'
@@ -692,17 +690,11 @@ if (left) {
         this.offCtx.fillRect(0, 0, map.tileSize, map.tileSize)
         this.offCtx.globalCompositeOperation = 'source-over'
         this.ctx.save()
-        this.ctx.shadowColor = 'rgba(12, 14, 12, 0.9)'
-        this.ctx.shadowBlur = 8
+        this.ctx.shadowColor = 'rgb(0, 0, 0)'
+        this.ctx.shadowBlur = 12
         this.ctx.shadowOffsetX = 2
         this.ctx.shadowOffsetY = 2
-        this.ctx.drawImage(this.offscreen, 0, 0, map.tileSize, map.tileSize, centerX - 4, centerY - 4, map.tileSize / 1.5, map.tileSize / 1.5)
-        this.ctx.font = '0.75rem Inter';
-        this.ctx.fillStyle = map.tintColors[e.type]
-        this.ctx.textAlign = 'center'
-        this.ctx.textBaseline = 'top'
-        const label = map.entityTypeMap[e.type]
-        this.ctx.fillText(label, centerX + (map.tileSize / 1.5) / 2 + 4, centerY + (map.tileSize / 1.5) / 2 + 4)
+        this.ctx.drawImage(this.offscreen, 0, 0, map.tileSize, map.tileSize, centerX, centerY, map.tileSize / 2, map.tileSize / 2)
         this.ctx.restore()
       }
 
@@ -730,7 +722,6 @@ if (left) {
 
     tick() {
       if (!this.isRunning) return
-      this.update()
       this.render()
       this.animationFrameId = requestAnimationFrame(this.tick.bind(this))
     },
@@ -744,3 +735,14 @@ if (left) {
   canvas.style.cursor = 'grab';
   Game.run(ctx, canvas);
 };
+
+window.mobileCheck = function () {
+  let check = false;
+  (function (a) { if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) check = true; })(navigator.userAgent || navigator.vendor || window.opera);
+  return check;
+};
+if (window.mobileCheck()) {
+  const button = document.getElementById('btn-download');
+  button.disabled = true;
+  button.textContent = 'Downloads are not supported on mobile devices.';
+}

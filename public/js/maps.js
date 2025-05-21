@@ -31,6 +31,41 @@ const bytesToSize = (b, colors = false) => {
   return span
 }
 
+let fileUrls = [];
+async function GenerateZipDownload() {
+  const button = document.getElementById('btn-download')
+  button.disabled = true
+  const originalText = button.textContent
+  button.textContent = 'Please wait...'
+
+  const zip = new JSZip();
+  for (const url of fileUrls) {
+    try {
+      const match = url.match(/(gfx|sfx|maps)\/.+/);
+            console.log(url.match(/(gfx|sfx|maps)\/.+/));
+
+      if (!match) continue;
+      console.log(`Adding ${url} to zip...`);
+      const relativePath = match[0];
+      const blob = await fetch(url).then(r => {
+        if (!r.ok) throw new Error(`Fetch failed: ${r.status}`);
+        return r.blob();
+      })
+      zip.file(relativePath, blob);
+    } catch (err) {
+      console.error(`Error fetching or adding ${url}:`, err);
+    }
+  }
+  const zipBlob = await zip.generateAsync({ type: "blob", streamFiles: true });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(zipBlob);
+  link.download = document.getElementById('name').textContent + '.zip';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  button.textContent = originalText
+  button.disabled = false
+}
 
 const maps_filter = document.getElementById('maps_filter');
 if (maps_filter) {
@@ -265,7 +300,9 @@ if (left) {
         });
         if (!response.ok) throw new Error('Request failed');
         const d = await response.json();
-
+        fileUrls = [];
+        document.getElementById('btn-download').textContent = `Download ${d.name}.zip`;
+        fileUrls.push(`/maps/${d.name}`)
         history.pushState(null, '', `/maps/${d.name}`);
         document.title = `${d.name} - CS2D Server List`;
         document.getElementById('name').textContent = d.name;
@@ -280,6 +317,7 @@ if (left) {
         item[0].children[1].textContent = bytesToSize(d.mapSize);
         item[1].children[1].textContent = `${d.mapWidth}×${d.mapHeight}`;
         item[2].children[0].textContent = `Tileset ${d.tileImg}`;
+        fileUrls.push(`/cs2d/gfx/tiles/${d.tileImg}`)
         item[2].children[0].setAttribute('data-href', `/cs2d/gfx/tiles/${d.tileImg}`);
         item[2].children[1].textContent = bytesToSize(d.tileFileSize);
         item[3].children[1].textContent = d.tileCount;
@@ -292,6 +330,7 @@ if (left) {
         if (d.bgImg) {
           newEl.textContent = `Background ${d.bgImg}`
           if (d.bgSize > 0) {
+            fileUrls.push('/cs2d/gfx/backgrounds/' + d.bgImg)
             item[4].children[1].textContent = bytesToSize(d.bgSize)
             item[4].children[1].classList.remove('err')
           } else {
@@ -334,6 +373,7 @@ if (left) {
             const div = document.createElement('div')
             div.className = 'stat-item'
             if (item.size > 0) {
+              fileUrls.push('/cs2d/' + item.path)
               const span = document.createElement('span')
               span.setAttribute('data-href', '/cs2d/' + item.path)
               span.textContent = item.path

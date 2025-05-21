@@ -777,6 +777,7 @@ li {
 }
 
 input:not([type="checkbox"]),
+#btn-download,
 #timeAgo > button,
 a[download] {
   background-color: rgba(115, 130, 140, 0.05);
@@ -798,22 +799,30 @@ a[download] {
   text-align: center;
 }
 
-#timeAgo > button, a[download] {
+#timeAgo > button, a[download], #btn-download {
   background-color: rgb(47, 113, 58);
   cursor: pointer;
   width: auto;
   color: #ddd;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  text-transform: uppercase;
   font-weight: 500;
   font-size: 0.8rem;
   min-width: 125px;
   margin-top: 0.25rem;
 }
 
-#timeAgo > button:not(:disabled):hover, a[download]:not(:disabled):hover {
+#timeAgo > button:not(:disabled):hover,
+a[download]:not(:disabled):hover,
+#btn-download:not(:disabled):hover {
   background-color: rgb(72, 147, 84);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#btn-download {
+  margin: 0 auto;
+  display: block;
+  width: 50%;
+  margin-top: 1rem;
 }
 
 #timeAgo > button:disabled {

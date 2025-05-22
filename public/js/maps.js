@@ -121,7 +121,6 @@ function initTippy() {
           return Promise.all([response.blob(), contentLength])
         })
         .then(([blob, contentLength]) => {
-          const sizeKB = bytesToSize(contentLength)
           let mainContent
           if (/\.(webp|png|bmp|jpe?g)$/.test(lowerHref)) {
             const image = new Image()
@@ -144,7 +143,7 @@ function initTippy() {
           const link = document.createElement('a')
           link.href = href
           link.download = ''
-          link.textContent = `Download ${sizeKB ? ` (${sizeKB})` : ''}`
+          link.textContent = `Download ${href.split('/').pop()}`
           container.appendChild(link)
           instance.setContent(container)
         })

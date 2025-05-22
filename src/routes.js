@@ -62,14 +62,6 @@ function routes(fastify) {
     })
   })
 
-  fastify.get('/maps', async (req, reply) => {
-    return reply.view('maps.ejs', {
-      title: 'Maps',
-      maps: await maps.getAllMapNames(),
-      url: req.url
-    })
-  })
-
   fastify.get('/tools', async (req, reply) => {
     return reply.view('tools.ejs', {
       title: 'Tools',
@@ -126,6 +118,15 @@ function routes(fastify) {
     })
   })
 
+  fastify.get('/maps', async (req, reply) => {
+    return reply.view('maps.ejs', {
+      title: 'Maps',
+      description: `Browse our collection of custom maps designed for all types of gameplay—team battles, deathmatches, and creative modes. Find your next favorite map and jump into the action!`,
+      maps: await maps.getAllMapNames(),
+      url: req.url
+    })
+  })
+
   fastify.get('/maps/:mapName', async (req, reply) => {
     const mapName = req.params.mapName
     if (!/^(as_|cs_|de_|dm_|ctf_|dom_|con_|zm_|fy_|he_|ka_|awp_|aim_)[a-z0-9_]+$/.test(mapName)) {
@@ -141,7 +142,7 @@ function routes(fastify) {
     return reply.view('map', {
       v: { ...JSON.parse(dat), nextMap, prevMap },
       title: mapName,
-      description: `Explore a variety of custom maps for intense, action-packed gameplay—whether you prefer tactical team combat, deathmatches, or creative environments, we have maps for every style.`,
+      description: `Play on ${mapName} — custom maps made for exciting team fights, fast deathmatches, and creative gameplay. Find the perfect map for your style.`,
       url: req.url,
       nextMap, prevMap,
       bytesToSize

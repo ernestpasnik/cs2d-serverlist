@@ -25,7 +25,7 @@ function routes(fastify) {
   fastify.get('/', async (req, reply) => {
     return reply.view('servers', {
       title: null,
-      description: 'Browse the list of active CS2D servers with detailed stats on map, player count, bots, and region. Access server data with our open API.',
+      description: 'Browse the most active CS2D servers with real-time stats including current map, player count, bots, and region. Access live data with our open JSON API.',
       url: req.url,
       srv: sockets.getRecentServers()
     })
@@ -36,7 +36,7 @@ function routes(fastify) {
     if (!result) return err404(req, reply)
     return reply.view('details', {
       title: result.name,
-      description: `View active CS2D server details for ${result.name} including map, player count, bots, and region. Quickly access stats and performance data.`,
+      description: `Get a full overview of the CS2D server "${result.name}", with stats like players, bots, map, region, and performance. View changes in real-time and historical trends.`,
       url: req.url,
       s: result,
       l: await leaderboard.getLeaderboard(req.params.address),
@@ -53,7 +53,7 @@ function routes(fastify) {
     const top100 = {...result, players: result.players.slice(0, 100) }
     return reply.view('leaderboard', {
       title: top100.name,
-      description: `Browse the top-performing CS2D players for ${top100.name} based on server stats, including rankings, scores, and player achievements.`,
+      description: `Explore top CS2D players from "${top100.name}" ranked by score, kills, deaths, MVPs, and other key stats. Stay up-to-date with daily refreshed leaderboard data.`,
       url: req.url,
       r: top100,
       addr: req.params.address,
@@ -65,7 +65,7 @@ function routes(fastify) {
   fastify.get('/tools', async (req, reply) => {
     return reply.view('tools.ejs', {
       title: 'Tools',
-      description: 'Monitor CS2D server stats and updates in your Discord server. Easily add your webhook URL for automatic notifications.',
+      description: 'Set up Discord alerts for CS2D servers with just a webhook. Stay notified when servers change maps or player counts. Works with any public or private server.',
       url: req.url,
       srv: sockets.getRecentServers()
     })
@@ -95,7 +95,7 @@ function routes(fastify) {
     const leaderboards = await leaderboard.getLeaderboards()
     return reply.view('stats', {
       title: 'Statistics',
-      description: 'Explore CS2D statistics: active players, server count, game modes, regions, and the most popular maps in a detailed breakdown.',
+      description: 'Dive into CS2D analytics showing global player trends, active server counts, favorite maps, top regions, and game mode breakdowns with updated numbers.',
       url: req.url,
       stats: stats.getStats(servers, leaderboards),
       timeAgo
@@ -112,7 +112,7 @@ function routes(fastify) {
       userid: req.params.userid,
       usertype: p[0].player.usertype,
       title: p[0].player.name,
-      description: `${p[0].player.name}'s CS2D Profile: Discover stats for ${p[0].player.name} (User ID: ${p[0].player.userid}). View performance with impressive kills, deaths, assists, MVPs, and time played. Explore activity across various servers and maps.`,
+      description: `${p[0].player.name}'s CS2D Profile – Track kills, deaths, MVPs, and time played. Review player activity across servers and maps for User ID ${p[0].player.userid}.`,
       url: req.url,
       formatTime
     })
@@ -121,7 +121,7 @@ function routes(fastify) {
   fastify.get('/maps', async (req, reply) => {
     return reply.view('maps.ejs', {
       title: 'Maps',
-      description: `Browse our collection of custom maps designed for all types of gameplay—team battles, deathmatches, and creative modes. Find your next favorite map and jump into the action!`,
+      description: `Explore our curated list of CS2D maps featuring classic, competitive, and fun layouts. Perfect for team strategy, deathmatch chaos, or custom game modes.`,
       maps: await maps.getAllMapNames(),
       url: req.url
     })
@@ -142,7 +142,7 @@ function routes(fastify) {
     return reply.view('map', {
       v: { ...JSON.parse(dat), nextMap, prevMap },
       title: mapName,
-      description: `Play on ${mapName} — custom maps made for exciting team fights, fast deathmatches, and creative gameplay. Find the perfect map for your style.`,
+      description: `Jump into action on ${mapName}. Designed for CS2D, it delivers unique layouts for tactical battles, fast-paced deathmatches, or objective-based gameplay.`,
       url: req.url,
       nextMap, prevMap,
       bytesToSize
@@ -152,7 +152,7 @@ function routes(fastify) {
   fastify.get('/api', async (req, reply) => {
     return reply.view('api_docs', {
       title: 'API Documentation',
-      description: 'Access CS2D server and leaderboard data with our open API. Free, unlimited access with CORS support and easy integration.',
+      description: 'Use our public CS2D API to fetch server status, player statistics, map data, and leaderboards. Fully open, with CORS support and no rate limits.',
       url: req.url
     })
   })
@@ -197,7 +197,6 @@ function routes(fastify) {
 
     for await (const part of parts) {
       if (part.type === 'file' && part.fieldname === 'file') {
-        // Check if the file has a .dat extension
         const filename = part.filename
         const fileExtension = filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2)
         if (fileExtension.toLowerCase() !== 'dat') {

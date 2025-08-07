@@ -78,12 +78,12 @@ async function initialize() {
   })
 
   stats.increaseStatsSentBytes(4)
-  usgn.send(req.serverlist, 36963, '81.169.236.243')
+  usgn.send(req.serverlist, 36963, '217.154.200.83')
 
   // Request CS2D server list every 5 minutes  
   setInterval(() => {
     stats.increaseStatsSentBytes(4)
-    usgn.send(req.serverlist, 36963, '81.169.236.243')
+    usgn.send(req.serverlist, 36963, '217.154.200.83')
   }, 300000)
 
   // Cleanup servers every minute if unresponsive for 2+ minutes

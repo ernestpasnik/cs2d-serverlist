@@ -1,4 +1,4 @@
-name: Deploy to cs2d.pp.ua
+name: Deploy to VPS
 
 on:
   push:
@@ -8,35 +8,44 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      NODE_ENV: production
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-          fetch-depth: 0
+      # 1. Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Sync repo to VPS
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: 22
-          script: |
+      # 2. Install deployment tools
+      - name: Setup deployment tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass rsync
+
+      # 3. Sync project files to VPS
+      - name: Sync files to VPS
+        env:
+          VPS_HOST: ${{ secrets.SSH_HOST }}
+          VPS_USER: ${{ secrets.SSH_USERNAME }}
+          VPS_PASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -p "$VPS_PASS" rsync -avz --delete \
+            --exclude 'node_modules' \
+            --exclude '.git' \
+            --exclude '*.log' \
+            ./ $VPS_USER@$VPS_HOST:/home/$VPS_USER/cs2d-serverlist/
+
+      # 4. Install dependencies, CS2D & minify CSS, then restart PM2
+      - name: Install dependencies, CS2D & minify CSS
+        env:
+          VPS_HOST: ${{ secrets.SSH_HOST }}
+          VPS_USER: ${{ secrets.SSH_USERNAME }}
+          VPS_PASS: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          sshpass -p "$VPS_PASS" ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST << 'EOF'
             set -e
+            cd /home/$USER/cs2d-serverlist
 
-            mkdir -p ~/cs2d-serverlist
-
-            # Fast rsync with checksum
-            rsync -az --info=NAME --checksum --delete \
-              --exclude='.git*' \
-              --exclude='.github*' \
-              --exclude='node_modules/*' \
-              --exclude='.env' \
-              --exclude='public/cs2d/*' \
-              ./ ~/cs2d-serverlist/
+            echo "Installing npm dependencies..."
+            npm ci --omit=dev
 
             # Install CS2D if missing
             if [ -z "$(ls -A ~/cs2d-serverlist/public/cs2d)" ]; then
@@ -51,6 +60,6 @@ jobs:
               rm -rf ~/cs2d-serverlist/public/css || true
             fi
 
-            # Restart PM2
-            pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
-            pm2 flush
+            echo "Restarting PM2 process via ecosystem file..."
+            pm2 reload ecosystem.config.js --env production
+          EOF

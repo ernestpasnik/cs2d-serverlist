@@ -39,19 +39,21 @@ jobs:
         run: |
           sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
             set -e
-            cd /home/$USER/cs2d-serverlist
+            DEPLOY_DIR="/home/$SSH_USER/cs2d-serverlist"
+            cd "$DEPLOY_DIR"
 
             npm ci --omit=dev
 
-            if [ -z "$(ls -A ./public/cs2d)" ]; then
-              mkdir -p ./public/cs2d
-              curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d ./public/cs2d
+            CS2D_DIR="$DEPLOY_DIR/public/cs2d"
+            if [ -z "$(ls -A "$CS2D_DIR" 2>/dev/null)" ]; then
+              mkdir -p "$CS2D_DIR"
+              curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d "$CS2D_DIR"
             fi
 
-            if [ -f ./public/css/main.css ]; then
+            if [ -f "$DEPLOY_DIR/public/css/main.css" ]; then
               command -v uglifycss >/dev/null 2>&1 || npm install -g uglifycss
-              uglifycss ./public/css/main.css > ./public/styles.css || true
-              rm -rf ./public/css || true
+              uglifycss "$DEPLOY_DIR/public/css/main.css" > "$DEPLOY_DIR/public/styles.css" || true
+              rm -rf "$DEPLOY_DIR/public/css" || true
             fi
 
             pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production

@@ -43,15 +43,24 @@ jobs:
           script: |
             set -e
             BASE=/home/ubuntu/cs2d-serverlist
+            CS2D_DIR="$BASE/public/cs2d"
 
             # Install CS2D if missing
-            [ -d "$BASE/public/cs2d" ] || \
-              (echo "Installing CS2D..." && mkdir -p "$BASE/public/cs2d" && \
-               sudo bash -c "$(curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw)")
+            if [ ! -d "$CS2D_DIR" ]; then
+              echo "Installing CS2D..."
+              mkdir -p "$CS2D_DIR"
+              cd "$CS2D_DIR"
+              sudo bash -c "$(curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw)"
+            else
+              echo "CS2D already installed, skipping."
+            fi
 
-            # Minify CSS
-            command -v uglifycss >/dev/null 2>&1 || sudo npm install -g uglifycss
-            [ -f "$BASE/public/css/main.css" ] && uglifycss "$BASE/public/css/main.css" > "$BASE/public/styles.css" && rm -rf "$BASE/public/css"
+            # Minify CSS if needed
+            if [ -f "$BASE/public/css/main.css" ]; then
+              command -v uglifycss >/dev/null 2>&1 || sudo npm install -g uglifycss
+              uglifycss "$BASE/public/css/main.css" > "$BASE/public/styles.css"
+              rm -rf "$BASE/public/css"
+            fi
 
             # Restart PM2
             pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start

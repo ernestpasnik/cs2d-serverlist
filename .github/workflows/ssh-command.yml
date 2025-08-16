@@ -38,10 +38,7 @@ jobs:
             mkdir -p /home/ubuntu/cs2d-serverlist
             cd /home/ubuntu/cs2d-serverlist
             uglifycss --version > /dev/null 2>&1 || npm install -g uglifycss
-            uglifyjs --version > /dev/null 2>&1 || npm install -g uglify-js
             uglifycss public/css/main.css > public/styles.css
             rm -rf public/css
-            uglifyjs public/js/*.js -o public/scripts.js
-            rm -rf public/js
             pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
           EOF

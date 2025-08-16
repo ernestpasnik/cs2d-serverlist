@@ -26,13 +26,13 @@ jobs:
           port: 22
           script: |
             set -e
-            BASE=/home/ubuntu/cs2d-serverlist
+            BASE=/home/ubuntu
             CS2D_DIR="$BASE/public/cs2d"
 
             mkdir -p "$BASE"
 
-            # Fast incremental rsync using checksums
-            rsync -az --checksum \
+            # Ultra-fast rsync: only copy changed/new files, remove deleted ones
+            rsync -a --info=NAME \
               --exclude='.git*' \
               --exclude='.github*' \
               --exclude='node_modules/*' \

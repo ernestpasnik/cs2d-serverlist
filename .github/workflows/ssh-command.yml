@@ -23,7 +23,7 @@ jobs:
         with:
           server: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}   # or ssh_private_key
+          password: ${{ secrets.SSH_PASSWORD }}
           port: 22
           local_path: './'
           remote_path: /home/ubuntu/cs2d-serverlist/
@@ -34,7 +34,7 @@ jobs:
             .env
             public/cs2d/*
 
-      # Run post-deploy commands
+      # Run post-deploy commands: install CS2D if missing + restart PM2
       - name: Install CS2D if missing & restart PM2
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -46,39 +46,26 @@ jobs:
             set -e
             cd /home/ubuntu/cs2d-serverlist
 
-            # --- Install CS2D if missing ---
-            if [ ! -x "public/cs2d/cs2d_dedicated" ]; then
-              echo "Installing CS2D dedicated server..."
-
-              sudo dpkg --add-architecture i386 || true
-              sudo apt-get update -y
-              sudo apt-get install -y curl unzip libstdc++6:i386
-
-              ver=$(curl -s https://unrealsoftware.de/game_cs2d.php | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | sed 's/\.//g')
-              cid=$(curl -s "https://unrealsoftware.de/get.php?get=cs2d_${ver}_linux.zip" | grep -m1 -o '"get.php[^"]*"' | cut -d'"' -f2 | sed 's/.*cid=//')
-
-              curl -s "https://unrealsoftware.de/get.php?get=cs2d_${ver}_linux.zip&p=1&cid=${cid}" -o cs2d.zip
-              curl -s "https://unrealsoftware.de/files_pub/cs2d_dedicated_linux.zip" -o cs2d_dedicated.zip
-
-              mkdir -p public/cs2d
-              unzip -qq -o cs2d.zip -d public/cs2d
-              unzip -qq -o cs2d_dedicated.zip -d public/cs2d
-
-              rm -rf cs2d.zip cs2d_dedicated.zip \
-                     public/cs2d/help public/cs2d/logos public/cs2d/screens \
-                     public/cs2d/gfx/fonts public/cs2d/sys/cache public/cs2d/sys/language
-
-              chmod +x public/cs2d/cs2d_dedicated
-              echo "✅ CS2D installed."
+            # --- Install CS2D only if missing ---
+            if [ ! -d "public/cs2d" ]; then
+              echo "CS2D not found. Running installation script..."
+              sudo bash -c "$(curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw)"
             else
-              echo "CS2D already present. Skipping."
+              echo "CS2D already installed. Skipping installation."
             fi
 
             # --- Minify CSS ---
-            if ! command -v uglifycss >/dev/null; then
+            if ! command -v uglifycss >/dev/null 2>&1; then
               sudo npm install -g uglifycss
             fi
-            [ -f public/css/main.css ] && uglifycss public/css/main.css > public/styles.css && rm -rf public/css
+            if [ -f public/css/main.css ]; then
+              uglifycss public/css/main.css > public/styles.css || true
+              rm -rf public/css || true
+            fi
 
             # --- Restart PM2 ---
             pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
+
+            # --- Clean up old PM2 logs ---
+            pm2 flush
+            echo "Old PM2 logs cleared."

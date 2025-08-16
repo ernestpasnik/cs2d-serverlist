@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup deployment tools
+      - name: Install deployment tools
         run: |
           sudo apt-get update
           sudo apt-get install -y sshpass rsync curl
@@ -28,6 +28,7 @@ jobs:
             --exclude 'node_modules' \
             --exclude '.git' \
             --exclude '*.log' \
+            -e "ssh -o StrictHostKeyChecking=no" \
             ./ $SSH_USER@$SSH_HOST:/home/$SSH_USER/cs2d-serverlist/
 
       - name: Install dependencies, CS2D, minify CSS & restart PM2
@@ -44,7 +45,7 @@ jobs:
 
             if [ -z "$(ls -A ./public/cs2d)" ]; then
               mkdir -p ./public/cs2d
-              sudo curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d ./public/cs2d
+              curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d ./public/cs2d
             fi
 
             if [ -f ./public/css/main.css ]; then

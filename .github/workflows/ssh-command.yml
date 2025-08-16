@@ -16,7 +16,7 @@ jobs:
       - name: Setup deployment tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y sshpass rsync curl npm
+          sudo apt-get install -y sshpass rsync curl
 
       - name: Sync files to VPS
         env:
@@ -30,7 +30,7 @@ jobs:
             --exclude '*.log' \
             ./ $SSH_USER@$SSH_HOST:/home/$SSH_USER/cs2d-serverlist/
 
-      - name: Install dependencies, CS2D & restart PM2
+      - name: Install dependencies, CS2D, minify CSS & restart PM2
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USERNAME }}
@@ -39,15 +39,19 @@ jobs:
           sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
             set -e
             cd /home/$USER/cs2d-serverlist
+
             npm ci --omit=dev
-            if [ -z "$(ls -A ~/cs2d-serverlist/public/cs2d)" ]; then
-              mkdir -p ~/cs2d-serverlist/public/cs2d
-              sudo curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d ~/cs2d-serverlist/public/cs2d
+
+            if [ -z "$(ls -A ./public/cs2d)" ]; then
+              mkdir -p ./public/cs2d
+              sudo curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d ./public/cs2d
             fi
-            if [ -f ~/cs2d-serverlist/public/css/main.css ]; then
+
+            if [ -f ./public/css/main.css ]; then
               command -v uglifycss >/dev/null 2>&1 || npm install -g uglifycss
-              uglifycss ~/cs2d-serverlist/public/css/main.css > ~/cs2d-serverlist/public/styles.css || true
-              rm -rf ~/cs2d-serverlist/public/css || true
+              uglifycss ./public/css/main.css > ./public/styles.css || true
+              rm -rf ./public/css || true
             fi
-            pm2 reload ecosystem.config.js --env production
+
+            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
           EOF

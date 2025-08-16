@@ -17,24 +17,22 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      # Upload files via SFTP
-      - name: Deploy with SFTP
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      - name: Sync files via rsync
+        uses: appleboy/ssh-action@v1.2.0
         with:
-          server: ${{ secrets.SSH_HOST }}
+          host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22
-          local_path: './'
-          remote_path: /home/ubuntu/cs2d-serverlist/
-          exclude: |
-            .git*
-            .github*
-            node_modules/*
-            .env
-            public/cs2d/*
+          script: |
+            rsync -avz --delete \
+              --exclude='.git*' \
+              --exclude='.github*' \
+              --exclude='node_modules/*' \
+              --exclude='.env' \
+              --exclude='public/cs2d/*' \
+              ./ /home/ubuntu/cs2d-serverlist/
 
-      # Run post-deploy commands: install CS2D if missing + restart PM2
       - name: Install CS2D if missing & restart PM2
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -46,19 +44,10 @@ jobs:
             set -e
             BASE=/home/ubuntu/cs2d-serverlist
             CS2D_DIR="$BASE/public/cs2d"
-
-            # --- Ensure CS2D directory exists ---
             sudo mkdir -p "$CS2D_DIR"
-
-            # --- Install CS2D only if missing ---
             if [ -z "$(ls -A "$CS2D_DIR")" ]; then
-              echo "CS2D not found. Installing..."
               sudo bash -c "cd '$CS2D_DIR' && curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash"
-            else
-              echo "CS2D already installed. Skipping."
             fi
-
-            # --- Minify CSS ---
             if ! command -v uglifycss >/dev/null 2>&1; then
               sudo npm install -g uglifycss
             fi
@@ -66,10 +55,5 @@ jobs:
               uglifycss "$BASE/public/css/main.css" > "$BASE/public/styles.css" || true
               rm -rf "$BASE/public/css" || true
             fi
-
-            # --- Restart PM2 ---
             pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
-
-            # --- Clear PM2 logs ---
             pm2 flush
-            echo "Deployment complete, PM2 restarted."

@@ -16,46 +16,38 @@ jobs:
       - name: Setup deployment tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y sshpass rsync curl
+          sudo apt-get install -y sshpass rsync curl npm
 
       - name: Sync files to VPS
         env:
-          VPS_HOST: ${{ secrets.SSH_HOST }}
-          VPS_USER: ${{ secrets.SSH_USERNAME }}
-          VPS_PASS: ${{ secrets.SSH_PASSWORD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USERNAME }}
+          SSH_PASS: ${{ secrets.SSH_PASSWORD }}
         run: |
-          sshpass -p "$VPS_PASS" rsync -avz --delete \
+          sshpass -p "$SSH_PASS" rsync -avz --delete \
             --exclude 'node_modules' \
             --exclude '.git' \
             --exclude '*.log' \
-            ./ $VPS_USER@$VPS_HOST:/home/$VPS_USER/cs2d-serverlist/
+            ./ $SSH_USER@$SSH_HOST:/home/$SSH_USER/cs2d-serverlist/
 
       - name: Install dependencies, CS2D & restart PM2
         env:
-          VPS_HOST: ${{ secrets.SSH_HOST }}
-          VPS_USER: ${{ secrets.SSH_USERNAME }}
-          VPS_PASS: ${{ secrets.SSH_PASSWORD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USERNAME }}
+          SSH_PASS: ${{ secrets.SSH_PASSWORD }}
         run: |
-          sshpass -p "$VPS_PASS" ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST << 'EOF'
+          sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << 'EOF'
             set -e
-            cd ~/cs2d-serverlist
-
-            echo "Installing npm dependencies..."
+            cd /home/$USER/cs2d-serverlist
             npm ci --omit=dev
-
-            echo "Installing CS2D if missing..."
             if [ -z "$(ls -A ~/cs2d-serverlist/public/cs2d)" ]; then
               mkdir -p ~/cs2d-serverlist/public/cs2d
-              curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d ~/cs2d-serverlist/public/cs2d -u
+              sudo curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d ~/cs2d-serverlist/public/cs2d
             fi
-
-            echo "Minifying CSS if exists..."
             if [ -f ~/cs2d-serverlist/public/css/main.css ]; then
               command -v uglifycss >/dev/null 2>&1 || npm install -g uglifycss
               uglifycss ~/cs2d-serverlist/public/css/main.css > ~/cs2d-serverlist/public/styles.css || true
               rm -rf ~/cs2d-serverlist/public/css || true
             fi
-
-            echo "Restarting PM2 process via ecosystem file..."
-            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+            pm2 reload ecosystem.config.js --env production
           EOF

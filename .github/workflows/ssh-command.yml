@@ -17,6 +17,11 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Add SSH host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p 22 ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
       - name: Sync files via rsync
         run: |
           rsync -az -e "ssh -p 22" \
@@ -28,19 +33,19 @@ jobs:
             ./ ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/home/ubuntu/cs2d-serverlist/
 
       - name: Install CS2D if missing & restart PM2
-        run: |
-          ssh -p 22 ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash << 'EOF'
-          set -e
-          BASE=/home/ubuntu/cs2d-serverlist
-          CS2D_DIR="$BASE/public/cs2d"
-          sudo mkdir -p "$CS2D_DIR"
-          if [ -z "$(ls -A "$CS2D_DIR")" ]; then
-            sudo bash -c "cd '$CS2D_DIR' && curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash"
-          fi
-          if [ -f "$BASE/public/css/main.css" ]; then
-            uglifycss "$BASE/public/css/main.css" > "$BASE/public/styles.css" || true
-            rm -rf "$BASE/public/css" || true
-          fi
-          pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
-          pm2 flush
-          EOF
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: |
+            set -e
+            BASE=/home/ubuntu/cs2d-serverlist
+            CS2D_DIR="$BASE/public/cs2d"
+            sudo mkdir -p "$CS2D_DIR"
+            if [ -z "$(ls -A "$CS2D_DIR")" ]; then
+              sudo bash -c "cd '$CS2D_DIR' && curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash"
+            fi
+            pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
+            pm2 flush

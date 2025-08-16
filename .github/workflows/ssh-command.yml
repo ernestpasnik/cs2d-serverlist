@@ -29,7 +29,7 @@ jobs:
 
             mkdir -p ~/cs2d-serverlist
 
-            # Fast rsync with checksum, deleting removed files
+            # Fast rsync with checksum
             rsync -az --info=NAME --checksum --delete \
               --exclude='.git*' \
               --exclude='.github*' \

@@ -10,35 +10,47 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NODE_ENV: production
+
     steps:
       - uses: actions/checkout@v3
         with:
-          submodules: 'recursive'
+          submodules: recursive
           fetch-depth: 0
 
+      # Upload files via SFTP
       - name: Deploy with SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           server: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          protocol: sftp
-          server-dir: /home/ubuntu/cs2d-serverlist/
+          password: ${{ secrets.SSH_PASSWORD }}   # or use ssh_private_key
+          port: 22
+          local_path: './'
+          remote_path: /home/ubuntu/cs2d-serverlist/
           exclude: |
-            **/.git*
-            **/.github*
-            **/node_modules/**
-            **/.env
-            public/cs2d/**
+            .git*
+            .github*
+            node_modules/*
+            .env
+            public/cs2d/*
 
+      # Run post-deploy commands on the server
       - name: Minify Assets and Restart PM2
-        run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}   # or use key: ${{ secrets.SSH_KEY }}
+          port: 22
+          script: |
             set -e
-            mkdir -p /home/ubuntu/cs2d-serverlist
             cd /home/ubuntu/cs2d-serverlist
-            uglifycss --version > /dev/null 2>&1 || npm install -g uglifycss
-            uglifycss public/css/main.css > public/styles.css
-            rm -rf public/css
+            # Ensure uglifycss is installed
+            if ! command -v uglifycss >/dev/null 2>&1; then
+              npm install -g uglifycss
+            fi
+            # Minify CSS
+            uglifycss public/css/main.css > public/styles.css || true
+            rm -rf public/css || true
+            # Restart PM2 process
             pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
-          EOF

@@ -17,7 +17,6 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      # Upload files via SFTP
       - name: Deploy with SFTP
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
@@ -34,8 +33,7 @@ jobs:
             .env
             public/cs2d/*
 
-      # Run post-deploy commands: install CS2D if missing + restart PM2
-      - name: Install CS2D if missing & restart PM2
+      - name: Post-deploy: Install CS2D & Restart PM2
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -44,28 +42,18 @@ jobs:
           port: 22
           script: |
             set -e
-            cd /home/ubuntu/cs2d-serverlist
+            BASE=/home/ubuntu/cs2d-serverlist
 
-            # --- Install CS2D only if missing ---
-            if [ ! -d "public/cs2d" ]; then
-              echo "CS2D not found. Running installation script..."
-              sudo bash -c "$(curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw)"
-            else
-              echo "CS2D already installed. Skipping installation."
-            fi
+            # Install CS2D if missing
+            [ -d "$BASE/public/cs2d" ] || \
+              (echo "Installing CS2D..." && mkdir -p "$BASE/public/cs2d" && \
+               sudo bash -c "$(curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw)")
 
-            # --- Minify CSS ---
-            if ! command -v uglifycss >/dev/null 2>&1; then
-              sudo npm install -g uglifycss
-            fi
-            if [ -f public/css/main.css ]; then
-              uglifycss public/css/main.css > public/styles.css || true
-              rm -rf public/css || true
-            fi
+            # Minify CSS
+            command -v uglifycss >/dev/null 2>&1 || sudo npm install -g uglifycss
+            [ -f "$BASE/public/css/main.css" ] && uglifycss "$BASE/public/css/main.css" > "$BASE/public/styles.css" && rm -rf "$BASE/public/css"
 
-            # --- Restart PM2 ---
+            # Restart PM2
             pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
-
-            # --- Clean up old PM2 logs ---
             pm2 flush
-            echo "Old PM2 logs cleared."
+            echo "Deployment complete, PM2 restarted."

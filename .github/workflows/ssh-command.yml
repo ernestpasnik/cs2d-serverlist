@@ -17,24 +17,7 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Sync files via rsync
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          port: 22
-          script: |
-            BASE=/home/ubuntu/cs2d-serverlist
-            rsync -az --checksum \
-              --exclude='.git*' \
-              --exclude='.github*' \
-              --exclude='node_modules/*' \
-              --exclude='.env' \
-              --exclude='public/cs2d/*' \
-              ./ "$BASE"/
-
-      - name: Install CS2D & Restart PM2
+      - name: Sync repo to VPS
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -45,20 +28,32 @@ jobs:
             set -e
             BASE=/home/ubuntu/cs2d-serverlist
             CS2D_DIR="$BASE/public/cs2d"
-            
-            sudo mkdir -p "$CS2D_DIR"
 
+            mkdir -p "$BASE"
+
+            # Fast incremental rsync using checksums
+            rsync -az --checksum \
+              --exclude='.git*' \
+              --exclude='.github*' \
+              --exclude='node_modules/*' \
+              --exclude='.env' \
+              --exclude='public/cs2d/*' \
+              ./ "$BASE"/
+
+            # Install CS2D if missing
             if [ -z "$(ls -A "$CS2D_DIR")" ]; then
-              sudo bash -c "cd '$CS2D_DIR' && curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash"
+              mkdir -p "$CS2D_DIR"
+              curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d "$CS2D_DIR"
             fi
 
-            if [ -f "$BASE/public/css/main.css" ]; then
-              if ! command -v uglifycss >/dev/null 2>&1; then
-                sudo npm install -g uglifycss
-              fi
-              uglifycss "$BASE/public/css/main.css" > "$BASE/public/styles.css" || true
+            # Minify CSS if exists
+            CSS_FILE="$BASE/public/css/main.css"
+            if [ -f "$CSS_FILE" ]; then
+              command -v uglifycss >/dev/null 2>&1 || npm install -g uglifycss
+              uglifycss "$CSS_FILE" > "$BASE/public/styles.css" || true
               rm -rf "$BASE/public/css" || true
             fi
 
+            # Restart PM2
             pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
             pm2 flush

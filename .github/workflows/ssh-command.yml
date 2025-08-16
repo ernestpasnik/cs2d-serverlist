@@ -1,4 +1,4 @@
-name: Deploy CS2D Server
+name: Deploy to cs2d.pp.ua
 
 on:
   push:
@@ -12,12 +12,13 @@ jobs:
       NODE_ENV: production
 
     steps:
+      # Checkout repo with submodules
       - uses: actions/checkout@v3
         with:
           submodules: recursive
           fetch-depth: 0
 
-      # Sync repo using password
+      # Sync files via rsync (no deletion)
       - name: Sync files via rsync
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -34,8 +35,8 @@ jobs:
               --exclude='public/cs2d/*' \
               ./ /home/ubuntu/cs2d-serverlist/
 
-      # Install CS2D if missing, minify CSS & restart PM2
-      - name: Setup CS2D & Restart PM2
+      # Install CS2D if missing & restart PM2
+      - name: Install CS2D & Restart PM2
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -46,14 +47,24 @@ jobs:
             set -e
             BASE=/home/ubuntu/cs2d-serverlist
             CS2D_DIR="$BASE/public/cs2d"
+            
+            # Ensure CS2D folder exists
             sudo mkdir -p "$CS2D_DIR"
+
+            # Download CS2D if empty
             if [ -z "$(ls -A "$CS2D_DIR")" ]; then
               sudo bash -c "cd '$CS2D_DIR' && curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash"
             fi
+
+            # Minify CSS if main.css exists
             if [ -f "$BASE/public/css/main.css" ]; then
-              command -v uglifycss >/dev/null 2>&1 || sudo npm install -g uglifycss
+              if ! command -v uglifycss >/dev/null 2>&1; then
+                sudo npm install -g uglifycss
+              fi
               uglifycss "$BASE/public/css/main.css" > "$BASE/public/styles.css" || true
               rm -rf "$BASE/public/css" || true
             fi
+
+            # Restart PM2
             pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
             pm2 flush

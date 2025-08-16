@@ -1,4 +1,4 @@
-name: Deploy CS2D Serverlist
+name: Deploy to VPS
 
 on:
   push:
@@ -10,22 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      # Install SSH dependencies
-      - name: Install sshpass
-        run: sudo apt update && sudo apt install -y sshpass
-
-      # Deploy: install dependencies, CS2D, minify CSS & restart PM2
-      - name: Install dependencies, CS2D, minify CSS & restart PM2
+      - name: Deploy via SSH
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USERNAME }}
@@ -36,63 +24,40 @@ jobs:
             DEPLOY_DIR="/home/$SSH_USER/cs2d-serverlist"
             cd "$DEPLOY_DIR"
 
-            # Install Node.js dependencies
-            npm ci --omit=dev
-
             CS2D_DIR="$DEPLOY_DIR/public/cs2d"
             if [ -z "$(ls -A "$CS2D_DIR" 2>/dev/null)" ]; then
               mkdir -p "$CS2D_DIR"
               cd "$CS2D_DIR"
 
-              # Create temporary setup script
-              cat > install_cs2d.sh << 'SCRIPT'
-#!/bin/bash
-set -e
+              # Fetch CS2D directly using commands already on the system
+              ver=$(curl -s "https://unrealsoftware.de/game_cs2d.php" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | sed -e 's/\.//g')
+              cid=$(curl -s "https://unrealsoftware.de/get.php?get=cs2d_${ver}_linux.zip" | grep -m1 -o '"get.php[^"]\+"' | cut -d'"' -f2 | sed 's/.\+cid=//g')
+              curl -s "https://unrealsoftware.de/get.php?get=cs2d_${ver}_linux.zip&p=1&cid=${cid}" -o "cs2d_${ver}_linux.zip"
+              curl -s "https://unrealsoftware.de/files_pub/cs2d_dedicated_linux.zip" -o "cs2d_dedicated_linux.zip"
 
-# Install dependencies
-if [ "$(uname -m)" = "x86_64" ]; then
-  if ! dpkg --print-foreign-architectures | grep -q "i386"; then
-    sudo dpkg --add-architecture i386
-    sudo apt update
-  fi
-  sudo apt install -y curl unzip libstdc++6:i386
-else
-  sudo apt install -y curl unzip
-fi
+              unzip -qq -o "cs2d_${ver}_linux.zip"
+              unzip -qq -o "cs2d_dedicated_linux.zip"
 
-# Fetch CS2D
-ver=$(curl -Ss "https://unrealsoftware.de/game_cs2d.php" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | sed -e 's/\.//g')
-cid=$(curl -Ss "https://unrealsoftware.de/get.php?get=cs2d_${ver}_linux.zip" | grep -m 1 -o '"get.php[^"]\+"' | cut -d'"' -f2 | sed 's/.\+cid=//g')
-curl -s "https://unrealsoftware.de/get.php?get=cs2d_${ver}_linux.zip&p=1&cid=${cid}" -o "cs2d_${ver}_linux.zip"
-curl -s "https://unrealsoftware.de/files_pub/cs2d_dedicated_linux.zip" -o "cs2d_dedicated_linux.zip"
+              chmod +x cs2d_dedicated
 
-unzip -qq -o "cs2d_${ver}_linux.zip"
-unzip -qq -o "cs2d_dedicated_linux.zip"
-
-# Cleanup
-rm -rf help logos screens gfx/fonts sys/cache sys/language \
-cs2d_${ver}_linux.zip cs2d_dedicated_linux.zip CS2D libsteam_api.so maps/temp.map \
-Readme.txt sys/autobuy.cfg sys/autoexec.cfg sys/config.cfg sys/controls.cfg \
-sys/editor.cfg sys/filters.cfg sys/mods.cfg sys/controls.lst sys/favorites.lst \
-sys/maptypes.lst sys/core/dls.cache sys/core/svl.cache sys/core/version.cfg
-
-chmod +x cs2d_dedicated
-echo "CS2D dedicated server setup completed successfully."
-SCRIPT
-
-              # Run the script and remove it
-              chmod +x install_cs2d.sh
-              ./install_cs2d.sh
-              rm install_cs2d.sh
+              # Cleanup unnecessary files
+              rm -rf help logos screens gfx/fonts sys/cache sys/language \
+              cs2d_${ver}_linux.zip cs2d_dedicated_linux.zip CS2D libsteam_api.so maps/temp.map \
+              Readme.txt sys/autobuy.cfg sys/autoexec.cfg sys/config.cfg sys/controls.cfg \
+              sys/editor.cfg sys/filters.cfg sys/mods.cfg sys/controls.lst sys/favorites.lst \
+              sys/maptypes.lst sys/core/dls.cache sys/core/svl.cache sys/core/version.cfg
             fi
 
-            # Minify CSS
+            # Minify CSS using existing system commands (if installed)
             if [ -f "$DEPLOY_DIR/public/css/main.css" ]; then
-              command -v uglifycss >/dev/null 2>&1 || npm install -g uglifycss
-              uglifycss "$DEPLOY_DIR/public/css/main.css" > "$DEPLOY_DIR/public/styles.css" || true
+              if command -v uglifycss >/dev/null 2>&1; then
+                uglifycss "$DEPLOY_DIR/public/css/main.css" > "$DEPLOY_DIR/public/styles.css" || true
+              fi
               rm -rf "$DEPLOY_DIR/public/css" || true
             fi
 
             # Restart PM2
-            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+            if command -v pm2 >/dev/null 2>&1; then
+              pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+            fi
           EOF

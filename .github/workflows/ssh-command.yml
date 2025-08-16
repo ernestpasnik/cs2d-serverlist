@@ -10,17 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Install deployment tools
       - name: Setup deployment tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y sshpass rsync
+          sudo apt-get install -y sshpass rsync curl
 
-      # 3. Sync project files to VPS
       - name: Sync files to VPS
         env:
           VPS_HOST: ${{ secrets.SSH_HOST }}
@@ -33,8 +30,7 @@ jobs:
             --exclude '*.log' \
             ./ $VPS_USER@$VPS_HOST:/home/$VPS_USER/cs2d-serverlist/
 
-      # 4. Install dependencies, CS2D & minify CSS, then restart PM2
-      - name: Install dependencies, CS2D & minify CSS
+      - name: Install dependencies, CS2D & restart PM2
         env:
           VPS_HOST: ${{ secrets.SSH_HOST }}
           VPS_USER: ${{ secrets.SSH_USERNAME }}
@@ -42,18 +38,18 @@ jobs:
         run: |
           sshpass -p "$VPS_PASS" ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST << 'EOF'
             set -e
-            cd /home/$USER/cs2d-serverlist
+            cd ~/cs2d-serverlist
 
             echo "Installing npm dependencies..."
             npm ci --omit=dev
 
-            # Install CS2D if missing
+            echo "Installing CS2D if missing..."
             if [ -z "$(ls -A ~/cs2d-serverlist/public/cs2d)" ]; then
               mkdir -p ~/cs2d-serverlist/public/cs2d
-              curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d ~/cs2d-serverlist/public/cs2d
+              curl -sSL https://gist.github.com/ernestpasnik/1fa721c2bf35a50d27ef13fd183882fb/raw | bash -s -- -d ~/cs2d-serverlist/public/cs2d -u
             fi
 
-            # Minify CSS if exists
+            echo "Minifying CSS if exists..."
             if [ -f ~/cs2d-serverlist/public/css/main.css ]; then
               command -v uglifycss >/dev/null 2>&1 || npm install -g uglifycss
               uglifycss ~/cs2d-serverlist/public/css/main.css > ~/cs2d-serverlist/public/styles.css || true
@@ -61,5 +57,5 @@ jobs:
             fi
 
             echo "Restarting PM2 process via ecosystem file..."
-            pm2 reload ecosystem.config.js --env production
+            pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
           EOF

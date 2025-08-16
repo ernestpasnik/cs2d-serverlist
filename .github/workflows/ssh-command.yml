@@ -15,28 +15,30 @@ jobs:
         with:
           submodules: 'recursive'
           fetch-depth: 0
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_KEY }} 
-          known_hosts: unnecessary
-          
-      - name: Adding Known Hosts
-        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy with rsync
-        run: rsync --exclude={'public/cs2d','node_modules','.git','.github','.env'} -avzP . ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/usr/share/nginx/cs2d-serverlist --delete-after
+      - name: Deploy with SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          protocol: sftp
+          server-dir: /home/ubuntu/cs2d-serverlist/
+          exclude: |
+            **/.git*
+            **/.github*
+            **/node_modules/**
+            **/.env
+            public/cs2d/**
 
       - name: Minify Assets and Restart PM2
         run: |
-          ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
-            cd /usr/share/nginx/cs2d-serverlist
+            mkdir -p /home/ubuntu/cs2d-serverlist
+            cd /home/ubuntu/cs2d-serverlist
             uglifycss --version > /dev/null 2>&1 || npm install -g uglifycss
-            uglifyjs --version > /dev/null 2>&1 || npm install -g uglify-js
             uglifycss public/css/main.css > public/styles.css
             rm -rf public/css
-            uglifyjs public/js/*.js -o public/scripts.js
-            rm -rf public/js
-            pm2 restart cs2d-serverlist
+            pm2 restart cs2d-serverlist || pm2 start npm --name cs2d-serverlist -- start
           EOF

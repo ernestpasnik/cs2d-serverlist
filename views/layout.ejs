@@ -73,15 +73,14 @@
   <% if (!production) { %>
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
+  <% } else { %>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js"></script>
+  <% } %>
     <script defer src="/js/details.js?v=<%= script %>"></script>
     <script defer src="/js/main.js?v=<%= script %>"></script>
     <script defer src="/js/maps.js?v=<%= script %>"></script>
     <script defer src="/js/servers.js?v=<%= script %>"></script>
     <script defer src="/js/tools.js?v=<%= script%>"></script>
-  <% } else { %>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js"></script>
-    <script defer src="/scripts.js?v=<%= script%>"></script>
-  <% } %>
 </body>
 </html>

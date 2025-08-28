@@ -7,9 +7,12 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: [self-hosted, ubuntu]
 
     steps:
+      # ----------------------------
+      # Checkout repo
+      # ----------------------------
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -33,15 +36,24 @@ jobs:
           key: cs2d-cache-${{ github.ref }}
 
       # ----------------------------
-      # Deploy locally
+      # Deploy locally on runner
       # ----------------------------
-      - name: Deploy locally on runner
+      - name: Deploy locally
         run: |
           set -e
+          set -x   # debug output
+
           DEPLOY_DIR="/home/ubuntu/cs2d-serverlist"
+          mkdir -p "$DEPLOY_DIR"
+
+          # Copy repo files to deploy directory
+          rsync -a --exclude='.git' "$GITHUB_WORKSPACE/" "$DEPLOY_DIR/"
+
           cd "$DEPLOY_DIR"
 
+          # ----------------------------
           # Install dependencies
+          # ----------------------------
           if [ "$(uname -m)" = "x86_64" ]; then
             if ! dpkg --print-foreign-architectures | grep -q "i386"; then
               sudo dpkg --add-architecture i386
@@ -52,15 +64,26 @@ jobs:
             sudo apt install -y curl unzip
           fi
 
+          # ----------------------------
+          # CS2D Setup
+          # ----------------------------
           CS2D_DIR="$DEPLOY_DIR/public/cs2d"
           mkdir -p "$CS2D_DIR"
           cd "$CS2D_DIR"
 
-          # Fetch CS2D if not cached
-          ver=$(curl -Ss "https://unrealsoftware.de/game_cs2d.php" | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | sed -e 's/\.//g')
+          # Fetch CS2D version
+          ver=$(curl -Ss "https://unrealsoftware.de/game_cs2d.php" \
+                | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" \
+                | head -n1 \
+                | sed 's/\.//g')
           CS2D_ZIP="cs2d_${ver}_linux.zip"
+
+          # Download CS2D if not present
           if [ ! -f "$CS2D_ZIP" ]; then
-            cid=$(curl -Ss "https://unrealsoftware.de/get.php?get=${CS2D_ZIP}" | grep -m 1 -o '"get.php[^"]+"' | cut -d'"' -f2 | sed 's/.\+cid=//g')
+            cid=$(curl -Ss "https://unrealsoftware.de/get.php?get=${CS2D_ZIP}" \
+                  | grep -m 1 -o '"get.php[^"]+"' \
+                  | cut -d'"' -f2 \
+                  | sed 's/.\+cid=//g')
             curl -s "https://unrealsoftware.de/get.php?get=${CS2D_ZIP}&p=1&cid=${cid}" -o "$CS2D_ZIP"
           fi
 
@@ -82,12 +105,17 @@ jobs:
           chmod +x cs2d_dedicated
           echo "CS2D dedicated server setup completed successfully."
 
+          # ----------------------------
           # Minify CSS
+          # ----------------------------
           if [ -f "$DEPLOY_DIR/public/css/main.css" ]; then
             command -v uglifycss >/dev/null 2>&1 || npm install -g uglifycss
             uglifycss "$DEPLOY_DIR/public/css/main.css" > "$DEPLOY_DIR/public/styles.css" || true
             rm -rf "$DEPLOY_DIR/public/css" || true
           fi
 
+          # ----------------------------
           # Reload PM2
+          # ----------------------------
+          export PATH="$PATH:$HOME/.npm-global/bin"
           pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production

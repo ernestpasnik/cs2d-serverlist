@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: appleboy/ssh-action@v1.0.3
+      - uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
           port: ${{ secrets.SSH_PORT }}
@@ -18,17 +18,28 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             export NODE_ENV=production
-            export PM2_APP=cs2d-serverlist
+            export PM2_APP="cs2d-serverlist"
 
+            # Create target directory if it does not exist
             mkdir -p /usr/share/nginx/
             cd /usr/share/nginx/
 
+            # Clone repository if not already cloned
             if [ ! -d "cs2d-serverlist/.git" ]; then
               git clone -b main https://github.com/ernestpasnik/cs2d-serverlist.git cs2d-serverlist
             fi
 
             cd cs2d-serverlist
+            # Pull the latest changes from the repository
             git pull origin main
+            # Install production dependencies
             npm install --production
 
-            pm2 restart $PM2_APP --update-env
+            # Check if PM2 process exists
+            if pm2 list | grep -q "$PM2_APP"; then
+              # Restart the PM2 process if it exists
+              pm2 restart $PM2_APP --update-env
+            else
+              # Start the PM2 process using ecosystem.config.js if it does not exist
+              pm2 start ecosystem.config.js --env production
+            fi

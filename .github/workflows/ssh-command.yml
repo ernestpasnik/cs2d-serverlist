@@ -8,27 +8,23 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          password: ${{ secrets.SERVER_PASSWORD }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
           script: |
             export NODE_ENV=production
-
-            cd /var/www
+            mkdir -p /usr/share/nginx/
+            cd /usr/share/nginx/
             if [ ! -d "cs2d-serverlist/.git" ]; then
               git clone -b main https://github.com/ernestpasnik/cs2d-serverlist.git cs2d-serverlist
             fi
-
             cd cs2d-serverlist
             git pull origin main
-
             npm install --production
-            pm2 restart app --update-env
-
-            cp nginx.conf /etc/nginx/nginx.conf
-            nginx -t && systemctl reload nginx
+            nginx -t && sudo systemctl reload nginx

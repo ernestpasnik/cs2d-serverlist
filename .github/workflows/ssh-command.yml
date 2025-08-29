@@ -17,29 +17,33 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
+            # Set production environment
             export NODE_ENV=production
             export PM2_APP="cs2d-serverlist"
 
-            # Create target directory if it does not exist
+            # Prepare deployment directory
             mkdir -p /usr/share/nginx/
             cd /usr/share/nginx/
 
-            # Clone repository if not already cloned
+            # Clone repo if not exists
             if [ ! -d "cs2d-serverlist/.git" ]; then
               git clone -b main https://github.com/ernestpasnik/cs2d-serverlist.git cs2d-serverlist
             fi
 
             cd cs2d-serverlist
-            # Pull the latest changes from the repository
             git pull origin main
-            # Install production dependencies
             npm install --production
 
-            # Check if PM2 process exists
+            # Detect main JS file dynamically
+            MAIN_FILE=$(ls *.js | head -n 1)
+            if [ -z "$MAIN_FILE" ]; then
+              echo "No JS file found to run!"
+              exit 1
+            fi
+
+            # Restart or start PM2 process in production
             if pm2 list | grep -q "$PM2_APP"; then
-              # Restart the PM2 process if it exists
               pm2 restart $PM2_APP --update-env
             else
-              # Start the PM2 process using ecosystem.config.js if it does not exist
-              pm2 start ecosystem.config.js --env production
+              pm2 start "$MAIN_FILE" --name "$PM2_APP" --update-env
             fi

@@ -1,83 +1,105 @@
 require('dotenv').config()
+
+const path = require('path')
+const fastify = require('fastify')({
+  trustProxy: true,
+  logger: { level: process.env.LOG_LEVEL || 'info' }
+})
+const fastifyStatic = require('@fastify/static')
 const redis = require('./src/utils/redis')
 const { getMTimeUnix } = require('./src/utils/utils')
-const fastify = require('fastify')({ trustProxy: true })
 
-const getFromCache = async (key) => {
-  const cachedValue = await redis.get(key)
-  return cachedValue ? JSON.parse(cachedValue) : null
+const CONFIG = {
+  host: process.env.HOST || '0.0.0.0',
+  port: Number(process.env.PORT) || 3000,
+  cacheTTL: Number(process.env.CACHE_TTL) || 3600,
+  uploadLimit: 1 * 1024 * 1024,
 }
 
-const setToCache = async (key, value) => {
-  await redis.set(key, JSON.stringify(value), 'EX', 3600)
+const getFromCache = async (key) => {
+  try {
+    const cached = await redis.get(key)
+    return cached ? JSON.parse(cached) : null
+  } catch (err) {
+    fastify.log.error({ err, key }, 'Redis GET failed')
+    return null
+  }
+}
+
+const setToCache = async (key, value, ttl = CONFIG.cacheTTL) => {
+  try {
+    await redis.set(key, JSON.stringify(value), 'EX', ttl)
+  } catch (err) {
+    fastify.log.error({ err, key }, 'Redis SET failed')
+  }
 }
 
 fastify.register(require('@fastify/multipart'), {
-  limits: {
-    fileSize: 1048576,  // 1 MB in bytes
-    files: 1,           // Max number of file fields
-  }
+  limits: { fileSize: CONFIG.uploadLimit, files: 1 }
 })
-fastify.register(require('@fastify/formbody'))
-require('./src/routes')(fastify)
 
-const production = process.env.NODE_ENV === 'production'
-if (production) {
-  fastify.register(require('fastify-minify'), {
-    global: true,
-    cache: {
-      get: getFromCache,
-      set: setToCache
-    }
-  })
-} else {
-  const fastifyStatic = require('@fastify/static')
-  fastify.register(fastifyStatic, { root: __dirname + '/public',  })
-}
+fastify.register(require('@fastify/formbody'))
+
+fastify.register(require('fastify-minify'), {
+  global: true,
+  cache: { get: getFromCache, set: setToCache }
+})
+
+fastify.register(fastifyStatic, { 
+  root: path.join(__dirname, 'public'),
+  prefix: '/public/',
+  decorateReply: false
+})
 
 fastify.register(require('@fastify/view'), {
   engine: { ejs: require('ejs') },
-  root: 'views',
+  root: path.join(__dirname, 'views'),
   layout: 'layout.ejs',
   defaultContext: {
-    production,
+    production: process.env.NODE_ENV === 'production',
     description: null,
     style: getMTimeUnix('public/styles.css'),
     script: getMTimeUnix('public/scripts.js')
   },
 })
 
+require('./src/routes')(fastify)
+
+let shuttingDown = false
+
 const gracefulShutdown = async (signal) => {
-  if (isShuttingDown) return
-  isShuttingDown = true
+  if (shuttingDown) return
+  shuttingDown = true
+  fastify.log.info(`Received ${signal}, shutting down...`)
+
   const timeout = setTimeout(() => {
-    console.warn('Forcefully shutting down after 10 seconds')
+    fastify.log.error('Force shutdown after 10s')
     process.exit(1)
-  }, 10000)
-  timeout.unref()
+  }, 10_000).unref()
+
   try {
     await fastify.close()
-    console.log('Closed out remaining connections')
+    fastify.log.info('Fastify closed')
     await redis.quit()
-    console.log('Redis connection closed')
+    fastify.log.info('Redis closed')
   } catch (err) {
-    console.error('Error while shutting down:', err)
+    fastify.log.error({ err }, 'Error during shutdown')
+  } finally {
+    clearTimeout(timeout)
+    process.exit(0)
   }
-  clearTimeout(timeout)
-  process.exit(0)
 }
 
-let isShuttingDown = false
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))
-process.on('SIGINT', () => gracefulShutdown('SIGINT'))
+['SIGTERM', 'SIGINT'].forEach((sig) => process.on(sig, () => gracefulShutdown(sig)))
 
-fastify.listen({
-  host: process.env.HOST || '0.0.0.0',
-  port: process.env.PORT || 3000
-}, (err, address) => {
-  if (err) {
+const start = async () => {
+  try {
+    const address = await fastify.listen({ host: CONFIG.host, port: CONFIG.port })
+    fastify.log.info(`Server listening on ${address}`)
+  } catch (err) {
     fastify.log.error(err)
     process.exit(1)
   }
-  console.log(`Server listening on ${address}`)
-})
+}
+
+start()

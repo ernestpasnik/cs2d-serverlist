@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: Deploy via SSH
 
 on:
   push:
@@ -7,115 +7,28 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, ubuntu]
-
+    runs-on: ubuntu-latest
     steps:
-      # ----------------------------
-      # Checkout repo
-      # ----------------------------
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      # ----------------------------
-      # Cache npm global packages
-      # ----------------------------
-      - name: Cache npm
-        uses: actions/cache@v3
+      - uses: appleboy/ssh-action@v1.0.3
         with:
-          path: ~/.npm
-          key: npm-cache-${{ hashFiles('**/package-lock.json') }}
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          script: |
+            export NODE_ENV=production
 
-      # ----------------------------
-      # Cache CS2D downloads
-      # ----------------------------
-      - name: Cache CS2D files
-        uses: actions/cache@v3
-        with:
-          path: |
-            /home/ubuntu/cs2d-serverlist/public/cs2d/cs2d_*.zip
-          key: cs2d-cache-${{ github.ref }}
-
-      # ----------------------------
-      # Deploy locally on runner
-      # ----------------------------
-      - name: Deploy locally
-        run: |
-          set -e
-          set -x   # debug output
-
-          DEPLOY_DIR="/home/ubuntu/cs2d-serverlist"
-          mkdir -p "$DEPLOY_DIR"
-
-          # Copy repo files to deploy directory
-          rsync -a --exclude='.git' "$GITHUB_WORKSPACE/" "$DEPLOY_DIR/"
-
-          cd "$DEPLOY_DIR"
-
-          # ----------------------------
-          # Install dependencies
-          # ----------------------------
-          if [ "$(uname -m)" = "x86_64" ]; then
-            if ! dpkg --print-foreign-architectures | grep -q "i386"; then
-              sudo dpkg --add-architecture i386
-              sudo apt update
+            cd /var/www
+            if [ ! -d "cs2d-serverlist/.git" ]; then
+              git clone -b main https://github.com/ernestpasnik/cs2d-serverlist.git cs2d-serverlist
             fi
-            sudo apt install -y curl unzip libstdc++6:i386
-          else
-            sudo apt install -y curl unzip
-          fi
 
-          # ----------------------------
-          # CS2D Setup
-          # ----------------------------
-          CS2D_DIR="$DEPLOY_DIR/public/cs2d"
-          mkdir -p "$CS2D_DIR"
-          cd "$CS2D_DIR"
+            cd cs2d-serverlist
+            git pull origin main
 
-          # Fetch CS2D version
-          ver=$(curl -Ss "https://unrealsoftware.de/game_cs2d.php" \
-                | grep -oE "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" \
-                | head -n1 \
-                | sed 's/\.//g')
-          CS2D_ZIP="cs2d_${ver}_linux.zip"
+            npm install --production
+            pm2 restart app --update-env
 
-          # Download CS2D if not present
-          if [ ! -f "$CS2D_ZIP" ]; then
-            cid=$(curl -Ss "https://unrealsoftware.de/get.php?get=${CS2D_ZIP}" \
-                  | grep -m 1 -o '"get.php[^"]+"' \
-                  | cut -d'"' -f2 \
-                  | sed 's/.\+cid=//g')
-            curl -s "https://unrealsoftware.de/get.php?get=${CS2D_ZIP}&p=1&cid=${cid}" -o "$CS2D_ZIP"
-          fi
-
-          if [ ! -f "cs2d_dedicated_linux.zip" ]; then
-            curl -s "https://unrealsoftware.de/files_pub/cs2d_dedicated_linux.zip" -o "cs2d_dedicated_linux.zip"
-          fi
-
-          # Unzip/update files
-          unzip -qq -o "$CS2D_ZIP"
-          unzip -qq -o "cs2d_dedicated_linux.zip"
-
-          # Cleanup old files
-          rm -rf help logos screens gfx/fonts sys/cache sys/language \
-          CS2D libsteam_api.so maps/temp.map \
-          Readme.txt sys/autobuy.cfg sys/autoexec.cfg sys/config.cfg sys/controls.cfg \
-          sys/editor.cfg sys/filters.cfg sys/mods.cfg sys/controls.lst sys/favorites.lst \
-          sys/maptypes.lst sys/core/dls.cache sys/core/svl.cache sys/core/version.cfg
-
-          chmod +x cs2d_dedicated
-          echo "CS2D dedicated server setup completed successfully."
-
-          # ----------------------------
-          # Minify CSS
-          # ----------------------------
-          if [ -f "$DEPLOY_DIR/public/css/main.css" ]; then
-            command -v uglifycss >/dev/null 2>&1 || npm install -g uglifycss
-            uglifycss "$DEPLOY_DIR/public/css/main.css" > "$DEPLOY_DIR/public/styles.css" || true
-            rm -rf "$DEPLOY_DIR/public/css" || true
-          fi
-
-          # ----------------------------
-          # Reload PM2
-          # ----------------------------
-          export PATH="$PATH:$HOME/.npm-global/bin"
-          pm2 reload ecosystem.config.js --env production || pm2 start ecosystem.config.js --env production
+            cp nginx.conf /etc/nginx/nginx.conf
+            nginx -t && systemctl reload nginx

@@ -34,16 +34,5 @@ jobs:
             git pull origin main
             npm install --production
 
-            # Detect main JS file dynamically
-            MAIN_FILE=$(ls *.js | head -n 1)
-            if [ -z "$MAIN_FILE" ]; then
-              echo "No JS file found to run!"
-              exit 1
-            fi
-
             # Restart or start PM2 process in production
-            if pm2 list | grep -q "$PM2_APP"; then
-              pm2 restart $PM2_APP --update-env
-            else
-              pm2 start "$MAIN_FILE" --name "$PM2_APP" --update-env
-            fi
+            pm2 startOrReload ecosystem.config.js --env production

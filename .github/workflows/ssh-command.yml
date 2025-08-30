@@ -1,4 +1,4 @@
-name: Deploy via SSH
+name: Deploy
 
 on:
   push:
@@ -21,7 +21,17 @@ jobs:
             DEPLOY_DIR="/var/www/cs2d-serverlist"
             PM2_APP="cs2d-serverlist"
 
-            sudo mkdir -p "$DEPLOY_DIR" && sudo chown -R $USER:$USER "$DEPLOY_DIR"
+            # Check prerequisites and stop if any missing
+            for cmd in nginx node npm git redis-server; do
+              if ! command -v $cmd > /dev/null; then
+                echo "$cmd is not installed. Exiting."
+                exit 1
+              fi
+            done
+
+            # Create deployment directory
+            sudo mkdir -p "$DEPLOY_DIR"
+            sudo chown -R $USER:$USER "$DEPLOY_DIR"
             cd "$DEPLOY_DIR"
 
             # Clone repo if missing, otherwise pull latest
@@ -31,6 +41,14 @@ jobs:
               git pull origin main
             fi
 
-            # Install dependencies and start/reload PM2
+            # Set ownership and permissions for public folder
+            NGINX_USER=$(nginx -V 2>&1 | grep -oP '(?<=--user=)[^ ]+')
+            sudo chown -R $NGINX_USER:$NGINX_USER "$DEPLOY_DIR/public"
+            sudo find "$DEPLOY_DIR/public" -type f -exec chmod 644 {} \;
+            sudo find "$DEPLOY_DIR/public" -type d -exec chmod 755 {} \;
+
+            # Install dependencies
             npm install --omit=dev
+
+            # Start or reload PM2 app
             pm2 startOrReload ecosystem.config.js --env production

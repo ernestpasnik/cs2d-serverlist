@@ -10,29 +10,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: appleboy/ssh-action@v1
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Set production environment
-            export NODE_ENV=production
-            export PM2_APP="cs2d-serverlist"
+            DEPLOY_DIR="/var/www/cs2d-serverlist"
+            PM2_APP="cs2d-serverlist"
 
-            # Prepare deployment directory
-            mkdir -p /usr/share/nginx/
-            cd /usr/share/nginx/
+            # Create deployment directory (sudo if needed)
+            sudo mkdir -p "$DEPLOY_DIR"
+            sudo chown -R $USER:$USER "$DEPLOY_DIR"
+            cd "$DEPLOY_DIR"
 
-            # Clone repo if not exists
-            if [ ! -d "cs2d-serverlist/.git" ]; then
-              git clone -b main https://github.com/ernestpasnik/cs2d-serverlist.git cs2d-serverlist
+            # Clone repo if it doesn't exist, otherwise pull latest
+            if [ ! -d ".git" ]; then
+              git clone -b main https://github.com/ernestpasnik/cs2d-serverlist.git .
+            else
+              git reset --hard
+              git pull origin main
             fi
 
-            cd cs2d-serverlist
-            git pull origin main
-            npm install --production
+            # Install dependencies
+            npm install --omit=dev
 
-            # Restart or start PM2 process in production
+            # Start or reload PM2 app
             pm2 startOrReload ecosystem.config.js --env production

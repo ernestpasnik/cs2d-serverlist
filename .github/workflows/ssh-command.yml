@@ -16,26 +16,21 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.SSH_PASSWORD }}
           script: |
             DEPLOY_DIR="/var/www/cs2d-serverlist"
             PM2_APP="cs2d-serverlist"
 
-            # Create deployment directory (sudo if needed)
-            sudo mkdir -p "$DEPLOY_DIR"
-            sudo chown -R $USER:$USER "$DEPLOY_DIR"
+            sudo mkdir -p "$DEPLOY_DIR" && sudo chown -R $USER:$USER "$DEPLOY_DIR"
             cd "$DEPLOY_DIR"
 
-            # Clone repo if it doesn't exist, otherwise pull latest
+            # Clone repo if missing, otherwise pull latest
             if [ ! -d ".git" ]; then
-              git clone -b main https://github.com/ernestpasnik/cs2d-serverlist.git .
+              git clone --depth 1 -b main https://github.com/ernestpasnik/cs2d-serverlist.git .
             else
-              git reset --hard
               git pull origin main
             fi
 
-            # Install dependencies
+            # Install dependencies and start/reload PM2
             npm install --omit=dev
-
-            # Start or reload PM2 app
             pm2 startOrReload ecosystem.config.js --env production

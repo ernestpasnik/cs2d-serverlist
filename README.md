@@ -1,30 +1,35 @@
-# CS2D Server List
+# **CS2D Server List**
 
-A **Node.js** application for real-time monitoring of **CS2D** servers, featuring a public API for accessing server details.
+**[![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)**
 
-🔗 **Live Demo:** [cs2d.pp.ua](https://cs2d.pp.ua)
+A **Node.js** application for **real-time monitoring** of **CS2D** game servers, featuring a **free and simple public API** for accessing server details.
 
----
+🌐 **[Live Website](https://cs2d.pp.ua)**
 
-## Features
-
-- **Servers**: Real-time status, player count, and map information.
-- **Stats**: Leaderboards and player statistics.
-- **Maps**: Available maps and usage statistics.
-- **Tools**: Lua script for automatic leaderboard uploads.
-- **API**: Free, unlimited, and CORS-enabled.
+![CS2D Server List Screenshot](https://i.imgur.com/YQzKxmI.png)
 
 ---
 
-## Requirements
+## **Features**
 
-- **Node.js**
-- **Redis**
-- **IPInfo API Key**
+- **📡 Servers**: Real-time status, player count, and map information.
+- **🏆 Stats**: Leaderboards and player statistics.
+- **🗺️ Maps**: Map parser and live view of available maps.
+- **🛠️ Tools**: Lua script for automatic leaderboard uploads and **server status on Discord**.
+- **🔌 API**: Free, simple, and CORS-enabled for easy integration.
 
 ---
 
-## Installation
+## **Requirements**
+
+- **Node.js** (v18+)
+- **Redis** (for caching and real-time data)
+- **IPInfo API Key** (for geolocation features)
+
+---
+
+## **Installation**
 
 1. Clone the repository:
    ```bash
@@ -52,6 +57,12 @@ A **Node.js** application for real-time monitoring of **CS2D** servers, featurin
 
 ---
 
-## License
+## **See Also**
 
-This project is licensed under the **MIT License** – see [LICENSE](LICENSE) for details.
+- **[CS2D LuaJIT](https://github.com/MikuAuahDark/cs2djit)** – Created by **MikuAuahDark**, this project replaces the CS2D Lua engine with **LuaJIT** for faster server performance, support for external Lua C modules, and **FFI (Foreign Function Interface)**.
+
+---
+
+## **License**
+
+This project is licensed under the **[MIT License](LICENSE)**.

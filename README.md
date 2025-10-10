@@ -1,17 +1,57 @@
 # CS2D Server List
-A Node.js app that displays the scoreboard, server details, and other real-time information. Includes an easy-to-use API to access CS2D server data and upload leaderboard stats. The API provides consistent JSON responses, unlimited usage, and public access with CORS enabled.
 
-Currently hosted at: [cs2d.pp.ua](https://cs2d.pp.ua)
+A **Node.js** application for real-time monitoring of **CS2D** servers, featuring a public API for accessing server details.
 
-## ENV Configuration
-Below are the environment variables used to configure the application, along with their default values:
-| **Variable**    | **Description**                                         | **Default Value**        |
-| --------------- | ------------------------------------------------------- | ------------------------ |
-| `HOST`          | Address to bind the server to                           | `0.0.0.0`                |
-| `PORT`          | Port for the server to listen on                        | `3000`                   |
-| `NODE_ENV`      | Defines the application environment                     | `development`            |
-| `REDIS_URL`     | URL for connecting to the Redis server                  | `redis://127.0.0.1:6379` |
-| `IPINFO_APIKEY` | [API key for IP geolocation service](https://ipinfo.io) | *Not set*                |
+🔗 **Live Demo:** [cs2d.pp.ua](https://cs2d.pp.ua)
+
+---
+
+## Features
+
+- **Servers**: Real-time status, player count, and map information.
+- **Stats**: Leaderboards and player statistics.
+- **Maps**: Available maps and usage statistics.
+- **Tools**: Lua script for automatic leaderboard uploads.
+- **API**: Free, unlimited, and CORS-enabled.
+
+---
+
+## Requirements
+
+- **Node.js**
+- **Redis**
+- **IPInfo API Key**
+
+---
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ernestpasnik/cs2d-serverlist.git
+   cd cs2d-serverlist
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Configure `.env`:
+   ```env
+   HOST=0.0.0.0
+   PORT=3000
+   REDIS_URL=redis://127.0.0.1:6379
+   IPINFO_APIKEY=your_api_key
+   ```
+
+4. Start the server:
+   ```bash
+   npm start
+   ```
+
+---
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+
+This project is licensed under the **MIT License** – see [LICENSE](LICENSE) for details.

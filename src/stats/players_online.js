@@ -1,61 +1,80 @@
-const https = require('https')
+class PlayerCountService {
+  constructor() {
+    this.playerCounts = {
+      steam: null,
+      unrealSoftware: null
+    };
+    this.pollingInterval = 300000; // 5 min
+    this.intervals = [];
+  }
 
-let PlayersOnline = {
-  steam: null,
-  unrealSoftware: null
-}
+  async fetchSteamPlayers() {
+    try {
+      const response = await fetch('http://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=666220');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
 
-const fetch = url => {
-  return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
-      let data = ''
-
-      res.on('data', chunk => data += chunk)
-      res.on('end', () => resolve(data))
-    }).on('error', reject)
-  })
-}
-
-const getSteamPlayersOnline = async () => {
-  try {
-    const data = await fetch('https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=666220')
-    const json = JSON.parse(data)
-    if (json && json.response) {
-      PlayersOnline.steam = json.response.player_count
-    } else {
-      console.log('Steam: Player count not found in response')
+      const data = await response.json();
+      this.playerCounts.steam = data?.response?.player_count ?? 0;
+      
+      return this.playerCounts.steam;
+    } catch (error) {
+      console.error(error.message);	
+      this.playerCounts.steam = 0;
+      return 0;
     }
-  } catch (err) {
-    console.log(`Error fetching Steam player count: ${err.message}`)
+  }
+
+  async fetchUnrealSoftwarePlayers() {
+    try {
+      const response = await fetch('http://217.154.200.83/users.php?p=1');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const html = await response.text();
+      const match = html.match(/(\d+)\s+Users?/i);
+      this.playerCounts.unrealSoftware = match ? parseInt(match[1], 10) : 0;
+      
+      return this.playerCounts.unrealSoftware;
+    } catch (error) {
+      console.error(error.message);
+      this.playerCounts.unrealSoftware = 0;
+      return 0;
+    }
+  }
+
+  async initialize() {
+    await Promise.allSettled([
+      this.fetchSteamPlayers(),
+      this.fetchUnrealSoftwarePlayers()
+    ]);
+  }
+
+  startPolling() {
+    this.initialize();
+    this.intervals = [
+      setInterval(() => this.fetchSteamPlayers(), this.pollingInterval),
+      setInterval(() => this.fetchUnrealSoftwarePlayers(), this.pollingInterval)
+    ];
+  }
+
+  stopPolling() {
+    this.intervals.forEach(interval => clearInterval(interval));
+    this.intervals = [];
+  }
+
+  getPlayerCounts() {
+    return {
+      steam: this.playerCounts.steam ?? 'N/A',
+      unrealSoftware: this.playerCounts.unrealSoftware ?? 'N/A'
+    };
   }
 }
 
-const getUnrealSoftwarePlayersOnline = async () => {
-  try {
-    const html = await fetch('https://unrealsoftware.de/users.php?p=1')
-    const match = html.match(/(\d+)\s+Users?/)
-    PlayersOnline.unrealSoftware = match ? parseInt(match[1], 10) : 0
-  } catch (err) {
-    console.log(`Error fetching Unreal Software player count: ${err.message}`)
-  }
-}
+const playerService = new PlayerCountService();
+playerService.startPolling();
 
-const startPolling = () => {
-  getSteamPlayersOnline()
-  getUnrealSoftwarePlayersOnline()
-  setInterval(getSteamPlayersOnline, 300000) // 5 min
-  setInterval(getUnrealSoftwarePlayersOnline, 300000) // 5 min
-}
-
-const getPlayersOnline = () => {
-  return {
-    steam: PlayersOnline.steam !== null ? PlayersOnline.steam : 'N/A',
-    unrealSoftware: PlayersOnline.unrealSoftware !== null ? PlayersOnline.unrealSoftware : 'N/A'
-  }
-}
-
-startPolling()
-
-module.exports = {
-  getPlayersOnline
-}
+export const getPlayersOnline = () => playerService.getPlayerCounts();
+export default playerService;

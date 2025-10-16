@@ -1,68 +1,67 @@
-# **CS2D Server List**
+# CS2D Server List
 
-**[![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)](https://nodejs.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)**
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green?logo=node.js)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://cs2d.pp.ua)
 
-A **Node.js** application for **real-time monitoring** of **CS2D** game servers, featuring a **free and simple public API** for accessing server details.
+A **real-time monitoring** tool for **CS2D** game servers, built with **Node.js** and **Redis**. It provides a **public API** for accessing server details, player statistics, and map information—all with **CORS support** for easy integration.
 
-🌐 **[Live Website](https://cs2d.pp.ua)**
-
-![CS2D Server List Screenshot](https://i.imgur.com/YQzKxmI.png)
-
----
-
-## **Features**
-
-- **📡 Servers**: Real-time status, player count, and map information.
-- **🏆 Stats**: Leaderboards and player statistics.
-- **🗺️ Maps**: Map parser and live view of available maps.
-- **🛠️ Tools**: Lua script for automatic leaderboard uploads and **server status on Discord**.
-- **🔌 API**: Free, simple, and CORS-enabled for easy integration.
+![CS2D Server List Preview](https://i.imgur.com/YQzKxmI.png)
 
 ---
 
-## **Requirements**
+## ✨ Key Features
 
-- **Node.js** (v18+)
-- **Redis** (for caching and real-time data)
-- **IPInfo API Key** (for geolocation features)
-
----
-
-## **Installation**
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/ernestpasnik/cs2d-serverlist.git
-   cd cs2d-serverlist
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Configure `.env`:
-   ```env
-   HOST=0.0.0.0
-   PORT=3000
-   REDIS_URL=redis://127.0.0.1:6379
-   IPINFO_APIKEY=your_api_key
-   ```
-
-4. Start the server:
-   ```bash
-   npm start
-   ```
+- **📡 Real-Time Server Monitoring**: Track server status, player count, and current map.
+- **🏆 Player Statistics**: Leaderboards and detailed player stats.
+- **🗺️ Map Parser**: View available maps and their details.
+- **🛠️ Automation Tools**: Lua script for **auto-uploading leaderboards** and **Discord server status updates**.
+- **🔌 Free Public API**: Simple, CORS-enabled, and ready for integration.
 
 ---
 
-## **See Also**
+## 📋 Requirements
 
-- **[CS2D LuaJIT](https://github.com/MikuAuahDark/cs2djit)** – Created by **MikuAuahDark**, this project replaces the CS2D Lua engine with **LuaJIT** for faster server performance, support for external Lua C modules, and **FFI (Foreign Function Interface)**.
+- **Node.js** (v18 or higher)
+- **Redis** (for caching)
+- **IPInfo API Key** (for geolocation)
 
 ---
 
-## **License**
+## 🚀 Quick Start
 
-This project is licensed under the **[MIT License](LICENSE)**.
+### 1. Clone the Repository
+```bash
+git clone https://github.com/ernestpasnik/cs2d-serverlist.git
+cd cs2d-serverlist
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Configure `.env`
+```env
+HOST=0.0.0.0
+PORT=3000
+REDIS_URL=redis://127.0.0.1:6379
+IPINFO_APIKEY=your_api_key_here
+```
+
+### 4. Run the Server
+```bash
+npm start
+```
+
+---
+
+## 🔗 Related Projects
+
+- **[CS2D LuaJIT](https://github.com/MikuAuahDark/cs2djit)** – A project by **MikuAuahDark** that replaces the default CS2D Lua engine with **LuaJIT**, enabling **faster performance**, support for **external Lua C modules**, and **FFI (Foreign Function Interface)**.
+
+---
+
+## 📜 License
+
+This project is open-source and available under the **[MIT License](LICENSE)**.

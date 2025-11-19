@@ -114,57 +114,6 @@ li {
   display: block !important;
 }
 
-#maps-dev > p {
-  padding: 0.6rem 0.75rem;
-  color: #ddd;
-  font-size: 0.875rem;
-  font-weight: 500;
-  background-color: rgba(0, 0, 0, 0.37);
-  border-radius: 0.25rem;
-}
-
-#maps-dev {
-  background:
-    linear-gradient(45deg, rgba(80, 70, 10, 0.15) 25%, transparent 25%),
-    linear-gradient(-45deg, rgba(80, 70, 10, 0.15) 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, rgba(80, 70, 10, 0.15) 75%),
-    linear-gradient(-45deg, transparent 75%, rgba(80, 70, 10, 0.15) 75%);
-  background-size: 40px 40px;
-  background-position: 0 0, 0 20px, 20px -20px, -20px 0px;
-  background-color: rgba(40, 40, 0, 0.85);
-  border: 1px solid rgba(202, 172, 80, 0.14);
-  border-radius: 4px;
-  padding: 0.75rem;
-  padding-top: 1.5rem;
-  margin-top: 1rem;
-  margin-bottom: 0.75rem;
-  text-align: center;
-}
-
-#maps-dev::before {
-  content: "🚧🛠️ Work in Progress: Some features are not ready yet ⏳💡";
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #ddd;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.development_mode {
-  background-color: rgba(244, 244, 70, 0.1);
-  border-radius: 0 0 8px 8px;
-  margin: 0 auto;
-  width: fit-content;
-}
-
-.development_mode > p {
-  color: rgb(255, 255, 123);
-  padding: 0.25rem 0.5rem;
-  margin: 0;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
 .info {
   background-color: rgba(18, 202, 147, 0.05);
   border: 1px solid rgba(152, 255, 153, 0.1);

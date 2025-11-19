@@ -15,7 +15,7 @@ A **real-time monitoring** tool for **CS2D** game servers, built with **Node.js*
 - **📡 Real-Time Server Monitoring**: Track server status, player count, and current map.
 - **🏆 Player Statistics**: Leaderboards and detailed player stats.
 - **🗺️ Map Parser**: View available maps and their details.
-- **🛠️ Automation Tools**: Lua script for **auto-uploading leaderboards** and **Discord server status updates**.
+- **🛠️ Automation Tools**: Lua script for auto-uploading leaderboards.
 - **🔌 Free Public API**: Simple, CORS-enabled, and ready for integration.
 
 ---
@@ -30,18 +30,18 @@ A **real-time monitoring** tool for **CS2D** game servers, built with **Node.js*
 
 ## 🚀 Quick Start
 
-### 1. Clone the Repository
+1. Clone the Repository
 ```bash
 git clone https://github.com/ernestpasnik/cs2d-serverlist.git
 cd cs2d-serverlist
 ```
 
-### 2. Install Dependencies
+2. Install Dependencies
 ```bash
 npm install
 ```
 
-### 3. Configure `.env`
+3. Configure `.env`
 ```env
 HOST=0.0.0.0
 PORT=3000
@@ -49,7 +49,7 @@ REDIS_URL=redis://127.0.0.1:6379
 IPINFO_APIKEY=your_api_key_here
 ```
 
-### 4. Run the Server
+4. Run the Server
 ```bash
 npm start
 ```

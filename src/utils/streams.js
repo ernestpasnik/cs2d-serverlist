@@ -1,145 +1,192 @@
 'use strict'
 
-class streams {
+class Streams {
   constructor(buff, size) {
     this.offset = 0
-    if (buff !== undefined) {
-      this.buffer = buff
-      this.length = size
-    } else {
-      this.buffer = Buffer.allocUnsafe(1500)
-      this.length = 1500
+    this.buffer = buff instanceof Buffer ? buff : Buffer.allocUnsafe(1500)
+    this.length = buff instanceof Buffer ? size || buff.length : 0
+    this.capacity = this.buffer.length
+  }
+  
+  _ensureCapacity(bytesNeeded) {
+    if (this.offset + bytesNeeded > this.capacity) {
+      let newCapacity = this.capacity * 2
+      while (this.offset + bytesNeeded > newCapacity) {
+        newCapacity *= 2
+      }
+      const newBuffer = Buffer.allocUnsafe(newCapacity)
+      this.buffer.copy(newBuffer, 0, 0, this.length)
+      this.buffer = newBuffer
+      this.capacity = newCapacity
     }
   }
-
-  readByte(offset = 0) {
-    this.offset += offset
+  
+  skip(count) {
+    this.offset = Math.min(this.offset + count, this.length)
+  }
+  
+  readByte() {
     if (this.offset >= this.length) return 0
     const val = this.buffer.readUInt8(this.offset)
     this.offset += 1
     return val
   }
-
-  readShort(offset = 0) {
-    this.offset += offset
+  
+  readShort() {
     if (this.offset + 2 > this.length) return 0
     const val = this.buffer.readUInt16LE(this.offset)
     this.offset += 2
     return val
   }
-
-  readInt(offset = 0) {
-    this.offset += offset
+  
+  readInt() {
     if (this.offset + 4 > this.length) return 0
     const val = this.buffer.readInt32LE(this.offset)
     this.offset += 4
     return val
   }
-
-  readLong(offset = 0) {
-    this.offset += offset
+  
+  readLong() {
     if (this.offset + 8 > this.length) return 0
     const val = this.buffer.readBigInt64LE(this.offset)
     this.offset += 8
     return val
   }
-
-  readFloat(offset = 0) {
-    this.offset += offset
+  
+  readFloat() {
     if (this.offset + 4 > this.length) return 0
     const val = this.buffer.readFloatLE(this.offset)
     this.offset += 4
     return val
   }
-
-  readDouble(offset = 0) {
-    this.offset += offset
+  
+  readDouble() {
     if (this.offset + 8 > this.length) return 0
     const val = this.buffer.readDoubleLE(this.offset)
     this.offset += 8
     return val
   }
-
-  readLine(offset = 0) {
-    this.offset += offset
+  
+  readLine() {
     if (this.offset >= this.length) return ''
-    let val = ''
-    while (true) {
-      const n = this.readByte()
-      if (n === 0 || n === 10) break
-      if (n !== 13) val += String.fromCharCode(n)
+    
+    let endOfLine = -1
+    for (let i = this.offset; i < this.length; i++) {
+      if (this.buffer[i] === 10) {
+        endOfLine = i
+        break
+      }
     }
+    
+    if (endOfLine === -1) {
+      const val = this.buffer.slice(this.offset, this.length).toString('ascii')
+      this.offset = this.length
+      return val
+    }
+    
+    const sliceEnd = endOfLine
+    let textEnd = sliceEnd
+    
+    if (sliceEnd > this.offset && this.buffer[sliceEnd - 1] === 13) {
+      textEnd = sliceEnd - 1
+    }
+    
+    const val = this.buffer.slice(this.offset, textEnd).toString('ascii')
+    
+    this.offset = endOfLine + 1
+    
     return val
   }
-
-  readString(length, encoding = 'latin1') {
-    if (this.offset + length > this.length) return ''
-    const val = this.buffer.slice(this.offset, this.offset + length).toString(encoding)
-    this.offset += length
-    return val
+  
+  readSString(encoding = 'ascii') {
+    if (this.offset + 1 > this.length) return ''
+    const length = this.readByte()
+    return this.readString(length, encoding)
   }
-
-  readStringNT(length, encoding = 'latin1') {
-    if (this.offset + length > this.length) return ''
-    const val = this.readString(length, encoding)
+  
+  readString(encoding = 'ascii') {
+    if (this.offset + 2 > this.length) return ''
+    const length = this.readShort()
+    return this.readString(length, encoding)
+  }
+  
+  writeByte(val) {
+    this._ensureCapacity(1)
+    this.buffer.writeUInt8(val, this.offset)
     this.offset += 1
-    return val
+    this.length = Math.max(this.length, this.offset)
   }
-
+  
+  writeShort(val) {
+    this._ensureCapacity(2)
+    this.buffer.writeUInt16LE(val, this.offset)
+    this.offset += 2
+    this.length = Math.max(this.length, this.offset)
+  }
+  
+  writeInt(val) {
+    this._ensureCapacity(4)
+    this.buffer.writeInt32LE(val, this.offset)
+    this.offset += 4
+    this.length = Math.max(this.length, this.offset)
+  }
+  
+  writeLong(val) {
+    this._ensureCapacity(8)
+    this.buffer.writeBigInt64LE(BigInt(val), this.offset)
+    this.offset += 8
+    this.length = Math.max(this.length, this.offset)
+  }
+  
+  writeLine(val, encoding = 'ascii') {
+    const stringLength = Buffer.byteLength(val, encoding)
+    this._ensureCapacity(stringLength + 1)
+    
+    this.buffer.write(val, this.offset, encoding)
+    this.offset += stringLength
+    
+    this.writeByte(10)
+    
+    this.length = Math.max(this.length, this.offset)
+  }
+  
+  writeSString(val, encoding = 'ascii') {
+    const stringLength = Buffer.byteLength(val, encoding)
+    if (stringLength > 255) {
+      throw new Error('String too long for 8-bit length prefix (max 255 bytes).')
+    }
+    this._ensureCapacity(1 + stringLength)
+    
+    this.writeByte(stringLength)
+    this.writeString(val, encoding)
+  }
+  
+  writeString(val, encoding = 'ascii') {
+    const stringLength = Buffer.byteLength(val, encoding)
+    if (stringLength > 65535) {
+      throw new Error('String too long for 16-bit length prefix (max 65535 bytes).')
+    }
+    this._ensureCapacity(2 + stringLength)
+    
+    this.writeShort(stringLength)
+    this.writeString(val, encoding)
+  }
+  
   getSize() {
     return this.length
   }
-
+  
+  getCapacity() {
+    return this.capacity
+  }
+  
   remaining() {
     return this.length - this.offset
   }
-
-  writeByte(val) {
-    this.buffer.writeUInt8(val, this.offset)
-    this.offset += 1
-    return this.buffer
-  }
-
-  writeShort(val) {
-    this.buffer.writeUInt16LE(val, this.offset)
-    this.offset += 2
-    return this.buffer
-  }
-
-  writeInt(val) {
-    this.buffer.writeInt32LE(val, this.offset)
-    this.offset += 4
-    return this.buffer
-  }
-
-  writeLong(val) {
-    this.buffer.writeBigInt64LE(val, this.offset)
-    this.offset += 8
-    return this.buffer
-  }
-
-  writeString(val, encoding) {
-    if (encoding === undefined) {
-      encoding = 'latin1'
-    }
-    this.buffer.write(val, this.offset, encoding)
-    this.offset += val.length
-    return this.buffer
-  }
-
-  writeStringNT(val, encoding) {
-    if (encoding === undefined) {
-      encoding = 'latin1'
-    }
-    this.buffer.write(val, this.offset, encoding)
-    this.offset += val.length
-    this.writeByte(0)
-    return this.buffer
-  }
-
+  
   writeClose() {
     return this.buffer.slice(0, this.offset)
   }
 }
 
-module.exports = streams
+module.exports = Streams

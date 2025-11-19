@@ -28,7 +28,7 @@ const timeAgo = ts => {
     const v = Math.floor(s / sec);
     if (v) return v + name + ' ago';
   }
-  return 'just now';
+  return 'now';
 };
 
 const updateUI = d => {

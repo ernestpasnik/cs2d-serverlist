@@ -1,5 +1,3 @@
-'use strict'
-
 class Streams {
   constructor(buff, size) {
     this.offset = 0
@@ -67,7 +65,7 @@ class Streams {
     return val
   }
   
-  readLine() {
+  readLine(encoding = 'ascii') {
     if (this.offset >= this.length) return ''
     
     let endOfLine = -1
@@ -79,7 +77,7 @@ class Streams {
     }
     
     if (endOfLine === -1) {
-      const val = this.buffer.slice(this.offset, this.length).toString('ascii')
+      const val = this.buffer.slice(this.offset, this.length).toString(encoding)
       this.offset = this.length
       return val
     }
@@ -91,7 +89,7 @@ class Streams {
       textEnd = sliceEnd - 1
     }
     
-    const val = this.buffer.slice(this.offset, textEnd).toString('ascii')
+    const val = this.buffer.slice(this.offset, textEnd).toString(encoding)
     
     this.offset = endOfLine + 1
     
@@ -101,13 +99,21 @@ class Streams {
   readSString(encoding = 'ascii') {
     if (this.offset + 1 > this.length) return ''
     const length = this.readByte()
-    return this.readString(length, encoding)
+    if (this.offset + length > this.length) return ''
+    
+    const val = this.buffer.slice(this.offset, this.offset + length).toString(encoding)
+    this.offset += length
+    return val
   }
   
   readString(encoding = 'ascii') {
     if (this.offset + 2 > this.length) return ''
     const length = this.readShort()
-    return this.readString(length, encoding)
+    if (this.offset + length > this.length) return ''
+    
+    const val = this.buffer.slice(this.offset, this.offset + length).toString(encoding)
+    this.offset += length
+    return val
   }
   
   writeByte(val) {
@@ -138,6 +144,20 @@ class Streams {
     this.length = Math.max(this.length, this.offset)
   }
   
+  writeFloat(val) {
+    this._ensureCapacity(4)
+    this.buffer.writeFloatLE(val, this.offset)
+    this.offset += 4
+    this.length = Math.max(this.length, this.offset)
+  }
+  
+  writeDouble(val) {
+    this._ensureCapacity(8)
+    this.buffer.writeDoubleLE(val, this.offset)
+    this.offset += 8
+    this.length = Math.max(this.length, this.offset)
+  }
+  
   writeLine(val, encoding = 'ascii') {
     const stringLength = Buffer.byteLength(val, encoding)
     this._ensureCapacity(stringLength + 1)
@@ -155,10 +175,13 @@ class Streams {
     if (stringLength > 255) {
       throw new Error('String too long for 8-bit length prefix (max 255 bytes).')
     }
-    this._ensureCapacity(1 + stringLength)
     
+    this._ensureCapacity(1 + stringLength)
     this.writeByte(stringLength)
-    this.writeString(val, encoding)
+    
+    this.buffer.write(val, this.offset, stringLength, encoding)
+    this.offset += stringLength
+    this.length = Math.max(this.length, this.offset)
   }
   
   writeString(val, encoding = 'ascii') {
@@ -166,10 +189,13 @@ class Streams {
     if (stringLength > 65535) {
       throw new Error('String too long for 16-bit length prefix (max 65535 bytes).')
     }
-    this._ensureCapacity(2 + stringLength)
     
+    this._ensureCapacity(2 + stringLength)
     this.writeShort(stringLength)
-    this.writeString(val, encoding)
+    
+    this.buffer.write(val, this.offset, stringLength, encoding)
+    this.offset += stringLength
+    this.length = Math.max(this.length, this.offset)
   }
   
   getSize() {

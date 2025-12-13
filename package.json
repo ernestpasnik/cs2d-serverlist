@@ -1,7 +1,7 @@
 {
   "name": "cs2d-serverlist",
-  "version": "2025.11.19",
-  "description": "Node.js app displaying real-time scoreboard and server info with an API for CS2D data and leaderboard stats.",
+  "version": "2025.12.13",
+  "description": "Amateur Node.js project showing CS2D servers, player stats, maps, and leaderboard via CORS API.",
   "main": "app.js",
   "author": "Ernest Paśnik",
   "license": "MIT",
@@ -9,15 +9,7 @@
     "type": "git",
     "url": "https://github.com/ernestpasnik/cs2d-serverlist.git"
   },
-  "keywords": [
-    "nodejs",
-    "webapp",
-    "ejs",
-    "fastify",
-    "cs2d",
-    "redis",
-    "api"
-  ],
+  "keywords": ["CS2D", "server list", "leaderboard", "Node.js", "API"],
   "engines": {
     "node": ">=20.0.0"
   },

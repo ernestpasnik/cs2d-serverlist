@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://cs2d.pp.ua)
 
-A **real-time monitoring** tool for **CS2D** game servers, built with **Node.js** and **Redis**. It provides a **public API** for accessing server details, player statistics, and map information—all with **CORS support** for easy integration.
+**CS2D Server List** is an amateur project for monitoring **CS2D** game servers, built with **Node.js** and **Redis**. It provides a **public API** for accessing server status, player statistics, and map information with **CORS support**.
 
 ![CS2D Server List Preview](https://i.imgur.com/YQzKxmI.png)
 
@@ -12,36 +12,32 @@ A **real-time monitoring** tool for **CS2D** game servers, built with **Node.js*
 
 ## Features
 
-- **📡 Real-Time Server Monitoring**: Track server status, player count, and current map.
-- **🏆 Player Statistics**: Leaderboards and detailed player stats.
-- **🗺️ Map Parser**: View available maps and their details.
-- **🛠️ Automation Tools**: Lua script for auto-uploading leaderboards.
-- **🔌 Free Public API**: Simple, CORS-enabled, and ready for integration.
+* **📡 Server Monitoring** – Track server status, active players, and current maps.
+* **🏆 Player Statistics** – Leaderboards and detailed player info.
+* **🗺️ Map Parser** – View available maps and their details.
+* **🛠️ Automation Tools** – Lua scripts for uploading leaderboards.
+* **🔌 Free Public API** – CORS-enabled API for easy integration.
 
 ---
 
 ## Requirements
 
-- **Node.js** (v20 or higher)
-- **Redis** (for caching)
-- **IPInfo API Key** (for geolocation)
+* **Node.js** v20+
+* **Redis**
+* **IPInfo API Key**
 
 ---
 
 ## Quick Start
 
-Clone the Repository
 ```bash
 git clone https://github.com/ernestpasnik/cs2d-serverlist.git
 cd cs2d-serverlist
-```
-
-Install Dependencies
-```bash
 npm install
 ```
 
-Configure `.env`
+Create `.env`:
+
 ```env
 HOST=0.0.0.0
 PORT=3000
@@ -49,19 +45,18 @@ REDIS_URL=redis://127.0.0.1:6379
 IPINFO_APIKEY=your_api_key_here
 ```
 
-Run the Server
 ```bash
 npm start
 ```
 
 ---
 
-## Related 
+## Related
 
-- **[CS2D LuaJIT](https://github.com/MikuAuahDark/cs2djit)** – A project by **MikuAuahDark** that replaces the default CS2D Lua engine with **LuaJIT**, enabling **faster performance**, support for **external Lua C modules**, and **FFI (Foreign Function Interface)**.
+* **[CS2D LuaJIT](https://github.com/MikuAuahDark/cs2djit)** – Replaces the default CS2D Lua engine with **LuaJIT**, enabling faster performance and support for external Lua C modules.
 
 ---
 
 ## License
 
-This project is open-source and available under the **[MIT License](LICENSE)**.
+This project is licensed under the **[MIT License](LICENSE)**.
